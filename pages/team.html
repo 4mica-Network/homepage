@@ -9,7 +9,9 @@
 <body class="bg-[#333333] text-white font-sans flex flex-col min-h-screen">
     <header class="flex justify-between items-center px-4 bg-[#333333] relative">
         <div class="flex items-center space-x-4">
-            <img src="../assets/logo_transparent.png" alt="4Mica Logo" class="w-[3cm] h-[3cm] opacity-50">
+            <a href="/">
+                <img src="../assets/logo_transparent.png" alt="4Mica Logo" class="w-[3cm] h-[3cm] opacity-50">
+            </a>
             <nav class="hidden md:flex space-x-6 text-white">
                 <!-- Resources Dropdown -->
                 <div class="relative group" onmouseenter="showDropdown(this)" onmouseleave="hideDropdown(this)">
@@ -56,7 +58,7 @@
         <h1 class="text-4xl font-bold text-[#00A3FF] mb-4 text-center">Meet the Team</h1>
         <p class="text-gray-300 mb-12 text-center text-lg">A diverse group of experts driving 4Mica forward.</p>
       
-        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           <!-- Team Member Card -->
           <div class="bg-[#444444] p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
             <img src="../assets/akash.webp" alt="Jane Doe" class="w-48 h-48 mx-auto rounded-full mb-4 border-4 border-[#00A3FF] shadow-md">
@@ -75,6 +77,11 @@
             <img src="../assets/tomer.webp" alt="Alice Lee" class="w-48 h-48 mx-auto rounded-full mb-4 border-4 border-[#00A3FF] shadow-md">
             <h3 class="text-xl font-semibold text-white text-center">Dr. Tomer Ashur</h3>
             <p class="text-[#00A3FF] text-center">Co-Founder</p>
+          </div>
+          <div class="bg-[#444444] p-6 rounded-2xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-1">
+            <img src="../assets/BartPreneel.jpg" alt="Alice Lee" class="w-48 h-48 mx-auto rounded-full mb-4 border-4 border-[#00A3FF] shadow-md">
+            <h3 class="text-xl font-semibold text-white text-center">Prof. Dr. ir. Bart Preneel</h3>
+            <p class="text-[#00A3FF] text-center">Scientific Advisor</p>
           </div>
         </div>
       </main>

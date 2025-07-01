@@ -8,19 +8,59 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[#333333] text-white font-sans flex flex-col min-h-screen">
-    <header class="flex justify-between items-center  px-4 bg-[#333333]">
+    <header class="flex justify-between items-center px-4 bg-[#333333] relative">
         <div class="flex items-center space-x-4">
-            <img src="assets/logo_transparent.png" alt="4Mica Logo" class="w-[3cm] h-[3cm] opacity-50">
-            <nav class="space-x-6 hidden md:flex text-white">
-                <a href="#resources" class="hover:underline">Resources</a>
-                <a href="#team" class="hover:underline">Team</a>
-                <a href="#contact" class="hover:underline">Contact Us</a>
-            </nav>
+          <img src="assets/logo_transparent.png" alt="4Mica Logo" class="w-[3cm] h-[3cm] opacity-50">
+          <nav class="hidden md:flex space-x-6 text-white">
+            <!-- Resources Dropdown -->
+            <div class="relative group" onmouseenter="showDropdown(this)" onmouseleave="hideDropdown(this)">
+                <a href="#" class="hover:underline text-white">Resources</a>
+                <div class="dropdown absolute left-0 hidden flex-col bg-[#444444] text-white rounded shadow-lg mt-2 z-10 opacity-0 translate-y-2 transition-all duration-300 ease-out">
+                  <ul class="py-2">
+                    <li><a href="/pages/documents.html" class="block px-4 py-2 hover:bg-[#555555]">Documents</a></li>
+                    <li><a href="/pages/whitepaper.html" class="block px-4 py-2 hover:bg-[#555555] whitespace-nowrap">White-Paper</a></li>
+                  </ul>
+                </div>
+              </div>
+              
+              <script>
+                let dropdownTimeout;
+              
+                function showDropdown(container) {
+                  clearTimeout(dropdownTimeout);
+                  const menu = container.querySelector('.dropdown');
+                  menu.classList.remove('hidden');
+                  requestAnimationFrame(() => {
+                    menu.classList.remove('opacity-0', 'translate-y-2');
+                    menu.classList.add('opacity-100', 'translate-y-0');
+                  });
+                }
+              
+                function hideDropdown(container) {
+                  const menu = container.querySelector('.dropdown');
+                  dropdownTimeout = setTimeout(() => {
+                    menu.classList.add('opacity-0', 'translate-y-2');
+                    menu.classList.remove('opacity-100', 'translate-y-0');
+                    // Hide after transition
+                    setTimeout(() => {
+                      if (menu.classList.contains('opacity-0')) {
+                        menu.classList.add('hidden');
+                      }
+                    }, 300); // match duration-300
+                  }, 200); // 200ms delay before hiding
+                }
+              </script>
+              
+      
+            <!-- Team Link -->
+            <a href="/pages/team.html" class="hover:underline">Team</a>
+      
+            <!-- Contact Us Link -->
+            <a href="/pages/contactus.html" class="hover:underline">Contact Us</a>
+          </nav>
         </div>
-    </header>
-    
-       
-    </header>
+      </header>
+      
 
     <main class="flex flex-col md:flex-row justify-center items-center flex-1 text-center p-6">
         <div class="md:w-1/2">

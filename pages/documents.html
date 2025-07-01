@@ -1,71 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>4Mica White Paper</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>4Mica White Paper</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+    }
+    #tsparticles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -10;
+    }
+    #scroll-gradient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to bottom, #333333, #333333);
+      z-index: -20;
+      transition: background 0.2s linear;
+      pointer-events: none;
+    }
+  </style>
 </head>
-<body class="bg-[#333333] text-white font-sans flex flex-col min-h-screen">
-    <header class="flex justify-between items-center px-4 bg-[#333333] relative">
-        <div class="flex items-center space-x-4">
-            <a href="/">
-                <img src="../assets/logo_transparent.png" alt="4Mica Logo" class="w-[3cm] h-[3cm] opacity-50">
-            </a>
-            <nav class="hidden md:flex space-x-6 text-white">
-                <!-- Resources Dropdown -->
-                <div class="relative group" onmouseenter="showDropdown(this)" onmouseleave="hideDropdown(this)">
-                    <a href="#" class="hover:underline text-white">Resources</a>
-                    <div class="dropdown absolute left-0 hidden flex-col bg-[#444444] text-white rounded shadow-lg mt-2 z-10 opacity-0 translate-y-2 transition-all duration-300 ease-out">
-                        <ul class="py-2">
-                            <li><a href="/pages/documents.html" class="block px-4 py-2 hover:bg-[#555555]">Documents</a></li>
-                            <li><a href="/pages/whitepaper.html" class="block px-4 py-2 hover:bg-[#555555] whitespace-nowrap">White-Paper</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <script>
-                    let dropdownTimeout;
+<body class="text-white font-sans flex flex-col min-h-screen">
+  <!-- Background Layers -->
+  <div id="scroll-gradient-bg"></div>
+  <div id="tsparticles"></div>
 
-                    function showDropdown(container) {
-                        clearTimeout(dropdownTimeout);
-                        const menu = container.querySelector('.dropdown');
-                        menu.classList.remove('hidden');
-                        requestAnimationFrame(() => {
-                            menu.classList.remove('opacity-0', 'translate-y-2');
-                            menu.classList.add('opacity-100', 'translate-y-0');
-                        });
-                    }
-
-                    function hideDropdown(container) {
-                        const menu = container.querySelector('.dropdown');
-                        dropdownTimeout = setTimeout(() => {
-                            menu.classList.add('opacity-0', 'translate-y-2');
-                            menu.classList.remove('opacity-100', 'translate-y-0');
-                            setTimeout(() => {
-                                if (menu.classList.contains('opacity-0')) {
-                                    menu.classList.add('hidden');
-                                }
-                            }, 300);
-                        }, 200);
-                    }
-                </script>
-                <a href="/pages/team.html" class="hover:underline">Team</a>
-                <a href="/pages/contactus.html" class="hover:underline">Contact Us</a>
-            </nav>
+  <!-- Header -->
+  <header class="flex justify-between items-center px-4 py-2 bg-[#333333] bg-opacity-80 backdrop-blur-md">
+    <div class="flex items-center space-x-4">
+      <a href="/">
+        <img src="../assets/logo_transparent.png" alt="4Mica Logo" class="w-[2.64cm] h-[1.92cm] opacity-50">
+      </a>
+      <nav class="hidden md:flex space-x-6 text-white">
+        <!-- Resources Dropdown -->
+        <div class="relative group" onmouseenter="showDropdown(this)" onmouseleave="hideDropdown(this)">
+          <a href="#" class="hover:underline text-white">Resources</a>
+          <div class="dropdown absolute left-0 hidden flex-col bg-[#444444] text-white rounded shadow-lg mt-2 z-10 opacity-0 translate-y-2 transition-all duration-300 ease-out">
+            <ul class="py-2">
+              <li><a href="/pages/documents.html" class="block px-4 py-2 hover:bg-[#555555]">Documents</a></li>
+              <li><a href="/pages/whitepaper.html" class="block px-4 py-2 hover:bg-[#555555] whitespace-nowrap">White-Paper</a></li>
+            </ul>
+          </div>
         </div>
-    </header>
-    <main class="flex-1 p-8">
-        <h1 class="text-4xl font-bold text-[#00A3FF] mb-4">Documents</h1>
-        <p class="text-gray-300 mb-8">Here you can find our latest documentation, architecture diagrams, and project overviews.</p>
-    
-        <ul class="list-disc pl-6 space-y-2 text-gray-200">
-          <li><a href="../assets/overview.pdf" class="text-[#00A3FF] hover:underline">System Overview PDF</a></li>
-          <li><a href="../assets/specifications.pdf" class="text-[#00A3FF] hover:underline">Technical Specifications</a></li>
-        </ul>
-      </main>
-      <footer class="bg-[#222222] text-center py-4">
-        <p class="text-sm">&copy; 2025 4Mica. All rights reserved.</p>
-    </footer>
+        <a href="/pages/team.html" class="hover:underline">Team</a>
+        <a href="/pages/contactus.html" class="hover:underline">Contact Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8 relative z-0">
+    <h1 class="text-4xl font-bold text-[#00A3FF] mb-4">Documents</h1>
+    <p class="text-gray-300 mb-8">Here you can find our latest documentation, architecture diagrams, and project overviews.</p>
+
+    <ul class="list-disc pl-6 space-y-2 text-gray-200">
+    <li><a href="../assets/overview.pdf" class="text-[#00A3FF] hover:underline">System Overview PDF</a></li>
+    <li><a href="../assets/specifications.pdf" class="text-[#00A3FF] hover:underline">Technical Specifications</a></li>
+    </ul>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#222222] text-center py-4">
+    <p class="text-sm">&copy; 2025 4Mica. All rights reserved.</p>
+  </footer>
+
+  <!-- Dropdown Script -->
+  <script>
+    let dropdownTimeout;
+    function showDropdown(container) {
+      clearTimeout(dropdownTimeout);
+      const menu = container.querySelector('.dropdown');
+      menu.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        menu.classList.remove('opacity-0', 'translate-y-2');
+        menu.classList.add('opacity-100', 'translate-y-0');
+      });
+    }
+    function hideDropdown(container) {
+      const menu = container.querySelector('.dropdown');
+      dropdownTimeout = setTimeout(() => {
+        menu.classList.add('opacity-0', 'translate-y-2');
+        menu.classList.remove('opacity-100', 'translate-y-0');
+        setTimeout(() => {
+          if (menu.classList.contains('opacity-0')) {
+            menu.classList.add('hidden');
+          }
+        }, 300);
+      }, 200);
+    }
+  </script>
+
+  <!-- tsParticles + Scroll Gradient -->
+  <script>
+    let particlesInstance;
+
+    tsParticles.load("tsparticles", {
+      fullScreen: { enable: false },
+      background: { color: "transparent" },
+      particles: {
+        number: { value: 100 },
+        color: { value: "#00A3FF" },
+        shape: { type: "circle" },
+        opacity: { value: 0.5 },
+        size: { value: { min: 1, max: 3 } },
+        move: {
+          enable: true,
+          speed: 1,
+          direction: "none",
+          random: true,
+          outModes: { default: "bounce" }
+        },
+        links: {
+          enable: true,
+          distance: 120,
+          color: "#00A3FF",
+          opacity: 0.3,
+          width: 1
+        }
+      },
+      interactivity: {
+        events: {
+          onHover: { enable: true, mode: "repulse" },
+          resize: true
+        },
+        modes: {
+          repulse: { distance: 100, duration: 0.4 }
+        }
+      },
+      detectRetina: true
+    }).then(instance => {
+      particlesInstance = instance;
+    });
+
+    window.addEventListener("scroll", () => {
+      if (!particlesInstance) return;
+
+      const scrollY = window.scrollY;
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      const scrollRatio = Math.min(scrollY / maxScroll, 1);
+
+      const startColor = [0, 163, 255];   // #00A3FF
+      const endColor = [255, 0, 150];     // #FF0096
+      const interpolate = (start, end, t) => Math.round(start + (end - start) * t);
+
+      const r = interpolate(startColor[0], endColor[0], scrollRatio);
+      const g = interpolate(startColor[1], endColor[1], scrollRatio);
+      const b = interpolate(startColor[2], endColor[2], scrollRatio);
+      const color = `rgb(${r},${g},${b})`;
+
+      particlesInstance.setOptions({
+        particles: {
+          color: { value: color },
+          links: { color: color }
+        }
+      });
+
+      document.getElementById("scroll-gradient-bg").style.background = `linear-gradient(to bottom, ${color}, rgb(20, 20, 20))`;
+    });
+  </script>
 </body>
 </html>
-  

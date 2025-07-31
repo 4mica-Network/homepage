@@ -6,21 +6,19 @@ export default function TeamSection() {
       name: 'Dr. Akash Madhusudan',
       role: 'CEO & Co-Founder',
       image: '../assets/akash.webp',
+      bio: 'Spent a decade solving real problems across banking, AI, and cryptography to build 4Mica',
     },
     {
       name: 'Dr. Mairon Mahzoun',
       role: 'CTO & Co-Founder',
       image: '../assets/mairon.webp',
+      bio: 'Architect of privacy-first, distributed payment systems, now powering trust-minimized commerce',
     },
     {
       name: 'Dr. Tomer Ashur',
       role: 'Co-Founder',
       image: '../assets/tomer.webp',
-    },
-    {
-      name: 'Prof. Dr. ir. Bart Preneel',
-      role: 'Scientific Advisor',
-      image: '../assets/BartPreneel.jpg',
+      bio: 'Cryptography-savant, ex-professor, ex-captain, now leading the instant transaction layer for commerce 2.0'
     },
   ];
 

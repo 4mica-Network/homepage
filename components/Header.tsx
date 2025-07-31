@@ -12,7 +12,7 @@ export default function Header() {
         <nav className="container mx-auto px-8 py-6 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3">
             <img 
-              src="https://raw.githubusercontent.com/4mica-Network/homepage/refs/heads/main/assets/logo_transparent.png?token=GHSAT0AAAAAADAQTQWD6KM5M5YHXJUQUGJ42ELOPSA"
+              src="../assets/logo_transparent.png"
               className="w-18 h-10 object-cover rounded-lg"
             />
             <span className="text-2xl font-bold font-pacifico">4Mica</span>

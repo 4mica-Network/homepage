@@ -14,12 +14,10 @@ export default function AboutSection() {
         
         <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg">
           <p className="text-lg md:text-xl text-[#1B1F3B] leading-relaxed text-center">
-            4Mica is a cutting-edge Web3-native payment infrastructure designed specifically for 
-            autonomous agent ecosystems. Our platform provides the foundational trustless payment layer 
-            that enables intelligent AI agents to delegate tasks, interact, and execute financial transactions 
-            seamlessly within decentralized marketplaces. By combining blockchain technology with advanced 
-            payment protocols, 4Mica ensures secure, transparent, and efficient transactions between AI agents, 
-            creating a new paradigm for autonomous digital commerce.
+            4Mica is a lightweight overlay service that enables sub-second transactions across any 
+            blockchain; Bitcoin, Ethereum, Solana, and beyond. 4Mica is designed to enable developers 
+            to enable transactions across any blockchain with a single API call. 4Mica makes programmable finance
+            accessible to everyone. 
           </p>
         </div>
       </div>

@@ -3,35 +3,25 @@
 export default function TeamSection() {
   const teamMembers = [
     {
-      name: 'Alex Chen',
+      name: 'Dr. Akash Madhusudan',
       role: 'CEO & Co-Founder',
-      bio: 'Former blockchain architect at Meta with 10+ years experience in distributed systems and AI infrastructure.',
-      image: 'https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20confident%20Asian%20male%20tech%20executive%20in%20his%2030s%2C%20wearing%20dark%20business%20attire%2C%20clean%20modern%20office%20background%2C%20corporate%20photography%20style%2C%20professional%20lighting&width=300&height=400&seq=team-alex&orientation=portrait'
+      image: '../assets/akash.webp',
     },
     {
-      name: 'Sarah Rodriguez',
+      name: 'Dr. Mairon Mahzoun',
       role: 'CTO & Co-Founder',
-      bio: 'PhD in Computer Science from Stanford, previously led AI research at Google DeepMind focusing on multi-agent systems.',
-      image: 'https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20confident%20Hispanic%20female%20technology%20leader%20in%20her%20early%2030s%2C%20wearing%20professional%20blazer%2C%20clean%20modern%20background%2C%20corporate%20photography%20style%2C%20warm%20lighting&width=300&height=400&seq=team-sarah&orientation=portrait'
+      image: '../assets/mairon.webp',
     },
     {
-      name: 'Michael Thompson',
-      role: 'Head of Engineering',
-      bio: 'Full-stack engineer with expertise in Web3 protocols and smart contract development, former lead at Coinbase.',
-      image: 'https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20confident%20Caucasian%20male%20software%20engineer%20in%20his%20late%2020s%2C%20wearing%20casual%20professional%20attire%2C%20modern%20tech%20office%20background%2C%20corporate%20photography%20style&width=300&height=400&seq=team-michael&orientation=portrait'
+      name: 'Dr. Tomer Ashur',
+      role: 'Co-Founder',
+      image: '../assets/tomer.webp',
     },
     {
-      name: 'Dr. Priya Patel',
-      role: 'Head of Research',
-      bio: 'AI researcher specializing in autonomous agent behavior and machine learning, published 50+ papers in top-tier journals.',
-      image: 'https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20confident%20Indian%20female%20AI%20researcher%20in%20her%20early%2030s%2C%20wearing%20professional%20attire%2C%20clean%20academic%20background%2C%20corporate%20photography%20style%2C%20natural%20lighting&width=300&height=400&seq=team-priya&orientation=portrait'
+      name: 'Prof. Dr. ir. Bart Preneel',
+      role: 'Scientific Advisor',
+      image: '../assets/BartPreneel.jpg',
     },
-    {
-      name: 'James Wilson',
-      role: 'VP of Business Development',
-      bio: 'Strategic partnerships expert with 15+ years in fintech and Web3, former executive at Stripe and ConsenSys.',
-      image: 'https://readdy.ai/api/search-image?query=Professional%20headshot%20of%20confident%20African%20American%20male%20business%20executive%20in%20his%2040s%2C%20wearing%20suit%20and%20tie%2C%20modern%20corporate%20office%20background%2C%20executive%20photography%20style&width=300&height=400&seq=team-james&orientation=portrait'
-    }
   ];
 
   return (
@@ -43,7 +33,7 @@ export default function TeamSection() {
           </h2>
           <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
           <p className="text-lg text-[#1B1F3B] max-w-2xl mx-auto">
-            Leading experts in AI, blockchain, and payment infrastructure
+            Leading experts in Cryptography, blockchain, and payment infrastructure
           </p>
         </div>
 

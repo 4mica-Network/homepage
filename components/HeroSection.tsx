@@ -4,13 +4,20 @@ import { useEffect, useState } from 'react';
 
 export default function HeroSection() {
   const [animationPhase, setAnimationPhase] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+    
     const interval = setInterval(() => {
       setAnimationPhase(prev => (prev + 1) % 12);
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isMounted]);
 
   const handleLearnMore = () => {
     const aboutSection = document.querySelector('#about');
@@ -18,6 +25,67 @@ export default function HeroSection() {
       aboutSection.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  if (!isMounted) {
+    return (
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A2540] via-[#1B2B50] to-[#102040]">
+        <div className="relative z-10 text-center max-w-5xl mx-auto px-6 w-full">
+          <div className="mb-8">
+            <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-[#F2F4F8] mb-6 leading-tight tracking-tight">
+            <span className="bg-gradient-to-r from-[#4682B4] to-[#48C9B0] bg-clip-text text-transparent">4Mica</span>
+              <br />
+                The Future of Payment
+              <br />
+            </h1>
+
+            <p className="text-lg md:text-xl lg:text-2xl text-[#F2F4F8]/85 mb-10 max-w-4xl mx-auto leading-relaxed font-light">
+            Enable instant, secure, and programmable transactions across any blockchain
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <button 
+              onClick={handleLearnMore}
+              className="bg-gradient-to-r from-[#4682B4] to-[#48C9B0] hover:from-[#5493C5] hover:to-[#59D4BB] text-[#F2F4F8] px-10 py-4 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-[1.02] cursor-pointer whitespace-nowrap shadow-lg hover:shadow-xl"
+            >
+              Learn More
+            </button>
+
+            <button
+              onClick={() => {
+                window.location.href = "mailto:akash@4mica.xyz?subject=Request%20Demo&body=Hi%20Akash,%20I%20would%20like%20to%20request%20a%20demo%20for%204Mica.";
+              }}
+              className="border-2 border-[#48C9B0] text-[#48C9B0] hover:bg-[#48C9B0]/10 hover:border-[#A3FFD6] hover:text-[#A3FFD6] px-10 py-4 rounded-full text-lg font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap backdrop-blur-sm"
+            >
+              Request Demo
+            </button>
+          </div>
+
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
+            <div className="bg-[#F2F4F8]/8 backdrop-blur-sm border border-[#48C9B0]/25 px-4 py-2 rounded-full text-[#F2F4F8] text-sm font-medium">
+              Programmable Transactions
+            </div>
+            <div className="bg-[#F2F4F8]/8 backdrop-blur-sm border border-[#48C9B0]/25 px-4 py-2 rounded-full text-[#F2F4F8] text-sm font-medium">
+              Autonomous Delegation
+            </div>
+            <div className="bg-[#F2F4F8]/8 backdrop-blur-sm border border-[#48C9B0]/25 px-4 py-2 rounded-full text-[#F2F4F8] text-sm font-medium">
+              Instant Payments
+            </div>
+            <div className="bg-[#F2F4F8]/8 backdrop-blur-sm border border-[#48C9B0]/25 px-4 py-2 rounded-full text-[#F2F4F8] text-sm font-medium">
+              Intelligent Infrastructure
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-[#F2F4F8]/60">
+          <span className="text-sm mb-2 font-medium">Discover More</span>
+          <div className="w-6 h-10 border-2 border-[#48C9B0]/60 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-[#48C9B0] rounded-full mt-2"></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A2540] via-[#1B2B50] to-[#102040] overflow-hidden">
@@ -239,15 +307,15 @@ export default function HeroSection() {
       {/* Content Overlay */}
       <div className="relative z-10 text-center max-w-5xl mx-auto px-6 w-full">
         <div className="mb-8">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#F2F4F8] mb-6 leading-tight tracking-tight">
-            The Instant Payment Layer
+          <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-[#F2F4F8] mb-6 leading-tight tracking-tight">
+            <span className="bg-gradient-to-r from-[#4682B4] to-[#48C9B0] bg-clip-text text-transparent">4Mica</span>
             <br />
-            for <span className="bg-gradient-to-r from-[#4682B4] to-[#48C9B0] bg-clip-text text-transparent">Autonomous AI Agents</span>
-          </h1>
+                The Future of Payment
+              <br />
+            </h1>
 
           <p className="text-lg md:text-xl lg:text-2xl text-[#F2F4F8]/85 mb-10 max-w-4xl mx-auto leading-relaxed font-light">
-            Enable AI agents to transact instantly, securely, and delegate payments 
-            across decentralized marketplaces
+            Enable instant, secure, and programmable transactions across any blockchain
           </p>
         </div>
 
@@ -259,9 +327,14 @@ export default function HeroSection() {
             Learn More
           </button>
 
-          <button className="border-2 border-[#48C9B0] text-[#48C9B0] hover:bg-[#48C9B0]/10 hover:border-[#A3FFD6] hover:text-[#A3FFD6] px-10 py-4 rounded-full text-lg font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap backdrop-blur-sm">
-            View Demo
-          </button>
+          <button
+              onClick={() => {
+                window.location.href = "mailto:akash@4mica.xyz?subject=Request%20Demo&body=Hi%20Akash,%20I%20would%20like%20to%20request%20a%20demo%20for%204Mica.";
+              }}
+              className="border-2 border-[#48C9B0] text-[#48C9B0] hover:bg-[#48C9B0]/10 hover:border-[#A3FFD6] hover:text-[#A3FFD6] px-10 py-4 rounded-full text-lg font-semibold transition-all duration-300 cursor-pointer whitespace-nowrap backdrop-blur-sm"
+            >
+              Request Demo
+            </button>
         </div>
 
         {/* Key Features Pills */}
@@ -273,7 +346,7 @@ export default function HeroSection() {
             Autonomous Delegation
           </div>
           <div className="bg-[#F2F4F8]/8 backdrop-blur-sm border border-[#48C9B0]/25 px-4 py-2 rounded-full text-[#F2F4F8] text-sm font-medium">
-            Verified Settlements
+            Instant Payments
           </div>
           <div className="bg-[#F2F4F8]/8 backdrop-blur-sm border border-[#48C9B0]/25 px-4 py-2 rounded-full text-[#F2F4F8] text-sm font-medium">
             Intelligent Infrastructure

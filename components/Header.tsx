@@ -9,9 +9,13 @@ export default function Header() {
   return (
     <>
       <header className="bg-[#0A2540] text-white shadow-lg">
-        <nav className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold font-pacifico">
-            4Mica
+        <nav className="container mx-auto px-8 py-6 flex items-center justify-between">
+          <Link href="/" className="flex items-center space-x-3">
+            <img 
+              src="https://raw.githubusercontent.com/4mica-Network/homepage/refs/heads/main/assets/logo_transparent.png?token=GHSAT0AAAAAADAQTQWD6KM5M5YHXJUQUGJ42ELOPSA"
+              className="w-18 h-10 object-cover rounded-lg"
+            />
+            <span className="text-2xl font-bold font-pacifico">4Mica</span>
           </Link>
           
           <div className="hidden md:flex items-center space-x-8">

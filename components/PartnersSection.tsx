@@ -15,12 +15,9 @@ export default function PartnersSection() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-[#1B1F3B] mb-6">
-            Our Partners
+            Our Partners and Collabolators
           </h2>
           <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
-          <p className="text-lg text-[#1B1F3B] max-w-2xl mx-auto">
-            Trusted by leading organizations in Web3, AI, and blockchain technology
-          </p>
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">
@@ -39,7 +36,12 @@ export default function PartnersSection() {
         </div>
         
         <div className="text-center">
-          <button className="bg-[#1E4DD8] hover:bg-[#3CAEF5] text-[#F0F4FF] px-8 py-4 rounded-lg text-lg font-semibold transition-colors cursor-pointer whitespace-nowrap">
+          <button
+            className="bg-[#1E4DD8] hover:bg-[#3CAEF5] text-[#F0F4FF] px-8 py-4 rounded-lg text-lg font-semibold transition-colors cursor-pointer whitespace-nowrap"
+            onClick={() => {
+              window.location.href = "mailto:akash@4mica.xyz";
+            }}
+          >
             Become a Partner
           </button>
         </div>

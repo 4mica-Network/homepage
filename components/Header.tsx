@@ -12,7 +12,7 @@ export default function Header() {
         <nav className="container mx-auto px-8 py-6 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3">
             <img 
-              src="../assets/logo_transparent.png"
+              src="/assets/logo_transparent.png"
               className="w-18 h-10 object-cover rounded-lg"
             />
             <span className="text-2xl font-bold font-pacifico">4Mica</span>
@@ -23,7 +23,7 @@ export default function Header() {
               href="#resources" 
               className="text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap"
             >
-              Resources (Coming Soon)
+              Resources
             </Link>
             <Link 
               href="#team" 

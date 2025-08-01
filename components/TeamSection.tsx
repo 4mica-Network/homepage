@@ -5,19 +5,19 @@ import Image from 'next/image';
 export default function TeamSection() {
   const teamMembers = [
     {
-      name: 'Dr. Akash Madhusudan',
+      name: 'Akash Madhusudan',
       role: 'CEO & Co-Founder',
       image: '/assets/akash.jpg',
       bio: 'Spent a decade solving real problems across banking, AI, and cryptography to build 4Mica',
     },
     {
-      name: 'Dr. Mairon Mahzoun',
+      name: 'Mairon Mahzoun',
       role: 'CTO & Co-Founder',
       image: '/assets/mairon.jpg',
       bio: 'Architect of privacy-first, distributed payment systems, now powering trust-minimized commerce',
     },
     {
-      name: 'Dr. Tomer Ashur',
+      name: 'Tomer Ashur',
       role: 'Co-Founder',
       image: '/assets/tomer.png',
       bio: 'Cryptography-savant, ex-professor, ex-captain, now leading the instant transaction layer for commerce 2.0'
@@ -43,16 +43,15 @@ export default function TeamSection() {
               key={index}
               className="bg-[#F5F9FF] rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group"
             >
-                <div className="relative overflow-hidden">
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  width={320} // Set consistent width
-                  height={320} // Set consistent height
-                  className="w-full h-70 object-cover object-center group-hover:scale-110 transition-transform duration-300"
-                  quality={100} // Ensures high-quality rendering
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative overflow-hidden h-[420px]">
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover object-center w-full h-full group-hover:scale-110 transition-transform duration-300"
+                    quality={100}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
               
               <div className="p-6">

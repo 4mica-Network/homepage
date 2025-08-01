@@ -3,29 +3,40 @@
 export default function TimelineSection() {
   const milestones = [
     {
+      quarter: 'Q2 2025',
+      title: 'PoC Release',
+      description: 'Initial proof of concept with basic transaction capabilities and single-chain support',
+      done: true
+    },
+    {
       quarter: 'Q3 2025',
-      title: 'Alpha Launch',
-      description: 'Initial platform release with core payment infrastructure for AI agent transactions'
+      title: 'Alpha Release',
+      description: 'Alpha Release to Ethereum and Solana with basic AI agent integration',
+      done: false
     },
     {
       quarter: 'Q4 2025',
-      title: 'Developer API',
-      description: 'Comprehensive API suite for developers to integrate 4Mica into their AI agent marketplaces'
+      title: 'Strategic Partnerships',
+      description: 'Partnerships with AI platforms to enhance ecosystem integration',
+      done: false
     },
     {
       quarter: 'Q1 2026',
-      title: 'Smart Contract Deployment',
-      description: 'Full smart contract implementation with multi-chain support and governance features'
+      title: 'Beta Release',
+      description: 'Beta release to Ethereum and Solana and enhanced AI agent capabilities',
+      done: false
     },
     {
       quarter: 'Q2 2026',
-      title: 'Enterprise Integration',
-      description: 'Enterprise-grade solutions with custom integrations for large-scale AI marketplaces'
+      title: 'Regularity Compliance',
+      description: 'Achieving compliance with financial regulations and prepare for mainnet launch',
+      done: false
     },
     {
       quarter: 'Q3 2026',
-      title: 'Global Expansion',
-      description: 'International rollout with compliance framework and regional partnership network'
+      title: 'Mainnet Launch',
+      description: 'Full mainnet launch with multi-chain support and advanced AI agent features',
+      done: false
     }
   ];
 
@@ -62,7 +73,11 @@ export default function TimelineSection() {
                   </div>
                 </div>
                 
-                <div className="absolute left-1/2 transform -translate-x-1/2 bg-[#5C7CFA] text-white rounded-full w-12 h-12 flex items-center justify-center font-bold text-sm border-4 border-white shadow-lg hidden md:flex">
+                <div
+                  className={`absolute left-1/2 transform -translate-x-1/2 rounded-full w-12 h-12 flex items-center justify-center font-bold text-sm border-4 border-white shadow-lg hidden md:flex ${
+                    milestone.done ? 'bg-green-500' : 'bg-[#5C7CFA] text-white'
+                  }`}
+                >
                   {index + 1}
                 </div>
                 
@@ -74,7 +89,11 @@ export default function TimelineSection() {
                   </div>
                 </div>
                 
-                <div className="md:hidden bg-[#5C7CFA] text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mt-4">
+                <div
+                  className={`md:hidden rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mt-4 ${
+                    milestone.done ? 'bg-green-500' : 'bg-[#5C7CFA] text-white'
+                  }`}
+                >
                   {index + 1}
                 </div>
               </div>

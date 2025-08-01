@@ -2,12 +2,7 @@
 
 export default function PartnersSection() {
   const partners = [
-    { name: 'TechCorp', logo: 'https://readdy.ai/api/search-image?query=Modern%20minimalist%20technology%20company%20logo%20design%20with%20geometric%20shapes%20and%20blue%20color%20scheme%2C%20clean%20corporate%20branding%2C%20vector%20style%20illustration%20on%20white%20background&width=200&height=100&seq=partner-logo-1&orientation=landscape' },
-    { name: 'AI Dynamics', logo: 'https://readdy.ai/api/search-image?query=Artificial%20intelligence%20company%20logo%20with%20neural%20network%20inspired%20design%2C%20blue%20and%20white%20color%20palette%2C%20professional%20corporate%20identity%2C%20minimalist%20vector%20illustration&width=200&height=100&seq=partner-logo-2&orientation=landscape' },
-    { name: 'BlockChain Solutions', logo: 'https://readdy.ai/api/search-image?query=Blockchain%20technology%20company%20logo%20featuring%20interconnected%20nodes%20and%20blocks%2C%20modern%20blue%20gradient%20design%2C%20clean%20professional%20branding%20on%20white%20background&width=200&height=100&seq=partner-logo-3&orientation=landscape' },
-    { name: 'CryptoVentures', logo: 'https://readdy.ai/api/search-image?query=Cryptocurrency%20and%20venture%20capital%20firm%20logo%20with%20diamond%20or%20gem%20motif%2C%20sophisticated%20blue%20and%20silver%20color%20scheme%2C%20premium%20corporate%20design&width=200&height=100&seq=partner-logo-4&orientation=landscape' },
-    { name: 'Web3 Innovations', logo: 'https://readdy.ai/api/search-image?query=Web3%20and%20decentralized%20technology%20company%20logo%20with%20interconnected%20circles%20and%20modern%20typography%2C%20blue%20accent%20colors%2C%20clean%20minimalist%20design&width=200&height=100&seq=partner-logo-5&orientation=landscape' },
-    { name: 'Smart Agents Inc', logo: 'https://readdy.ai/api/search-image?query=Smart%20AI%20agent%20technology%20company%20logo%20with%20robotic%20or%20digital%20assistant%20theme%2C%20blue%20and%20white%20professional%20design%2C%20modern%20corporate%20branding&width=200&height=100&seq=partner-logo-6&orientation=landscape' }
+    { name: 'EigenCloud', logo: 'https://www.eigencloud.xyz/images/Eigen_Cloud_Logo.png' },
   ];
 
   return (
@@ -15,12 +10,12 @@ export default function PartnersSection() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-[#1B1F3B] mb-6">
-            Our Partners and Collabolators
+            Partners and Technical Collaborators
           </h2>
           <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">
+        <div className={`flex ${partners.length === 1 ? 'justify-center' : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8'} mb-12`}>
           {partners.map((partner, index) => (
             <div 
               key={index}

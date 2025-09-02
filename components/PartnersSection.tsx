@@ -3,6 +3,7 @@
 export default function PartnersSection() {
   const partners = [
     { name: 'EigenCloud', logo: 'https://www.eigencloud.xyz/images/Eigen_Cloud_Logo.png' },
+    { name: 'Aligned Layer', logo: '/assets/aligned_layer_logo.png' }
   ];
 
   return (
@@ -15,16 +16,16 @@ export default function PartnersSection() {
           <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
         </div>
         
-        <div className={`flex ${partners.length === 1 ? 'justify-center' : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8'} mb-12`}>
+        <div className="flex flex-wrap justify-center items-center gap-8 mb-12">
           {partners.map((partner, index) => (
             <div 
               key={index}
-              className="bg-[#F5F9FF] rounded-lg p-6 flex items-center justify-center hover:shadow-lg transition-shadow duration-300 border-2 border-transparent hover:border-[#5C7CFA]/30"
+              className="bg-[#F5F9FF] rounded-lg p-3 flex items-center justify-center hover:shadow-lg transition-shadow duration-300 border-2 border-transparent hover:border-[#5C7CFA]/30"
             >
               <img
-                src={partner.logo}
-                alt={partner.name}
-                className="max-w-full max-h-16 object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+          src={partner.logo}
+          alt={partner.name}
+          className="max-w-full max-h-16 object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
               />
             </div>
           ))}

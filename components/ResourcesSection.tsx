@@ -1,4 +1,5 @@
 'use client';
+import Link from "next/link";
 
 export default function ResourcesSection() {
   return (
@@ -29,41 +30,44 @@ export default function ResourcesSection() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              {/* Technical Docs */}
               <div className="bg-[#F5F9FF] rounded-lg p-6 flex-1 max-w-xs">
-                <div className="w-12 h-12 bg-[#3CAEF5] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="w-6 h-6 flex items-center justify-center">
-                    <i className="ri-book-line text-xl text-white"></i>
+                <Link href="/docs">
+                  <div className="w-12 h-12 bg-[#3CAEF5] rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-105 transition">
+                    <div className="w-6 h-6 flex items-center justify-center">
+                      <i className="ri-book-line text-xl text-white"></i>
+                    </div>
                   </div>
-                </div>
+                </Link>
                 <h4 className="font-semibold text-[#1B1F3B] mb-2">Technical Docs</h4>
                 <p className="text-sm text-[#1B1F3B]">API references and integration guides</p>
               </div>
               
+              {/* Whitepapers */}
               <div className="bg-[#F5F9FF] rounded-lg p-6 flex-1 max-w-xs">
-                <div className="w-12 h-12 bg-[#5C7CFA] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="w-6 h-6 flex items-center justify-center">
-                    <i className="ri-file-paper-line text-xl text-white"></i>
+                <Link href="/whitepapers">
+                  <div className="w-12 h-12 bg-[#5C7CFA] rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-105 transition">
+                    <div className="w-6 h-6 flex items-center justify-center">
+                      <i className="ri-file-paper-line text-xl text-white"></i>
+                    </div>
                   </div>
-                </div>
+                </Link>
                 <h4 className="font-semibold text-[#1B1F3B] mb-2">Whitepapers</h4>
                 <p className="text-sm text-[#1B1F3B]">In-depth technical specifications</p>
               </div>
               
+              {/* Code Samples */}
               <div className="bg-[#F5F9FF] rounded-lg p-6 flex-1 max-w-xs">
-                <div className="w-12 h-12 bg-[#1E4DD8] rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="w-6 h-6 flex items-center justify-center">
-                    <i className="ri-code-line text-xl text-white"></i>
+                <Link href="/code-samples">
+                  <div className="w-12 h-12 bg-[#1E4DD8] rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-105 transition">
+                    <div className="w-6 h-6 flex items-center justify-center">
+                      <i className="ri-code-line text-xl text-white"></i>
+                    </div>
                   </div>
-                </div>
+                </Link>
                 <h4 className="font-semibold text-[#1B1F3B] mb-2">Code Samples</h4>
                 <p className="text-sm text-[#1B1F3B]">Ready-to-use integration examples</p>
               </div>
-            </div>
-            
-            <div className="mt-8">
-              <span className="inline-block bg-gradient-to-r from-[#1E4DD8] to-[#3CAEF5] text-white px-6 py-3 rounded-full font-semibold text-lg">
-                Coming Soon
-              </span>
             </div>
           </div>
         </div>

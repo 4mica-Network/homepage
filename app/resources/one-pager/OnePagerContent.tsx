@@ -16,13 +16,13 @@ export default function OnePagerContent() {
       <div className="relative z-10">
         {/* Header */}
         <div className="text-center pt-20 pb-16">
-          <h1 className="text-5xl md:text-5xl font-bold text-white mb-4">
-            Scalable, Instant, and Cheap Payments for AVSs
+          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
+            Scalable, Capital-efficient, and Instant Payments for AVSs
           </h1>
         </div>
 
         <div className="container mx-auto px-6 pb-20">
-          {/* Problem Statement & Solution */}
+          {/* Problem Statement & Use Case */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-20">
             {/* Problem Statement - Left */}
             <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-2xl">
@@ -36,7 +36,7 @@ export default function OnePagerContent() {
               </h2>
               
               <p className="text-lg text-[#1B1F3B] mb-6 leading-relaxed">
-                AVSs unlock massive off-chain scale but lack a practical solution for real-time payments.
+                AVSs unlock massive off-chain scale but lack a practical, non-custodial way to pay in real time.
               </p>
               
               <div className="space-y-4">
@@ -57,44 +57,117 @@ export default function OnePagerContent() {
                 
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-6">
                   <p className="text-red-800 font-semibold">
-                    The result: per-task billing is impossible at scale → slowed adoption.
+                    The result: per-task billing is nearly impossible at scale → slowed adoption.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* 4Mica Solution - Right */}
+            {/* Use Case - Right */}
             <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-2xl">
               <h2 className="text-3xl font-bold text-[#1B1F3B] mb-6 flex items-center">
-                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                <div className="w-8 h-8 bg-[#3CAEF5] rounded-full flex items-center justify-center mr-3">
                   <div className="w-4 h-4 flex items-center justify-center">
-                    <i className="ri-check-line text-white text-lg"></i>
+                    <i className="ri-lightbulb-line text-white text-lg"></i>
                   </div>
                 </div>
-                4Mica
+                Case Study: Aligned Layer
               </h2>
               
+              <div className="mb-6">
+                <img 
+                  src="/assets/aligned_layer_logo.png"
+                  alt="Aligned Layer" 
+                  className="w-1/2 h-30 object-cover object-top rounded-lg mb-4 mx-auto"
+                  style={{ maxWidth: '50%' }}
+                />
+              </div>
+              
               <div className="space-y-4">
-                <ul className="space-y-4">
-                  {[
-                    'Enables "line of credit" for AVSs',
-                    'Single collateral deposit → underwrites thousands of instant micro-payments across different services',
-                    'Configurable TTLs & SLAs',
-                    'Settlement enforced on parent chain (no value leakage)',
-                    'Flexible and composable across verification, restaking, and off-chain compute stacks (EigenLayer, Aligned, etc.)'
-                  ].map((item, index) => (
-                    <li key={index} className="flex items-start text-[#1B1F3B]">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                <ul className="space-y-5">
+                <li className="flex items-start text-[#1B1F3B] text-lg">
+                  <div className="w-3 h-3 bg-[#3CAEF5] rounded-full mr-3 mt-2"></div>
+                  Aligned offers ultra-cheap verification costs
+                </li>
+                <li className="flex items-start text-[#1B1F3B] text-lg">
+                  <div className="w-3 h-3 bg-[#3CAEF5] rounded-full mr-3 mt-2"></div>
+                  Proof cost: &nbsp;
+                  <span className="font-bold text-[#3CAEF5] text-xl">$0.019</span>{' '}
+                     &nbsp;vs payment gas fee: &nbsp;
+                  <span className="font-bold text-red-500 text-xl">$0.14</span>
+                </li>
+                <li className="flex items-start text-[#1B1F3B] text-lg">
+                  <div className="w-3 h-3 bg-[#3CAEF5] rounded-full mr-3 mt-2"></div>
+                  Paying is too costly and slow → blocks scaling
+                </li>
+                <li className="flex items-start text-[#1B1F3B] text-lg">
+                  <div className="w-3 h-3 bg-[#3CAEF5] rounded-full mr-3 mt-2"></div>
+                  Number of transactions is limited in a block → scaling bottleneck
+                </li>
+              </ul>
               </div>
             </div>
           </div>
 
-          {/* Architecture Section */}
+          {/* 4Mica Solution */}
           <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-2xl mb-20">
+            <h2 className="text-3xl font-bold text-[#1B1F3B] mb-6 flex items-center justify-center">
+              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mr-3">
+                <div className="w-4 h-4 flex items-center justify-center">
+                  <i className="ri-check-line text-white text-lg"></i>
+                </div>
+              </div>
+              4Mica Solution
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  title: 'Line of Credit',
+                  description: 'Enables "line of credit" for AVSs',
+                  icon: 'ri-bank-card-line'
+                },
+                {
+                  title: 'Instant Payments',
+                  description: 'Single collateral deposit → underwrites thousands of instant micro-payments',
+                  icon: 'ri-flashlight-line'
+                },
+                {
+                  title: 'Configurable SLAs',
+                  description: 'Configurable TTLs & SLAs',
+                  icon: 'ri-settings-3-line'
+                },
+                {
+                  title: 'Secure Settlement',
+                  description: 'Settlement enforced on parent chain (no value leakage)',
+                  icon: 'ri-shield-check-line'
+                },
+                {
+                  title: 'Flexible Integration',
+                  description: 'Flexible and composable across verification, restaking, and off-chain compute stacks',
+                  icon: 'ri-puzzle-line'
+                },
+                {
+                  title: 'Multi-Platform Support',
+                  description: 'Works with EigenLayer, Aligned, and other infrastructure providers',
+                  icon: 'ri-links-line'
+                }
+              ].map((item, index) => (
+                <div key={index} className="bg-[#F5F9FF] rounded-lg p-6 text-center">
+                  <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="w-6 h-6 flex items-center justify-center">
+                      <i className={`${item.icon} text-white text-xl`}></i>
+                    </div>
+                  </div>
+                  <h3 className="font-bold text-[#1B1F3B] mb-2">{item.title}</h3>
+                  <p className="text-sm text-[#1B1F3B]">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Architecture Section */}
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-2xl mb-12">
             <h2 className="text-3xl font-bold text-[#1B1F3B] mb-8 text-center flex items-center justify-center">
               <div className="w-8 h-8 bg-[#1E4DD8] rounded-full flex items-center justify-center mr-3">
                 <div className="w-4 h-4 flex items-center justify-center">
@@ -167,7 +240,7 @@ export default function OnePagerContent() {
                     <i className="ri-time-line text-white"></i>
                   </div>
                 </div>
-                <h4 className="font-semibold text-[#1B1F3B] mb-1">TTL Config</h4>
+                <h4 className="font-semibold text-[#1B1F3B] mb-1">Configurable TTL </h4>
                 <p className="text-xs text-[#1B1F3B]">Time-to-live settings</p>
               </div>
               
@@ -187,56 +260,9 @@ export default function OnePagerContent() {
                     <i className="ri-shield-line text-white"></i>
                   </div>
                 </div>
-                <h4 className="font-semibold text-[#1B1F3B] mb-1">SLA Config</h4>
+                <h4 className="font-semibold text-[#1B1F3B] mb-1">Configurable SLA</h4>
                 <p className="text-xs text-[#1B1F3B]">Service agreements</p>
               </div>
-            </div>
-          </div>
-
-          {/* Use Case Section */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-2xl mb-12">
-            <h2 className="text-3xl font-bold text-[#1B1F3B] mb-8 flex items-center">
-              <div className="w-8 h-8 bg-[#3CAEF5] rounded-full flex items-center justify-center mr-3">
-                <div className="w-4 h-4 flex items-center justify-center">
-                  <i className="ri-lightbulb-line text-white text-lg"></i>
-                </div>
-              </div>
-              Use Case
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <div>
-                <img 
-                  src="/assets/aligned_layer_logo.png" 
-                  alt="Aligned Use Case" 
-                  className="w-full h-64 object-cover object-top rounded-lg"
-                />
-              </div>
-              
-              <div className="space-y-6">
-                <ul className="space-y-5">
-                  {[
-                    'Aligned offer very cheap verification costs',
-                    <span key="cost">
-                      Proof cost:{" "}
-                      <span className="font-bold text-[#3CAEF5] text-xl">$0.019</span>{" "}
-                      <span className="mx-2">vs</span>
-                      Payment gas fee:{" "}
-                      <span className="font-bold text-red-500 text-xl">$0.14</span>
-                    </span>,
-                    'Impossible to scale, paying is too costly and slow',
-                  ].map((item, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start text-[#1B1F3B]"
-                    >
-                      <div className="w-3 h-3 bg-[#3CAEF5] rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                      <span className="text-lg leading-relaxed">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
             </div>
           </div>
 

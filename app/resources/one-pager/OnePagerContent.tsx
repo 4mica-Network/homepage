@@ -16,8 +16,8 @@ export default function OnePagerContent() {
       <div className="relative z-10">
         {/* Header */}
         <div className="text-center pt-20 pb-16">
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
-            4Mica: Scalable, Instant, and Cheap Payments for AVSs
+          <h1 className="text-5xl md:text-5xl font-bold text-white mb-4">
+            Scalable, Instant, and Cheap Payments for AVSs
           </h1>
         </div>
 

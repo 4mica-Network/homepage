@@ -17,7 +17,7 @@ export default function OnePagerContent() {
         {/* Header */}
         <div className="text-center pt-20 pb-16">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
-            4Mica: Real-Time, Non-Custodial Payments for AVSs
+            4Mica: Scalable, Instant, and Cheap Payments for AVSs
           </h1>
         </div>
 
@@ -79,7 +79,7 @@ export default function OnePagerContent() {
                   {[
                     'Enables "line of credit" for AVSs',
                     'Single collateral deposit → underwrites thousands of instant micro-payments across different services',
-                    'Configurable by TTL & collateral ratio for SLAs',
+                    'Configurable TTLs & SLAs',
                     'Settlement enforced on parent chain (no value leakage)',
                     'Flexible and composable across verification, restaking, and off-chain compute stacks (EigenLayer, Aligned, etc.)'
                   ].map((item, index) => (
@@ -221,7 +221,7 @@ export default function OnePagerContent() {
                       Proof cost:{" "}
                       <span className="font-bold text-[#3CAEF5] text-xl">$0.019</span>{" "}
                       <span className="mx-2">vs</span>
-                      Gas fee:{" "}
+                      Payment gas fee:{" "}
                       <span className="font-bold text-red-500 text-xl">$0.14</span>
                     </span>,
                     'Impossible to scale, paying is too costly and slow',

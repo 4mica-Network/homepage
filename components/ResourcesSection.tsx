@@ -1,5 +1,5 @@
 'use client';
-import Link from "next/link";
+import Link from 'next/link';
 
 export default function ResourcesSection() {
   return (
@@ -12,63 +12,88 @@ export default function ResourcesSection() {
           <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl p-12 shadow-lg text-center">
-            <div className="w-24 h-24 bg-[#1E4DD8] rounded-full flex items-center justify-center mx-auto mb-8">
-              <div className="w-12 h-12 flex items-center justify-center">
-                <i className="ri-file-text-line text-3xl text-white"></i>
-              </div>
-            </div>
-            
-            <h3 className="text-3xl font-bold text-[#1B1F3B] mb-6">
-              Documentation & Whitepapers
-            </h3>
-            
-            <p className="text-lg text-[#1B1F3B] mb-8 leading-relaxed">
-              We're preparing comprehensive documentation, technical whitepapers, and developer guides 
-              to help you understand and integrate with the 4Mica payment infrastructure.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {/* Technical Docs */}
-              <div className="bg-[#F5F9FF] rounded-lg p-6 flex-1 max-w-xs">
-                <Link href="/docs">
-                  <div className="w-12 h-12 bg-[#3CAEF5] rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-105 transition">
-                    <div className="w-6 h-6 flex items-center justify-center">
-                      <i className="ri-book-line text-xl text-white"></i>
-                    </div>
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Link href="/resources/one-pager" className="group cursor-pointer">
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105 h-full">
+                <div className="w-16 h-16 bg-gradient-to-r from-[#1E4DD8] to-[#3CAEF5] rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <i className="ri-file-text-line text-2xl text-white"></i>
                   </div>
-                </Link>
-                <h4 className="font-semibold text-[#1B1F3B] mb-2">Technical Docs</h4>
-                <p className="text-sm text-[#1B1F3B]">API references and integration guides</p>
-              </div>
-              
-              {/* One Pager */}
-              <div className="bg-[#F5F9FF] rounded-lg p-6 flex-1 max-w-xs">
-                <Link href="/one-pager">
-                  <div className="w-12 h-12 bg-[#5C7CFA] rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-105 transition">
-                    <div className="w-6 h-6 flex items-center justify-center">
-                      <i className="ri-file-paper-line text-xl text-white"></i>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-[#1B1F3B] mb-4 text-center">
+                  One-Pager
+                </h3>
+                
+                <p className="text-[#1B1F3B] leading-relaxed text-center">
+                  Comprehensive overview of 4Mica's real-time, non-custodial payment infrastructure for AVSs.
+                </p>
+                
+                <div className="mt-6 text-center">
+                  <span className="inline-flex items-center text-[#1E4DD8] font-semibold">
+                    Read More 
+                    <div className="w-4 h-4 flex items-center justify-center ml-1">
+                      <i className="ri-arrow-right-line"></i>
                     </div>
-                  </div>
-                </Link>
-                <h4 className="font-semibold text-[#1B1F3B] mb-2">One Pager</h4>
-                <p className="text-sm text-[#1B1F3B]">Our solution at a glance</p>
+                  </span>
+                </div>
               </div>
-              
-              {/* Code Samples */}
-              <div className="bg-[#F5F9FF] rounded-lg p-6 flex-1 max-w-xs">
-                <Link href="/blog">
-                  <div className="w-12 h-12 bg-[#1E4DD8] rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-105 transition">
-                    <div className="w-6 h-6 flex items-center justify-center">
-                      <i className="ri-code-line text-xl text-white"></i>
+            </Link>
+
+            <Link href="/resources/technical-docs" className="group cursor-pointer">
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105 h-full">
+                <div className="w-16 h-16 bg-gradient-to-r from-[#3CAEF5] to-[#5C7CFA] rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <i className="ri-book-line text-2xl text-white"></i>
+                  </div>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-[#1B1F3B] mb-4 text-center">
+                  Technical Docs
+                </h3>
+                
+                <p className="text-[#1B1F3B] leading-relaxed text-center">
+                  In-depth technical specifications, API references, and integration guides for developers.
+                </p>
+                
+                <div className="mt-6 text-center">
+                  <span className="inline-flex items-center text-[#1E4DD8] font-semibold">
+                    Explore Docs
+                    <div className="w-4 h-4 flex items-center justify-center ml-1">
+                      <i className="ri-arrow-right-line"></i>
                     </div>
-                  </div>
-                </Link>
-                <h4 className="font-semibold text-[#1B1F3B] mb-2">Blog</h4>
-                <p className="text-sm text-[#1B1F3B]">Insights and updates from our team</p>
+                  </span>
+                </div>
               </div>
-            </div>
+            </Link>
+
+            <Link href="/resources/blog" className="group cursor-pointer">
+              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:scale-105 h-full">
+                <div className="w-16 h-16 bg-gradient-to-r from-[#5C7CFA] to-[#1E4DD8] rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="w-8 h-8 flex items-center justify-center">
+                    <i className="ri-article-line text-2xl text-white"></i>
+                  </div>
+                </div>
+                
+                <h3 className="text-2xl font-bold text-[#1B1F3B] mb-4 text-center">
+                  Blog
+                </h3>
+                
+                <p className="text-[#1B1F3B] leading-relaxed text-center">
+                  Latest insights, updates, and thought leadership on AVS payments and infrastructure.
+                </p>
+                
+                <div className="mt-6 text-center">
+                  <span className="inline-flex items-center text-[#1E4DD8] font-semibold">
+                    Read Articles
+                    <div className="w-4 h-4 flex items-center justify-center ml-1">
+                      <i className="ri-arrow-right-line"></i>
+                    </div>
+                  </span>
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       </div>

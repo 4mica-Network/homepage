@@ -43,30 +43,30 @@ export default function ResourcesSection() {
                 <p className="text-sm text-[#1B1F3B]">API references and integration guides</p>
               </div>
               
-              {/* Whitepapers */}
+              {/* One Pager */}
               <div className="bg-[#F5F9FF] rounded-lg p-6 flex-1 max-w-xs">
-                <Link href="/whitepapers">
+                <Link href="/one-pager">
                   <div className="w-12 h-12 bg-[#5C7CFA] rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-105 transition">
                     <div className="w-6 h-6 flex items-center justify-center">
                       <i className="ri-file-paper-line text-xl text-white"></i>
                     </div>
                   </div>
                 </Link>
-                <h4 className="font-semibold text-[#1B1F3B] mb-2">Whitepapers</h4>
-                <p className="text-sm text-[#1B1F3B]">In-depth technical specifications</p>
+                <h4 className="font-semibold text-[#1B1F3B] mb-2">One Pager</h4>
+                <p className="text-sm text-[#1B1F3B]">Our solution at a glance</p>
               </div>
               
               {/* Code Samples */}
               <div className="bg-[#F5F9FF] rounded-lg p-6 flex-1 max-w-xs">
-                <Link href="/code-samples">
+                <Link href="/blog">
                   <div className="w-12 h-12 bg-[#1E4DD8] rounded-full flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-105 transition">
                     <div className="w-6 h-6 flex items-center justify-center">
                       <i className="ri-code-line text-xl text-white"></i>
                     </div>
                   </div>
                 </Link>
-                <h4 className="font-semibold text-[#1B1F3B] mb-2">Code Samples</h4>
-                <p className="text-sm text-[#1B1F3B]">Ready-to-use integration examples</p>
+                <h4 className="font-semibold text-[#1B1F3B] mb-2">Blog</h4>
+                <p className="text-sm text-[#1B1F3B]">Insights and updates from our team</p>
               </div>
             </div>
           </div>

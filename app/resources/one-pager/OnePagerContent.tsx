@@ -32,11 +32,11 @@ export default function OnePagerContent() {
                     <i className="ri-error-warning-line text-white text-lg"></i>
                   </div>
                 </div>
-                Problem Statement
+                Problem
               </h2>
               
               <p className="text-lg text-[#1B1F3B] mb-6 leading-relaxed">
-                AVSs unlock massive off-chain scale but lack a practical, non-custodial way to pay in real time.
+                AVSs unlock massive off-chain scale but lack a practical solution for real-time payments.
               </p>
               
               <div className="space-y-4">
@@ -57,7 +57,7 @@ export default function OnePagerContent() {
                 
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-6">
                   <p className="text-red-800 font-semibold">
-                    The result: per-task billing is nearly impossible at scale → slowed adoption.
+                    The result: per-task billing is impossible at scale → slowed adoption.
                   </p>
                 </div>
               </div>
@@ -71,14 +71,14 @@ export default function OnePagerContent() {
                     <i className="ri-check-line text-white text-lg"></i>
                   </div>
                 </div>
-                4Mica High-Level
+                4Mica
               </h2>
               
               <div className="space-y-4">
                 <ul className="space-y-4">
                   {[
                     'Enables "line of credit" for AVSs',
-                    'Single collateral deposit → underwrites thousands of instant micro-payments',
+                    'Single collateral deposit → underwrites thousands of instant micro-payments across different services',
                     'Configurable by TTL & collateral ratio for SLAs',
                     'Settlement enforced on parent chain (no value leakage)',
                     'Flexible and composable across verification, restaking, and off-chain compute stacks (EigenLayer, Aligned, etc.)'
@@ -94,7 +94,7 @@ export default function OnePagerContent() {
           </div>
 
           {/* Architecture Section */}
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-8 shadow-2xl mb-20">
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-2xl mb-20">
             <h2 className="text-3xl font-bold text-[#1B1F3B] mb-8 text-center flex items-center justify-center">
               <div className="w-8 h-8 bg-[#1E4DD8] rounded-full flex items-center justify-center mr-3">
                 <div className="w-4 h-4 flex items-center justify-center">
@@ -201,32 +201,42 @@ export default function OnePagerContent() {
                   <i className="ri-lightbulb-line text-white text-lg"></i>
                 </div>
               </div>
-              Use Case: Aligned
+              Use Case
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div>
                 <img 
-                  src="https://readdy.ai/api/search-image?query=modern%20blockchain%20network%20diagram%20showing%20AVS%20infrastructure%20with%20payment%20flows%2C%20nodes%20connected%20in%20a%20decentralized%20network%2C%20clean%20tech%20illustration%20with%20blue%20and%20teal%20colors%2C%20financial%20technology%20visualization%20for%20crypto%20payments%20and%20verification%20systems&width=400&height=300&seq=aligned-usecase&orientation=landscape" 
+                  src="/assets/aligned_layer_logo.png" 
                   alt="Aligned Use Case" 
                   className="w-full h-64 object-cover object-top rounded-lg"
                 />
               </div>
               
-              <div className="space-y-4">
-                <ul className="space-y-4">
+              <div className="space-y-6">
+                <ul className="space-y-5">
                   {[
-                    'Aligned AVS can leverage 4Mica for real-time payments without custodians',
-                    'Builders can launch services without liquidity fragmentation', 
-                    'Users transact instantly with seamless per-call billing'
+                    'Aligned offer very cheap verification costs',
+                    <span key="cost">
+                      Proof cost:{" "}
+                      <span className="font-bold text-[#3CAEF5] text-xl">$0.019</span>{" "}
+                      <span className="mx-2">vs</span>
+                      Gas fee:{" "}
+                      <span className="font-bold text-red-500 text-xl">$0.14</span>
+                    </span>,
+                    'Impossible to scale, paying is too costly and slow',
                   ].map((item, index) => (
-                    <li key={index} className="flex items-start text-[#1B1F3B]">
-                      <div className="w-2 h-2 bg-[#3CAEF5] rounded-full mr-3 mt-2 flex-shrink-0"></div>
-                      <span className="text-lg">{item}</span>
+                    <li
+                      key={index}
+                      className="flex items-start text-[#1B1F3B]"
+                    >
+                      <div className="w-3 h-3 bg-[#3CAEF5] rounded-full mr-3 mt-2 flex-shrink-0"></div>
+                      <span className="text-lg leading-relaxed">{item}</span>
                     </li>
                   ))}
                 </ul>
               </div>
+
             </div>
           </div>
 

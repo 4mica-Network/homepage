@@ -91,18 +91,18 @@ export default function OnePagerContent() {
                 </li>
                 <li className="flex items-start text-[#1B1F3B] text-lg">
                   <div className="w-3 h-3 bg-[#3CAEF5] rounded-full mr-3 mt-2"></div>
-                  Proof cost: &nbsp;
+                  Aligned cost: &nbsp;
                   <span className="font-bold text-[#3CAEF5] text-xl">$0.019</span>{' '}
                      &nbsp;vs payment gas fee: &nbsp;
                   <span className="font-bold text-red-500 text-xl">$0.14</span>
                 </li>
                 <li className="flex items-start text-[#1B1F3B] text-lg">
                   <div className="w-3 h-3 bg-[#3CAEF5] rounded-full mr-3 mt-2"></div>
-                  Paying is too costly and slow → blocks scaling
+                  Transaction gas fees are 8x higher than the service cost &nbsp;
                 </li>
                 <li className="flex items-start text-[#1B1F3B] text-lg">
                   <div className="w-3 h-3 bg-[#3CAEF5] rounded-full mr-3 mt-2"></div>
-                  Number of transactions is limited in a block → scaling bottleneck
+                   Payment limitations prevent scaling
                 </li>
               </ul>
               </div>
@@ -149,7 +149,7 @@ export default function OnePagerContent() {
                 },
                 {
                   title: 'Multi-Platform Support',
-                  description: 'Works with EigenLayer, Aligned, and other infrastructure providers',
+                  description: 'Trusted by Aligned layer, ultimate payment solution for AVSs',
                   icon: 'ri-links-line'
                 }
               ].map((item, index) => (

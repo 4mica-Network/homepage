@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import CodeBlock from '../../../components/CodeBlock';
 
 export default function TechnicalDocsContent() {
   const [activeSection, setActiveSection] = useState('overview');
@@ -64,9 +65,15 @@ export default function TechnicalDocsContent() {
                   <h2 className="text-3xl font-bold text-[#1B1F3B] mb-6">Overview</h2>
                   <div className="space-y-6">
                     <p className="text-[#1B1F3B] leading-relaxed">
-                      4Mica is a blockchain-based payment network that enables secure, tab-based micro-payments backed by
-                      collateral. The Rust SDK provides a type-safe interface for both payers and recipients, and handles
-                      cryptographic signing, collateral management, and settlement flows against the Core4Mica smart contract.
+                      Imagine walking into your neighborhood bar on a busy Friday. Instead of paying for each drink, you open a tab,
+                      keep enjoying the night, and the bartender quietly records every round you order. There&apos;s mutual trust:
+                      you promise to settle up before you leave, and the bar keeps serving without friction.
+                    </p>
+                    <p className="text-[#1B1F3B] leading-relaxed">
+                      4Mica brings that effortless tab experience to on-chain payments. Every request creates a cryptographically enforced
+                      guarantee that collateral is locked and available, so recipients know funds will arrive once the tab is closed. The
+                      Rust SDK gives both sides a type-safe toolkit for managing those guarantees, handling signatures, settlements, and
+                      contract interactions with the Core4Mica protocol.
                     </p>
                     <div>
                       <h3 className="text-xl font-semibold text-[#1B1F3B] mb-4">Key Capabilities</h3>
@@ -118,10 +125,12 @@ export default function TechnicalDocsContent() {
                     </p>
                     <div>
                       <h3 className="text-xl font-semibold text-[#1B1F3B] mb-3">Cargo Dependency</h3>
-                      <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-[dependencies]
-rust-sdk-4mica = "0.1.0"
-                      </pre>
+                      <CodeBlock
+                        code={`[dependencies]
+rust-sdk-4mica = "0.1.0"`}
+                        language="toml"
+                        className="p-4"
+                      />
                       <p className="text-sm text-[#1B1F3B] mt-3">
                         After updating <code className="font-mono">Cargo.toml</code>, run <code className="font-mono">cargo build</code> to pull
                         the crate and verify your toolchain.
@@ -164,8 +173,8 @@ rust-sdk-4mica = "0.1.0"
                     </div>
                     <div className="space-y-4">
                       <h3 className="text-xl font-semibold text-[#1B1F3B]">Config Builder Example</h3>
-                      <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-{`use rust_sdk_4mica::{Config, ConfigBuilder, Client};
+                      <CodeBlock
+                        code={`use rust_sdk_4mica::{Config, ConfigBuilder, Client};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -176,20 +185,24 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = Client::new(config).await?;
     Ok(())
 }`}
-                      </pre>
+                        language="rust"
+                        className="p-4"
+                      />
                     </div>
                     <div className="space-y-4">
                       <h3 className="text-xl font-semibold text-[#1B1F3B]">Environment Variable Setup</h3>
-                      <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-{`export 4MICA_WALLET_PRIVATE_KEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+                      <CodeBlock
+                        code={`export 4MICA_WALLET_PRIVATE_KEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
 
 # Optional: override defaults
 export 4MICA_RPC_URL="http://localhost:3000"
 export 4MICA_ETHEREUM_HTTP_RPC_URL="http://localhost:8545"
 export 4MICA_CONTRACT_ADDRESS="0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"`}
-                      </pre>
-                      <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-{`use rust_sdk_4mica::{ConfigBuilder, Client};
+                        language="bash"
+                        className="p-4"
+                      />
+                      <CodeBlock
+                        code={`use rust_sdk_4mica::{ConfigBuilder, Client};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -200,7 +213,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = Client::new(config).await?;
     Ok(())
 }`}
-                      </pre>
+                        language="rust"
+                        className="p-4"
+                      />
                     </div>
                   </div>
                 </div>
@@ -264,8 +279,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                     <div>
                       <h3 className="text-xl font-semibold text-[#1B1F3B] mb-3">User Client (Payer)</h3>
                       <div className="space-y-4">
-                        <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-{`use rust_sdk_4mica::U256;
+                        <CodeBlock
+                          code={`use rust_sdk_4mica::U256;
 
 // Deposit 1 ETH as collateral
 let amount = U256::from(1_000_000_000_000_000_000u128);
@@ -273,18 +288,20 @@ match client.user.deposit(amount).await {
     Ok(receipt) => println!("Deposit successful: {:?}", receipt.transaction_hash),
     Err(e) => eprintln!("Deposit failed: {}", e),
 }`}
-                        </pre>
-                        <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-{`use rust_sdk_4mica::UserInfo;
+                          language="rust"
+                        />
+                        <CodeBlock
+                          code={`use rust_sdk_4mica::UserInfo;
 
 // Inspect current collateral and withdrawal state
 let user_info = client.user.get_user().await?;
 println!("Collateral: {}", user_info.collateral);
 println!("Withdrawal request amount: {}", user_info.withdrawal_request_amount);
 println!("Withdrawal request timestamp: {}", user_info.withdrawal_request_timestamp);`}
-                        </pre>
-                        <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-{`use rust_sdk_4mica::{PaymentGuaranteeClaims, SigningScheme, U256};
+                          language="rust"
+                        />
+                        <CodeBlock
+                          code={`use rust_sdk_4mica::{PaymentGuaranteeClaims, SigningScheme, U256};
 
 let claims = PaymentGuaranteeClaims {
     user_address: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8".to_string(),
@@ -304,37 +321,42 @@ match client.user.sign_payment(claims.clone(), SigningScheme::Eip712).await {
 }
 
 let fallback_sig = client.user.sign_payment(claims, SigningScheme::Eip191).await?;`}
-                        </pre>
+                          language="rust"
+                        />
                       </div>
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold text-[#1B1F3B] mb-3">Recipient Client</h3>
                       <div className="space-y-4">
-                        <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-{`let user_address = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8".to_string();
+                        <CodeBlock
+                          code={`let user_address = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8".to_string();
 let recipient_address = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC".to_string();
 let tab_id = client.recipient.create_tab(user_address, recipient_address, Some(3600)).await?;
 println!("Created tab with ID: {}", tab_id);`}
-                        </pre>
-                        <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-{`let status = client.recipient.get_tab_payment_status(tab_id).await?;
+                          language="rust"
+                        />
+                        <CodeBlock
+                          code={`let status = client.recipient.get_tab_payment_status(tab_id).await?;
 println!("Paid: {}", status.paid);
 println!("Remunerated: {}", status.remunerated);`}
-                        </pre>
-                        <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-{`let payment_sig = client.user.sign_payment(claims.clone(), SigningScheme::Eip712).await?;
+                          language="rust"
+                        />
+                        <CodeBlock
+                          code={`let payment_sig = client.user.sign_payment(claims.clone(), SigningScheme::Eip712).await?;
 let bls_cert = client.recipient.issue_payment_guarantee(
     claims,
     payment_sig.signature,
     payment_sig.scheme,
 ).await?;
 println!("BLS Certificate: {:?}", bls_cert);`}
-                        </pre>
-                        <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-{`let receipt = client.recipient.remunerate(bls_cert).await?;
+                          language="rust"
+                        />
+                        <CodeBlock
+                          code={`let receipt = client.recipient.remunerate(bls_cert).await?;
 println!("Claimed from user collateral!");
 println!("Transaction hash: {:?}", receipt.transaction_hash);`}
-                        </pre>
+                          language="rust"
+                        />
                       </div>
                     </div>
                   </div>
@@ -464,15 +486,17 @@ println!("Transaction hash: {:?}", receipt.transaction_hash);`}
                         </div>
                       ))}
                     </div>
-                    <pre className="bg-gray-900 text-green-400 p-4 rounded text-sm overflow-x-auto">
-{`use rust_sdk_4mica::error::{
+                    <CodeBlock
+                      code={`use rust_sdk_4mica::error::{
     DepositError,
     FinalizeWithdrawalError,
     RemunerateError,
     RequestWithdrawalError,
     SignPaymentError,
 };`}
-                    </pre>
+                      language="rust"
+                      className="p-4"
+                    />
                   </div>
                 </div>
               )}
@@ -492,7 +516,7 @@ println!("Transaction hash: {:?}", receipt.transaction_hash);`}
                       ].map((item, index) => (
                         <div key={index} className="bg-[#F5F9FF] rounded-lg p-4">
                           <h4 className="font-semibold text-[#1B1F3B] mb-2">{item.title}</h4>
-                          <pre className="bg-gray-900 text-green-400 p-3 rounded text-sm overflow-x-auto">{item.command}</pre>
+                          <CodeBlock code={item.command} language="bash" className="p-3" />
                         </div>
                       ))}
                     </div>
@@ -532,9 +556,8 @@ println!("Transaction hash: {:?}", receipt.transaction_hash);`}
                   <div className="space-y-6">
                     <div>
                       <h3 className="text-xl font-semibold text-[#1B1F3B] mb-3">End-to-End Payment Flow</h3>
-                      <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                        <pre className="text-green-400 text-sm">
-{`use rust_sdk_4mica::{
+                      <CodeBlock
+                        code={`use rust_sdk_4mica::{
     Client, ConfigBuilder, PaymentGuaranteeClaims, SigningScheme, U256,
 };
 
@@ -587,8 +610,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }`}
-                        </pre>
-                      </div>
+                        language="rust"
+                        className="p-4"
+                      />
                     </div>
                   </div>
                 </div>

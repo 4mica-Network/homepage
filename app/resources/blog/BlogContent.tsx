@@ -33,7 +33,7 @@ export default function BlogContent() {
     {
       id: 1,
       title: 'The Future of AVS Payments: Why 4Mica Matters',
-      excerpt: 'Exploring how instant, non-custodial payments are revolutionizing the AVS ecosystem and enabling new business models.',
+      excerpt: '4Mica issues cryptographic “tabs” backed by user collateral, so services can deliver instantly while settlement catches up later—Visa-like UX with on-chain guarantees.',
       author: 'Mairon',
       date: '2025-01-15',
       readTime: '5 min read',

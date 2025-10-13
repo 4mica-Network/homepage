@@ -70,10 +70,13 @@ export default function TechnicalDocsContent() {
                       you promise to settle up before you leave, and the bar keeps serving without friction.
                     </p>
                     <p className="text-[#1B1F3B] leading-relaxed">
-                      4Mica brings that effortless tab experience to on-chain payments. Every request creates a cryptographically enforced
-                      guarantee that collateral is locked and available, so recipients know funds will arrive once the tab is closed. The
-                      Rust SDK gives both sides a type-safe toolkit for managing those guarantees, handling signatures, settlements, and
-                      contract interactions with the Core4Mica protocol.
+                      4Mica establishes trust in payment systems by enabling cryptographically enforced,
+                      on-chain lines of credit. 
+                      Each payment request generates a cryptographic guarantee that collateral is securely
+                      locked and available—ensuring recipients can trust that funds will be delivered once 
+                      the credit line (or “tab”) is settled. The Rust SDK provides both parties with a 
+                      type-safe toolkit to manage these guarantees, including signature handling, settlements,
+                      and seamless contract interactions with the Core4Mica protocol.
                     </p>
                     <div>
                       <h3 className="text-xl font-semibold text-[#1B1F3B] mb-4">Key Capabilities</h3>

@@ -27,7 +27,7 @@ export default function ResourcesSection() {
                 </h3>
                 
                 <p className="text-[#1B1F3B] leading-relaxed text-center">
-                  Comprehensive overview of 4Mica's real-time, non-custodial payment infrastructure for AVSs.
+                  Comprehensive overview of 4Mica&rsquo;s real-time, non-custodial payment infrastructure for AVSs.
                 </p>
                 
                 <div className="mt-6 text-center">

@@ -1,6 +1,7 @@
 
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -88,10 +89,13 @@ export default function BlogContent() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredPosts.map((post) => (
                 <article key={post.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                  <img 
+                  <Image 
                     src={post.image} 
                     alt={post.title}
-                    className="w-full h-48 object-cover object-top"
+                    width={400}
+                    height={250}
+                    className="h-48 w-full object-cover object-top"
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
                   />
                   
                   <div className="p-6">
@@ -194,10 +198,12 @@ export default function BlogContent() {
                       className="block cursor-pointer"
                     >
                       <div className="flex space-x-3 hover:bg-[#F5F9FF] p-2 rounded transition-colors">
-                        <img 
+                        <Image 
                           src={post.image} 
                           alt={post.title}
-                          className="w-16 h-16 object-cover object-top rounded flex-shrink-0"
+                          width={64}
+                          height={64}
+                          className="h-16 w-16 rounded object-cover object-top flex-shrink-0"
                         />
                         <div className="flex-1 min-w-0">
                           <h4 className="text-sm font-semibold text-[#1B1F3B] line-clamp-2 mb-1">

@@ -1,16 +1,23 @@
 
 'use client';
 
+import Image from 'next/image';
+
 export default function OnePagerContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0A2540] via-[#1E4DD8] to-[#3CAEF5] relative">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
-        <img 
-          src="https://readdy.ai/api/search-image?query=abstract%20geometric%20network%20pattern%20with%20connected%20nodes%20and%20lines%2C%20blockchain%20technology%20visualization%2C%20dark%20blue%20background%20with%20subtle%20grid%20patterns%2C%20modern%20fintech%20infrastructure%20design%2C%20clean%20minimalist%20tech%20aesthetic%20for%20payment%20systems%20and%20decentralized%20networks&width=1920&height=1080&seq=onepager-bg&orientation=landscape" 
-          alt="Background Pattern" 
-          className="w-full h-full object-cover object-top"
-        />
+        <div className="relative h-full w-full">
+          <Image 
+            src="https://readdy.ai/api/search-image?query=abstract%20geometric%20network%20pattern%20with%20connected%20nodes%20and%20lines%2C%20blockchain%20technology%20visualization%2C%20dark%20blue%20background%20with%20subtle%20grid%20patterns%2C%20modern%20fintech%20infrastructure%20design%2C%20clean%20minimalist%20tech%20aesthetic%20for%20payment%20systems%20and%20decentralized%20networks&width=1920&height=1080&seq=onepager-bg&orientation=landscape" 
+            alt="Abstract geometric network background"
+            fill
+            className="object-cover object-top"
+            sizes="100vw"
+            priority
+          />
+        </div>
       </div>
 
       <div className="relative z-10">
@@ -75,11 +82,12 @@ export default function OnePagerContent() {
               </h2>
               
               <div className="mb-6">
-                <img 
+                <Image 
                   src="/assets/aligned_layer_logo.png"
-                  alt="Aligned Layer" 
-                  className="w-1/2 h-30 object-cover object-top rounded-lg mb-4 mx-auto"
-                  style={{ maxWidth: '50%' }}
+                  alt="Aligned Layer"
+                  width={320}
+                  height={120}
+                  className="mx-auto mb-4 h-30 w-1/2 max-w-[50%] object-contain"
                 />
               </div>
               
@@ -269,7 +277,7 @@ export default function OnePagerContent() {
           {/* Footer Message */}
           <div className="text-center">
             <p className="text-xl text-white/90 font-medium italic">
-              "4Mica is building the missing payment primitive that makes AVSs commercially viable."
+              &ldquo;4Mica is building the missing payment primitive that makes AVSs commercially viable.&rdquo;
             </p>
           </div>
         </div>

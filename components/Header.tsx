@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -11,9 +12,13 @@ export default function Header() {
       <header className="bg-[#0A2540] text-white shadow-lg">
         <nav className="container mx-auto px-8 py-6 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3">
-            <img 
+            <Image 
               src="/assets/logo_transparent.png"
-              className="w-18 h-10 object-cover rounded-lg"
+              alt="4Mica logo"
+              width={180}
+              height={60}
+              className="h-10 w-auto object-cover rounded-lg"
+              priority
             />
             <span className="text-2xl font-bold font-pacifico">4Mica</span>
           </Link>

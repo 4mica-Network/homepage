@@ -640,8 +640,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         </li>
                         <li>
                           <span className="font-semibold">Documentation:</span>{' '}
-                          <a className="text-[#1E4DD8]" href="https://docs.4mica.xyz" target="_blank" rel="noreferrer">
-                            https://docs.4mica.xyz
+                          <a className="text-[#1E4DD8]" href="https://4mica.xyz/resources/technical-docs" target="_blank" rel="noreferrer">
+                            https://4mica.xyz/resources/technical-docs
                           </a>
                         </li>
                         <li>

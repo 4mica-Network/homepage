@@ -41,7 +41,7 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
             <div className="flex space-x-4">
-              <Link href="#" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
+              <Link href="https://x.com/0x4Mica" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
                 <div className="w-6 h-6 flex items-center justify-center">
                   <i className="ri-twitter-line text-xl"></i>
                 </div>
@@ -51,7 +51,7 @@ export default function Footer() {
                   <i className="ri-linkedin-line text-xl"></i>
                 </div>
               </Link>
-              <Link href="#" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
+              <Link href="https://github.com/4mica-Network" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
                 <div className="w-6 h-6 flex items-center justify-center">
                   <i className="ri-github-line text-xl"></i>
                 </div>

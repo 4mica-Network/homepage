@@ -20,13 +20,13 @@ export default function Header() {
           
           <div className="hidden md:flex items-center space-x-8">
             <Link 
-              href="#resources" 
+              href="/#resources" 
               className="text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap"
             >
               Resources
             </Link>
             <Link 
-              href="#team" 
+              href="/#team" 
               className="text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap"
             >
               Team

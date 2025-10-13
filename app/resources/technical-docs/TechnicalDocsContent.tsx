@@ -8,7 +8,7 @@ export default function TechnicalDocsContent() {
   const navigationItems = [
     { id: 'overview', title: 'Overview', icon: 'ri-eye-line' },
     { id: 'installation', title: 'Installation', icon: 'ri-download-cloud-2-line' },
-    { id: 'configuration', title: 'Configuration', icon: 'ri-sliders-line' },
+    { id: 'configuration', title: 'Configuration', icon: 'ri-equalizer-line' },
     { id: 'usage', title: 'Usage Guide', icon: 'ri-terminal-box-line' },
     { id: 'payment-flow', title: 'Payment Flow', icon: 'ri-route-line' },
     { id: 'error-handling', title: 'Error Handling', icon: 'ri-error-warning-line' },

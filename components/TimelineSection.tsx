@@ -12,7 +12,7 @@ export default function TimelineSection() {
       quarter: 'Q3 2025',
       title: 'Alpha Release',
       description: 'Alpha Release to Ethereum and Solana with basic AI agent integration',
-      done: false
+      done: true
     },
     {
       quarter: 'Q4 2025',

@@ -11,19 +11,19 @@ export default function TimelineSection() {
     {
       quarter: 'Q3 2025',
       title: 'Alpha Release',
-      description: 'Alpha Release to Ethereum and Solana with basic AI agent integration',
+      description: 'Alpha Release to Ethereum and Solana with credit capabilities for Agents and AVSs',
       done: true
     },
     {
       quarter: 'Q4 2025',
       title: 'Strategic Partnerships',
-      description: 'Partnerships with AI platforms to enhance ecosystem integration',
+      description: 'Partnerships with AI platforms, AVSs, and DeFI companies to enhance ecosystem integration',
       done: false
     },
     {
       quarter: 'Q1 2026',
       title: 'Beta Release',
-      description: 'Beta release to Ethereum and Solana and enhanced AI agent capabilities',
+      description: 'Beta release to Ethereum and Solana and support for retail payments',
       done: false
     },
     {
@@ -35,7 +35,7 @@ export default function TimelineSection() {
     {
       quarter: 'Q3 2026',
       title: 'Mainnet Launch',
-      description: 'Full mainnet launch with multi-chain support and advanced AI agent features',
+      description: 'Full mainnet launch with multi-chain support, cross-chain credit, and off-ramping to fiat',
       done: false
     }
   ];
@@ -49,7 +49,7 @@ export default function TimelineSection() {
           </h2>
           <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
           <p className="text-lg text-[#1B1F3B] max-w-2xl mx-auto">
-            Our journey to revolutionize autonomous AI agent payments
+            Our journey to revolutionize web3 commerce
           </p>
         </div>
 

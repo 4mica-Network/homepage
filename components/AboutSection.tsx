@@ -14,10 +14,9 @@ export default function AboutSection() {
         
         <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg">
           <p className="text-lg md:text-xl text-[#1B1F3B] leading-relaxed text-center">
-            4Mica is a lightweight overlay service that enables sub-second transactions across any 
-            blockchain; Bitcoin, Ethereum, Solana, and beyond. 4Mica is designed to enable developers 
-            to enable transactions across any blockchain with a single API call. 4Mica makes programmable finance
-            accessible to everyone. 
+            4Mica is a lightweight overlay service that enables any service to extend cryptographically-backed lines-of-credit across any 
+            blockchain; Bitcoin, Ethereum, Solana, and beyond. 4Mica is designed to fix web3's inefficient pre-funded model, acting as a credit layer for instant and inexpensive settlements, backed by guaranteed fair-exchange. 
+            4Mica makes programmable credit accessible to everyone. 
           </p>
         </div>
       </div>

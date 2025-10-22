@@ -12,7 +12,7 @@ export default function Footer() {
               4Mica
             </Link>
             <p className="text-[#F0F4FF]/80 leading-relaxed max-w-md">
-              The payment infrastructure powering the future of autonomous AI agent marketplaces. 
+              Instant, cryptographically-backed lines-of-credit for any product. 
               Secure, seamless, and decentralized.
             </p>
           </div>

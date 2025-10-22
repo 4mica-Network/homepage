@@ -24,7 +24,7 @@ export default function OnePagerContent() {
         {/* Header */}
         <div className="text-center pt-20 pb-16">
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-4">
-            Scalable, Capital-efficient, and Instant Payments for AVSs
+            Credit-backed, Capital-efficient, and Instant payments for any service, web3 or traditional. 
           </h1>
         </div>
 
@@ -43,7 +43,7 @@ export default function OnePagerContent() {
               </h2>
               
               <p className="text-lg text-[#1B1F3B] mb-6 leading-relaxed">
-                AVSs unlock massive off-chain scale but lack a practical, non-custodial way to pay in real time.
+                Any service deployed on web3 rails lack a capital-efficient, cheap, and non-custodial way to pay in real time.
               </p>
               
               <div className="space-y-4">
@@ -52,7 +52,7 @@ export default function OnePagerContent() {
                   {[
                     'Centralized trust',
                     'Fragmented liquidity', 
-                    'Locked capital',
+                    'Locked capital (capital inefficiency)',
                     'UX & regulatory friction'
                   ].map((item, index) => (
                     <li key={index} className="flex items-center text-[#1B1F3B]">
@@ -78,7 +78,7 @@ export default function OnePagerContent() {
                     <i className="ri-lightbulb-line text-white text-lg"></i>
                   </div>
                 </div>
-                Case Study: Aligned Layer
+                Case Study: AVSs (e.g., Aligned Layer)
               </h2>
               
               <div className="mb-6">
@@ -132,32 +132,32 @@ export default function OnePagerContent() {
               {[
                 {
                   title: 'Line of Credit',
-                  description: 'Enables "line of credit" for AVSs',
+                  description: 'Enables cryptographically-backed "lines of credit"',
                   icon: 'ri-bank-card-line'
                 },
                 {
                   title: 'Instant Payments',
-                  description: 'Single collateral deposit → underwrites thousands of instant micro-payments',
+                  description: 'One yield-generating deposit → backs thousands of instant micro-payments',
                   icon: 'ri-flashlight-line'
                 },
                 {
                   title: 'Configurable SLAs',
-                  description: 'Configurable TTLs & SLAs',
+                  description: 'Configurable TTLs & SLAs, for full flexibility',
                   icon: 'ri-settings-3-line'
                 },
                 {
-                  title: 'Secure Settlement',
-                  description: 'Settlement enforced on parent chain (no value leakage)',
+                  title: 'Secure and Trustless Settlement',
+                  description: 'Settlement automatically enforced on parent chain (no value leakage)',
                   icon: 'ri-shield-check-line'
                 },
                 {
                   title: 'Flexible Integration',
-                  description: 'Flexible and composable across verification, restaking, and off-chain compute stacks',
+                  description: 'Flexible and composable across any service that accepts crypto',
                   icon: 'ri-puzzle-line'
                 },
                 {
                   title: 'Multi-Platform Support',
-                  description: 'Trusted by Aligned layer, ultimate payment solution for AVSs',
+                  description: 'Trusted by Aligned layer as the ultimate payment solution for AVSs',
                   icon: 'ri-links-line'
                 }
               ].map((item, index) => (
@@ -194,7 +194,7 @@ export default function OnePagerContent() {
                     </div>
                   </div>
                   <h3 className="font-bold text-[#1B1F3B] mb-2">Collateral</h3>
-                  <p className="text-sm text-[#1B1F3B]">Single deposit</p>
+                  <p className="text-sm text-[#1B1F3B]">Deposit in yield-generating vault</p>
                 </div>
                 
                 <div className="w-8 h-8 flex items-center justify-center">
@@ -208,7 +208,7 @@ export default function OnePagerContent() {
                     </div>
                   </div>
                   <h3 className="font-bold text-[#1B1F3B] mb-2">Line of Credit</h3>
-                  <p className="text-sm text-[#1B1F3B]">Instant access</p>
+                  <p className="text-sm text-[#1B1F3B]">Instant access to service</p>
                 </div>
                 
                 <div className="w-8 h-8 flex items-center justify-center">
@@ -221,8 +221,8 @@ export default function OnePagerContent() {
                       <i className="ri-flashlight-line text-white text-xl"></i>
                     </div>
                   </div>
-                  <h3 className="font-bold text-[#1B1F3B] mb-2">Instant Payments</h3>
-                  <p className="text-sm text-[#1B1F3B]">Micro-transactions</p>
+                  <h3 className="font-bold text-[#1B1F3B] mb-2">Instant Value-Exchange</h3>
+                  <p className="text-sm text-[#1B1F3B]">Cryptographic payment tabs</p>
                 </div>
                 
                 <div className="w-8 h-8 flex items-center justify-center">
@@ -236,7 +236,7 @@ export default function OnePagerContent() {
                     </div>
                   </div>
                   <h3 className="font-bold text-[#1B1F3B] mb-2">Settlement on L1</h3>
-                  <p className="text-sm text-[#1B1F3B]">Final security</p>
+                  <p className="text-sm text-[#1B1F3B]">Secure and trustless by design</p>
                 </div>
               </div>
             </div>

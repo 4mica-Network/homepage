@@ -6,7 +6,8 @@ export default function PartnersSection() {
   const partners = [
     { name: 'EigenCloud', logo: 'https://www.eigencloud.xyz/images/Eigen_Cloud_Logo.png' },
     { name: 'Aligned Layer', logo: '/assets/aligned_layer_logo.png' },
-    { name: 'Ensemble', logo: '/assets/ensemble_logo.png' }
+    { name: 'Ensemble', logo: '/assets/ensemble_logo.png' },
+    { name: 'Vistara', logo: '/assets/Vistaara.jpeg' }
   ];
 
   return (

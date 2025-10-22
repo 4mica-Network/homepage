@@ -34,12 +34,12 @@ export default function HeroSection() {
             <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-[#F2F4F8] mb-6 leading-tight tracking-tight">
             <span className="bg-gradient-to-r from-[#4682B4] to-[#48C9B0] bg-clip-text text-transparent">4Mica</span>
               <br />
-                The Future of Payment
+                Instant Web3 Payments
               <br />
             </h1>
 
             <p className="text-lg md:text-xl lg:text-2xl text-[#F2F4F8]/85 mb-10 max-w-4xl mx-auto leading-relaxed font-light">
-            Enable instant, secure, and programmable transactions across any blockchain
+            Secure lines-of-credit across any blockchain
             </p>
           </div>
 
@@ -63,16 +63,16 @@ export default function HeroSection() {
 
           <div className="flex flex-wrap justify-center gap-3 mb-12">
             <div className="bg-[#F2F4F8]/8 backdrop-blur-sm border border-[#48C9B0]/25 px-4 py-2 rounded-full text-[#F2F4F8] text-sm font-medium">
-              Programmable Transactions
+             Configurable TTL
             </div>
             <div className="bg-[#F2F4F8]/8 backdrop-blur-sm border border-[#48C9B0]/25 px-4 py-2 rounded-full text-[#F2F4F8] text-sm font-medium">
-              Autonomous Delegation
+              Gas Efficient
             </div>
             <div className="bg-[#F2F4F8]/8 backdrop-blur-sm border border-[#48C9B0]/25 px-4 py-2 rounded-full text-[#F2F4F8] text-sm font-medium">
-              Instant Payments
+              Instant Fair-Exchange
             </div>
             <div className="bg-[#F2F4F8]/8 backdrop-blur-sm border border-[#48C9B0]/25 px-4 py-2 rounded-full text-[#F2F4F8] text-sm font-medium">
-              Intelligent Infrastructure
+              Non-Custodial
             </div>
           </div>
         </div>

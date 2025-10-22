@@ -12,7 +12,7 @@ export default function How4MicaWorksPage() {
     {
       heading: 'Executive Summary',
       paragraphs: [
-        'Web3 payments still feel like a cash-only economy: every interaction must be prefunded, assets sit idle, and settlement latency erodes UX. 4Mica changes that by introducing a cryptographic payment tab, a non-custodial line of credit that lets users consume services instantly while settlement happens later. Collateral lives in yield-bearing vaults, operators issue guarantees within milliseconds, and service providers (the lenders) receive fair-exchange promises they can redeem on-chain if a user walks away. The result is Visa-like speed backed by immutable settlement.' 
+        'Web3 payments still feel like a cash-only economy: every interaction must be prefunded, assets sit idle, and settlement latency erodes UX. 4Mica changes that by introducing a cryptographic payment tab, a non-custodial line of credit that lets users consume services instantly while settlement happens later. Collateral lives in yield-bearing vaults, operators issue guarantees within milliseconds, and service providers (the lenders) receive fair-exchange promises they can redeem on-chain if a user walks away. The result is Visa-like speed backed by immutable settlement.', 
         'Instead of forcing builders to choose between UX and decentralisation, 4Mica fuses both: deposits never leave a vault, recipients hold a BLS-signed guarantee, and the protocol coordinates the flow of credit without touching the happy-path settlement. When a borrower settles, the tab resets; if they do not, the guarantee becomes an enforceable claim against the locked collateral. That simple feedback loop is the payment primitive Web3 has been missing.',
       ],
     },

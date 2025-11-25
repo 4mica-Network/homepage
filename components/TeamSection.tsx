@@ -14,7 +14,7 @@ export default function TeamSection() {
       name: 'Mairon Mahzoun',
       role: 'CTO & Co-Founder',
       image: '/assets/mairon.jpg',
-      bio: 'Architect of privacy-first, distributed payment systems, now powering trust-minimized commerce',
+      bio: 'Everyone talks about AI and web3. Few understand money. 4mica exists because I grew tired of watching the web3 community claiming it had solved payments. It didn’t. So I decided to.',
     },
     {
       name: 'Tomer Ashur',

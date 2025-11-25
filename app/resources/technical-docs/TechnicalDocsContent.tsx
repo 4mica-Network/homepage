@@ -1,23 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import CodeBlock from '../../../components/CodeBlock';
 
+const navigationItems = [
+  { id: 'overview', title: 'Overview', icon: 'ri-eye-line' },
+  { id: 'installation', title: 'Installation', icon: 'ri-download-cloud-2-line' },
+  { id: 'configuration', title: 'Configuration', icon: 'ri-equalizer-line' },
+  { id: 'usage', title: 'Usage Guide', icon: 'ri-terminal-box-line' },
+  { id: 'x402', title: 'X402 Integration', icon: 'ri-key-2-line' },
+  { id: 'payment-flow', title: 'Protocol Flow', icon: 'ri-route-line' },
+  { id: 'error-handling', title: 'Error Handling', icon: 'ri-error-warning-line' },
+  { id: 'development', title: 'Development', icon: 'ri-tools-line' },
+  { id: 'security', title: 'Security', icon: 'ri-shield-check-line' },
+  { id: 'examples', title: 'Code Examples', icon: 'ri-file-code-line' },
+  { id: 'support', title: 'Support', icon: 'ri-customer-service-2-line' }
+];
+
 export default function TechnicalDocsContent() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#F5F9FF] pt-20" aria-busy>Loading technical docs…</div>}>
+      <TechnicalDocsContentInner />
+    </Suspense>
+  );
+}
+
+function TechnicalDocsContentInner() {
+  const searchParams = useSearchParams();
   const [activeSection, setActiveSection] = useState('overview');
 
-  const navigationItems = [
-    { id: 'overview', title: 'Overview', icon: 'ri-eye-line' },
-    { id: 'installation', title: 'Installation', icon: 'ri-download-cloud-2-line' },
-    { id: 'configuration', title: 'Configuration', icon: 'ri-equalizer-line' },
-    { id: 'usage', title: 'Usage Guide', icon: 'ri-terminal-box-line' },
-    { id: 'payment-flow', title: 'Payment Flow', icon: 'ri-route-line' },
-    { id: 'error-handling', title: 'Error Handling', icon: 'ri-error-warning-line' },
-    { id: 'development', title: 'Development', icon: 'ri-tools-line' },
-    { id: 'security', title: 'Security', icon: 'ri-shield-check-line' },
-    { id: 'examples', title: 'Code Examples', icon: 'ri-file-code-line' },
-    { id: 'support', title: 'Support', icon: 'ri-customer-service-2-line' }
-  ];
+  useEffect(() => {
+    const requestedSection = searchParams.get('section');
+    if (requestedSection && navigationItems.some((item) => item.id === requestedSection)) {
+      setActiveSection(requestedSection);
+    }
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-[#F5F9FF] pt-20">
@@ -65,18 +83,13 @@ export default function TechnicalDocsContent() {
                   <h2 className="text-3xl font-bold text-[#1B1F3B] mb-6">Overview</h2>
                   <div className="space-y-6">
                     <p className="text-[#1B1F3B] leading-relaxed">
-                      Imagine walking into your neighborhood bar on a busy Friday. Instead of paying for each drink, you open a tab,
-                      keep enjoying the night, and the bartender quietly records every round you order. There&apos;s mutual trust:
-                      you promise to settle up before you leave, and the bar keeps serving without friction.
+                      The latest 4Mica Rust SDK (v0.3.3) powers cryptographically enforced, non-custodial credit lines. It wraps the
+                      Core4Mica contracts, facilitator, and HTTP 402 helper into a single toolkit so you can collateralize, issue
+                      guarantees, and settle tabs without forcing users to pre-fund every request.
                     </p>
                     <p className="text-[#1B1F3B] leading-relaxed">
-                      4Mica establishes trust in payment systems by enabling cryptographically enforced,
-                      on-chain lines of credit. 
-                      Each payment request generates a cryptographic guarantee that collateral is securely
-                      locked and available—ensuring recipients can trust that funds will be delivered once 
-                      the credit line (or “tab”) is settled. The Rust SDK provides both parties with a 
-                      type-safe toolkit to manage these guarantees, including signature handling, settlements,
-                      and seamless contract interactions with the Core4Mica protocol.
+                      This page summarizes the refreshed SDK README plus the latest protocol sequence diagrams. Use it as a quick-start
+                      for integrating Core4Mica directly or bridging HTTP 402 resources through the x402-4mica facilitator.
                     </p>
                     <div>
                       <h3 className="text-xl font-semibold text-[#1B1F3B] mb-4">Key Capabilities</h3>
@@ -84,27 +97,27 @@ export default function TechnicalDocsContent() {
                         {[
                           {
                             title: 'User Client',
-                            desc: 'Deposit collateral, sign guarantees, settle tabs, and manage withdrawals.'
+                            desc: 'Deposit collateral, sign guarantees, settle tabs, and manage withdrawals with typed responses.'
                           },
                           {
                             title: 'Recipient Client',
-                            desc: 'Open tabs, issue payment guarantees, and claim remuneration when settlements fail.'
+                            desc: 'Open/reuse tabs, issue payment guarantees, and remunerate against locked collateral.'
                           },
                           {
-                            title: 'Typed Errors',
-                            desc: 'Strongly typed errors with detailed context for every contract-facing operation.'
+                            title: 'X402 Flow Helper',
+                            desc: 'Generate base64 X-PAYMENT headers and optionally call /settle for HTTP 402 protected resources.'
                           },
                           {
-                            title: 'Built-in Signing',
-                            desc: 'First-class EIP-712 and EIP-191 signing utilities with automatic address validation.'
+                            title: 'Typed Claims & Certificates',
+                            desc: 'PaymentGuaranteeClaimsV1 with req_id + totals upgraded to BLS certificates for on-chain redemption.'
                           },
                           {
-                            title: 'Type-Safe Contracts',
-                            desc: 'Comprehensive Rust types wrap all Core4Mica contract interactions.'
+                            title: 'Safety Rails',
+                            desc: 'Address validation, required/optional config separation, and structured error enums for each flow.'
                           },
                           {
                             title: 'Secure Defaults',
-                            desc: 'Non-custodial design with configurable grace periods and tab expiration enforced on-chain.'
+                            desc: 'Non-custodial design with enforced grace periods, domain separation, and 4Mica-only signing schemes.'
                           }
                         ].map((item, index) => (
                           <div key={index} className="bg-[#F5F9FF] rounded-lg p-4">
@@ -123,20 +136,21 @@ export default function TechnicalDocsContent() {
                   <h2 className="text-3xl font-bold text-[#1B1F3B] mb-6">Installation</h2>
                   <div className="space-y-6">
                     <p className="text-[#1B1F3B] leading-relaxed">
-                      Add the SDK to your project&apos;s <code className="font-mono">Cargo.toml</code> dependencies. The crate is
-                      published as <code className="font-mono">rust-sdk-4mica</code> and targets the Core4Mica smart contract.
+                      The SDK ships as <code className="font-mono">rust-sdk-4mica</code> on crates.io (currently <code className="font-mono">0.3.3</code>).
+                      It targets the Core4Mica contracts and x402 facilitator APIs with Tokio + async support baked in.
                     </p>
                     <div>
                       <h3 className="text-xl font-semibold text-[#1B1F3B] mb-3">Cargo Dependency</h3>
                       <CodeBlock
                         code={`[dependencies]
-rust-sdk-4mica = "0.1.0"`}
+rust-sdk-4mica = "0.3.3"`}
                         language="toml"
                         className="p-4"
                       />
                       <p className="text-sm text-[#1B1F3B] mt-3">
-                        After updating <code className="font-mono">Cargo.toml</code>, run <code className="font-mono">cargo build</code> to pull
-                        the crate and verify your toolchain.
+                        You can also run <code className="font-mono">cargo add rust-sdk-4mica@0.3.3</code>. After updating{' '}
+                        <code className="font-mono">Cargo.toml</code>, run <code className="font-mono">cargo build</code> to pull the crate and
+                        verify your toolchain.
                       </p>
                     </div>
                   </div>
@@ -151,19 +165,19 @@ rust-sdk-4mica = "0.1.0"`}
                       <h3 className="text-xl font-semibold text-[#1B1F3B]">Required Parameters</h3>
                       <ul className="space-y-2 text-[#1B1F3B]">
                         <li>
-                          <span className="font-semibold">rpc_url:</span> 4Mica RPC endpoint (defaults to{' '}
-                          <code className="font-mono">http://localhost:3000</code>).
+                          <span className="font-semibold">wallet_private_key:</span> Hex-encoded signer key with or without a{' '}
+                          <code className="font-mono">0x</code> prefix. This is the only required setting.
                         </li>
                         <li>
-                          <span className="font-semibold">wallet_private_key:</span> Hex-encoded signer key with or without a{' '}
-                          <code className="font-mono">0x</code> prefix.
+                          <span className="font-semibold">rpc_url:</span> 4Mica RPC endpoint. Defaults to{' '}
+                          <code className="font-mono">https://api.4mica.xyz/</code>; override for local stacks.
                         </li>
                       </ul>
                     </div>
                     <div className="space-y-3">
                       <h3 className="text-xl font-semibold text-[#1B1F3B]">Optional Parameters</h3>
                       <p className="text-[#1B1F3B]">
-                        These are fetched from the server by default. Override only when pointing to custom infrastructure.
+                        The SDK fetches most public params automatically. Override these when pointing at custom infrastructure.
                       </p>
                       <ul className="space-y-2 text-[#1B1F3B]">
                         <li>
@@ -173,6 +187,10 @@ rust-sdk-4mica = "0.1.0"`}
                           <span className="font-semibold">contract_address:</span> Deployed Core4Mica contract address.
                         </li>
                       </ul>
+                      <p className="text-sm text-[#1B1F3B]">
+                        The Ethereum <code className="font-mono">chain_id</code>, contract metadata, and operator parameters are fetched and
+                        validated from the core service automatically.
+                      </p>
                     </div>
                     <div className="space-y-4">
                       <h3 className="text-xl font-semibold text-[#1B1F3B]">Config Builder Example</h3>
@@ -197,8 +215,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                       <CodeBlock
                         code={`export 4MICA_WALLET_PRIVATE_KEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
 
-# Optional: override defaults
-export 4MICA_RPC_URL="http://localhost:3000"
+# Optional: override defaults (api.4mica.xyz is used automatically if unset)
+export 4MICA_RPC_URL="https://api.4mica.xyz/"
 export 4MICA_ETHEREUM_HTTP_RPC_URL="http://localhost:8545"
 export 4MICA_CONTRACT_ADDRESS="0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"`}
                         language="bash"
@@ -228,6 +246,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 <div>
                   <h2 className="text-3xl font-bold text-[#1B1F3B] mb-6">Usage Guide</h2>
                   <div className="space-y-8">
+                    <p className="text-[#1B1F3B] leading-relaxed">
+                      <code className="font-mono">Client</code> exposes <code className="font-mono">user</code> and{' '}
+                      <code className="font-mono">recipient</code> helpers that share signer + public parameters. Layer{' '}
+                      <code className="font-mono">X402Flow</code> on top when you need HTTP 402 integration (see the next section).
+                    </p>
                     <div>
                       <h3 className="text-xl font-semibold text-[#1B1F3B] mb-4">API Methods Summary</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -235,7 +258,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                           <h4 className="font-semibold text-[#1B1F3B] mb-3">UserClient Methods</h4>
                           <ul className="space-y-2 text-[#1B1F3B] text-sm">
                             <li>
-                              <span className="font-semibold">deposit(amount: U256)</span> → TransactionReceipt | DepositError
+                              <span className="font-semibold">deposit(amount: U256, erc20_token?: String)</span> → TransactionReceipt | DepositError
                             </li>
                             <li>
                               <span className="font-semibold">get_user()</span> → UserInfo | GetUserError
@@ -278,6 +301,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                           </ul>
                         </div>
                       </div>
+                    </div>
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold text-[#1B1F3B] mb-3">Instantiate once, reuse everywhere</h3>
+                      <CodeBlock
+                        code={`use rust_sdk_4mica::{Client, ConfigBuilder};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = Client::new(
+        ConfigBuilder::default()
+            .wallet_private_key(std::env::var("PAYER_KEY")?)
+            .build()?,
+    ).await?;
+
+    // client.user and client.recipient share the same signer + params
+    println!("ready: {}", client.user.address()?);
+    Ok(())
+}`}
+                        language="rust"
+                      />
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold text-[#1B1F3B] mb-3">User Client (Payer)</h3>
@@ -366,52 +409,176 @@ println!("Transaction hash: {:?}", receipt.transaction_hash);`}
                 </div>
               )}
 
+              {activeSection === 'x402' && (
+                <div>
+                  <h2 className="text-3xl font-bold text-[#1B1F3B] mb-6">HTTP 402 / X402 Integration</h2>
+                  <div className="space-y-6">
+                    <p className="text-[#1B1F3B] leading-relaxed">
+                      <code className="font-mono">X402Flow</code> turns <code className="font-mono">paymentRequirements</code> from a{' '}
+                      <code className="font-mono">402 Payment Required</code> response into a signed <code className="font-mono">X-PAYMENT</code>{' '}
+                      header. It mirrors the facilitator flow described in the latest SDK README and the sequence diagrams:
+                    </p>
+                    <div className="bg-[#F5F9FF] rounded-lg p-6">
+                      <ol className="list-decimal list-inside space-y-3 text-[#1B1F3B]">
+                        <li>
+                          <span className="font-semibold">Discover requirements.</span> Client receives{' '}
+                          <code className="font-mono">paymentRequirementsTemplate</code> +{' '}
+                          <code className="font-mono">extra.tabEndpoint</code> in a 402 response (with accepted <code className="font-mono">(scheme, network)</code> pairs).
+                        </li>
+                        <li>
+                          <span className="font-semibold">Refresh tab + bind wallet.</span> <code className="font-mono">X402Flow</code> POSTs{' '}
+                          <code className="font-mono">tabEndpoint</code> with <code className="font-mono">{'{ userAddress, paymentRequirements }'}</code>{' '}
+                          so the facilitator opens or reuses the tab and stamps <code className="font-mono">tabId</code>.
+                        </li>
+                        <li>
+                          <span className="font-semibold">Sign the guarantee.</span> The helper builds{' '}
+                          <code className="font-mono">PaymentGuaranteeRequestClaimsV1</code> and signs it via EIP-712 (4mica-only schemes),
+                          returning the base64 <code className="font-mono">X-PAYMENT</code> header.
+                        </li>
+                        <li>
+                          <span className="font-semibold">Retry &amp; verify.</span> The resource retries with <code className="font-mono">X-PAYMENT</code>,
+                          forwards the payload to <code className="font-mono">/verify</code>, and receives structured validation without hitting core.
+                        </li>
+                        <li>
+                          <span className="font-semibold">Settle when ready.</span> The resource calls <code className="font-mono">/settle</code> (or uses{' '}
+                          <code className="font-mono">X402Flow::settle_payment</code>) to mint a BLS certificate from the core service. Recipients persist
+                          that certificate for later on-chain remuneration if the payer never clears the tab.
+                        </li>
+                      </ol>
+                    </div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div className="bg-white rounded-lg shadow p-4">
+                        <h3 className="text-lg font-semibold text-[#1B1F3B] mb-3">Client side: build the header</h3>
+                        <CodeBlock
+                          code={`use rust_sdk_4mica::{Client, ConfigBuilder, X402Flow};
+use rust_sdk_4mica::x402::PaymentRequirements;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let payer = Client::new(
+        ConfigBuilder::default()
+            .wallet_private_key(std::env::var("PAYER_KEY")?)
+            .build()?,
+    ).await?;
+
+    let payment_requirements: PaymentRequirements = serde_json::from_value(
+        tab_response["paymentRequirements"].clone()
+    )?;
+    let user_address = std::env::var("PAYER_ADDRESS")?;
+
+    let flow = X402Flow::new(payer)?;
+    let signed = flow
+        .sign_payment(payment_requirements.clone(), user_address.clone())
+        .await?;
+
+    let x_payment_header = signed.header; // send as X-PAYMENT
+    Ok(())
+}`}
+                          language="rust"
+                          className="p-4"
+                        />
+                      </div>
+                      <div className="bg-white rounded-lg shadow p-4">
+                        <h3 className="text-lg font-semibold text-[#1B1F3B] mb-3">Server side: settle after /verify</h3>
+                        <CodeBlock
+                          code={`use rust_sdk_4mica::{Client, ConfigBuilder, X402Flow, X402SignedPayment};
+use rust_sdk_4mica::x402::PaymentRequirements;
+
+async fn settle(
+    facilitator_url: &str,
+    payment_requirements: PaymentRequirements,
+    payment: X402SignedPayment,
+) -> Result<(), Box<dyn std::error::Error>> {
+    let core = Client::new(
+        ConfigBuilder::default()
+            .wallet_private_key(std::env::var("RESOURCE_SIGNER_KEY")?)
+            .build()?,
+    ).await?;
+    let flow = X402Flow::new(core)?;
+
+    let settled = flow
+        .settle_payment(payment, payment_requirements, facilitator_url)
+        .await?;
+    println!("settlement result: {}", settled.settlement);
+    Ok(())
+}`}
+                          language="rust"
+                          className="p-4"
+                        />
+                      </div>
+                    </div>
+                    <p className="text-sm text-[#1B1F3B]">
+                      Notes: <code className="font-mono">scheme</code> must include <code className="font-mono">4mica</code>, claims must match the advertised
+                      <code className="font-mono">paymentRequirements</code>, and <code className="font-mono">X402Flow</code> auto-refreshes tabs via{' '}
+                      <code className="font-mono">extra.tabEndpoint</code> before signing. The facilitator mirrors upstream errors so resources can return
+                      precise HTTP 402 responses.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {activeSection === 'payment-flow' && (
                 <div>
                   <h2 className="text-3xl font-bold text-[#1B1F3B] mb-6">Payment Flow</h2>
                   <div className="space-y-6">
                     <p className="text-[#1B1F3B] leading-relaxed">
-                      Tabs model ongoing work between a payer and a recipient. Guarantees are signed promises to settle within a grace window.
-                      The Core4Mica contract enforces timing, verifies signatures, and protects against double spends based on the logic shown below.
+                      Tabs model ongoing work between a payer and a recipient. The sequence below condenses the refreshed protocol overview
+                      (see <code className="font-mono">4mica_protocol_overview.md</code> and <code className="font-mono">4mica_protocol_credit.txt</code>):
                     </p>
                     <div className="bg-[#F5F9FF] rounded-lg p-6">
                       <ol className="list-decimal list-inside space-y-3 text-[#1B1F3B]">
                         <li>
-                          <span className="font-semibold text-[#1B1F3B]">Open a tab.</span> The recipient creates a unique{' '}
-                          <code className="font-mono">tab_id</code> via <code className="font-mono">create_tab</code>, capturing the
-                          payer wallet, recipient wallet, and optional TTL. The contract stamps <code className="font-mono">tab_timestamp</code>
-                          for future grace period checks.
+                          <span className="font-semibold text-[#1B1F3B]">Deposit collateral.</span> Users lock ETH or ERC-20 in Core4Mica; the
+                          API syncs events so wallets become eligible for guarantees.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#1B1F3B]">Issue guarantees during the tab lifetime.</span> Users sign
-                          <code className="font-mono">PaymentGuaranteeClaims</code> with EIP-712 or EIP-191 and recipients mint BLS certificates
-                          using <code className="font-mono">issue_payment_guarantee</code>. These guarantees reference the tab and
-                          capture <code className="font-mono">req_id</code>, amount, and timestamp.
+                          <span className="font-semibold text-[#1B1F3B]">Discover payment options.</span> Recipients respond with 402 templates listing accepted{' '}
+                          <code className="font-mono">(scheme, network)</code> pairs and a <code className="font-mono">tabEndpoint</code> for minting tabs.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#1B1F3B]">Close or settle the tab.</span> When work is completed the payer can
-                          settle on-chain with <code className="font-mono">pay_tab</code> or an operator records payment via{' '}
-                          <code className="font-mono">recordPayment</code>. Paid amounts accumulate in <code className="font-mono">payments[tab_id].paid</code>.
+                          <span className="font-semibold text-[#1B1F3B]">Provision a tab.</span> Resource servers (or <code className="font-mono">X402Flow</code>) POST{' '}
+                          <code className="font-mono">/tabs</code> through the facilitator to bind <code className="font-mono">tabId</code> to the payer wallet and asset/TTL.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#1B1F3B]">Grace period for remuneration.</span> If the payer does not settle,
-                          the recipient must wait until <code className="font-mono">tab_timestamp + remunerationGracePeriod</code> to call{' '}
-                          <code className="font-mono">remunerate</code>. Remuneration must happen before{' '}
-                          <code className="font-mono">tab_timestamp + tabExpirationTime</code> and fails if the tab was already
-                          paid or previously remunerated.
+                          <span className="font-semibold text-[#1B1F3B]">Compose guarantees.</span> Payers sign{' '}
+                          <code className="font-mono">PaymentGuaranteeRequestClaimsV1</code> for each request. The facilitator upgrades them to include{' '}
+                          <code className="font-mono">req_id</code>, running totals, and domain info before BLS signing.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#1B1F3B]">Collateral adjustments.</span> A successful remuneration
-                          deducts from the payer&apos;s collateral and reconciles any pending withdrawal requests that overlap the
-                          tab timestamp plus <code className="font-mono">synchronizationDelay</code>.
+                          <span className="font-semibold text-[#1B1F3B]">Pre-flight &amp; settle.</span> Resources call <code className="font-mono">/verify</code> to validate
+                          structure, then <code className="font-mono">/settle</code> to mint certificates. Certificates let work proceed while the user still holds funds.
+                        </li>
+                        <li>
+                          <span className="font-semibold text-[#1B1F3B]">Close the tab.</span> Happy path: payer calls <code className="font-mono">pay_tab</code> on-chain using the latest{' '}
+                          <code className="font-mono">req_id</code>. Fallback: after grace period, recipients call <code className="font-mono">remunerate</code> on-chain with the certificate.
+                        </li>
+                        <li>
+                          <span className="font-semibold text-[#1B1F3B]">Withdraw safely.</span> Withdrawal requests pause guarantee issuance for that wallet until
+                          the contract events finalize, ensuring no double spends across tabs and withdrawals.
                         </li>
                       </ol>
                     </div>
-                    <p className="text-sm text-[#1B1F3B]">
-                      The contract guards against zero-amount claims, invalid recipients, double spending, and expired tabs. BLS signatures
-                      are verified against the configured <code className="font-mono">GUARANTEE_VERIFICATION_KEY</code>, ensuring only
-                      registered verification keys can authorize remuneration.
-                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="border border-[#E5E5E5] rounded-lg p-4">
+                        <h4 className="font-semibold text-[#1B1F3B] mb-3">Actors</h4>
+                        <ul className="space-y-2 text-sm text-[#1B1F3B]">
+                          <li>Payer SDK (<code className="font-mono">rust-sdk-4mica</code>): signs guarantees, pays tabs, requests withdrawals.</li>
+                          <li>Resource + facilitator (<code className="font-mono">x402-4mica</code>): exposes <code className="font-mono">/supported</code>,{' '}
+                            <code className="font-mono">/tabs</code>, <code className="font-mono">/verify</code>, and <code className="font-mono">/settle</code>.</li>
+                          <li>Core service (<code className="font-mono">api.4mica.xyz</code>): issues BLS guarantees, tracks tabs, streams contract events.</li>
+                          <li>Core4Mica contract: enforces grace periods, verifies BLS certs, and moves collateral.</li>
+                        </ul>
+                      </div>
+                      <div className="border border-[#E5E5E5] rounded-lg p-4">
+                        <h4 className="font-semibold text-[#1B1F3B] mb-3">Guards &amp; guarantees</h4>
+                        <ul className="space-y-2 text-sm text-[#1B1F3B]">
+                          <li>Zero-amount claims, invalid recipients, and double spends are rejected before signing.</li>
+                          <li>BLS certificates are verified against operator public parameters (domain-separated).</li>
+                          <li>Remuneration fails if the tab is expired, already paid, or previously remunerated.</li>
+                          <li>Collateral and withdrawal events are synchronized so payouts never exceed locked funds.</li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -509,12 +676,13 @@ println!("Transaction hash: {:?}", receipt.transaction_hash);`}
                   <h2 className="text-3xl font-bold text-[#1B1F3B] mb-6">Development</h2>
                   <div className="space-y-6 text-[#1B1F3B]">
                     <p>
-                      The SDK ships with unit and integration tests targeting contract behavior and serialization. Use the following commands
-                      while developing new integrations or contributing upstream.
+                      The SDK ships with unit and integration tests targeting contract behavior, serialization, and x402 helpers. Use the
+                      following commands while developing new integrations or contributing upstream.
                     </p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {[
                         { title: 'Run Test Suite', command: 'cargo test' },
+                        { title: 'Format & Lint', command: 'cargo fmt && cargo clippy -- -D warnings' },
                         { title: 'Build for Release', command: 'cargo build --release' }
                       ].map((item, index) => (
                         <div key={index} className="bg-[#F5F9FF] rounded-lg p-4">
@@ -538,7 +706,8 @@ println!("Transaction hash: {:?}", receipt.transaction_hash);`}
                         'Prefer EIP-712 signing. Structured data hashing reduces replay and serialization ambiguity.',
                         'Monitor collateral levels. Double spending attempts fail, but operational alerts prevent disruption.',
                         'Use multi-signature wallets for large collateral deposits and production remitters.',
-                        'Audit payment flows and settlement patterns regularly, especially when adjusting grace periods.'
+                        'Audit payment flows and settlement patterns regularly, especially when adjusting grace periods.',
+                        'When using HTTP 402, enforce scheme/network matching before settling and log facilitator responses.'
                       ].map((advice, index) => (
                         <div key={index} className="border border-[#E5E5E5] rounded-lg p-4 text-sm leading-relaxed">
                           {advice}
@@ -626,8 +795,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                   <h2 className="text-3xl font-bold text-[#1B1F3B] mb-6">Support & Licensing</h2>
                   <div className="space-y-6 text-[#1B1F3B]">
                     <p>
-                      The SDK is released under the Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0) license.
-                      Review the license before integrating into commercial products.
+                      The SDK is MIT licensed (see <code className="font-mono">LICENSE</code>) and aligns with the refreshed SDK README and protocol
+                      docs. Use the links below for the latest code, facilitator examples, and public documentation.
                     </p>
                     <div className="bg-[#F5F9FF] rounded-lg p-4">
                       <h3 className="text-lg font-semibold text-[#1B1F3B] mb-3">Official Resources</h3>
@@ -639,13 +808,24 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                           </a>
                         </li>
                         <li>
-                          <span className="font-semibold">Documentation:</span>{' '}
-                          <a className="text-[#1E4DD8]" href="https://4mica.xyz/resources/technical-docs" target="_blank" rel="noreferrer">
-                            https://4mica.xyz/resources/technical-docs
+                          <span className="font-semibold">Rust SDK README:</span>{' '}
+                          <a className="text-[#1E4DD8]" href="https://github.com/4mica-Network/4mica-core/tree/main/sdk" target="_blank" rel="noreferrer">
+                            github.com/4mica-Network/4mica-core/tree/main/sdk
                           </a>
                         </li>
                         <li>
-                          <span className="font-semibold">GitHub:</span>{' '}
+                          <span className="font-semibold">Facilitator (x402-4mica):</span>{' '}
+                          <a
+                            className="text-[#1E4DD8]"
+                            href="https://github.com/4mica-Network/x402-4mica"
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            github.com/4mica-Network/x402-4mica
+                          </a>
+                        </li>
+                        <li>
+                          <span className="font-semibold">Core Platform:</span>{' '}
                           <a
                             className="text-[#1E4DD8]"
                             href="https://github.com/4mica-Network/4mica-core"

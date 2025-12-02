@@ -20,7 +20,7 @@ export default function ResourcesSection() {
     {
       title: 'HTTP 402 / x402',
       href: '/resources/technical-docs?section=x402',
-      description: 'Build X-PAYMENT headers with X402Flow and settle through the x402-4mica facilitator.',
+      description: 'Quick-start for 4Mica credit paywalls: scheme/network, tab endpoints, and the X-PAYMENT envelope via x402-4mica.',
       icon: 'ri-key-2-line',
       gradient: 'from-[#5C7CFA] to-[#1E4DD8]'
     },

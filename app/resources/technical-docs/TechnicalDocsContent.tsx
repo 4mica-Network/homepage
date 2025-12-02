@@ -414,69 +414,63 @@ println!("Transaction hash: {:?}", receipt.transaction_hash);`}
                   <h2 className="text-3xl font-bold text-[#1B1F3B] mb-6">HTTP 402 / X402 Integration</h2>
                   <div className="space-y-6">
                     <p className="text-[#1B1F3B] leading-relaxed">
-                      <code className="font-mono">X402Flow</code> turns <code className="font-mono">paymentRequirements</code> from a{' '}
-                      <code className="font-mono">402 Payment Required</code> response into a signed <code className="font-mono">X-PAYMENT</code>{' '}
-                      header. It mirrors the facilitator flow described in the latest SDK README and the sequence diagrams:
+                      The <code className="font-mono">x402-4mica</code> facilitator turns x402 paywalls into 4Mica credit certificates. It opens tabs,
+                      validates <code className="font-mono">X-PAYMENT</code> headers against the advertised <code className="font-mono">paymentRequirements</code>, and settles
+                      by returning a BLS certificate that recipients can persist or redeem on-chain.
                     </p>
-                    <div className="bg-[#F5F9FF] rounded-lg p-6">
+                    <div className="bg-[#F5F9FF] rounded-lg p-6 space-y-4">
+                      <h3 className="text-xl font-semibold text-[#1B1F3B]">Resource servers: quick integration</h3>
                       <ol className="list-decimal list-inside space-y-3 text-[#1B1F3B]">
                         <li>
-                          <span className="font-semibold">Discover requirements.</span> Client receives{' '}
-                          <code className="font-mono">paymentRequirementsTemplate</code> +{' '}
-                          <code className="font-mono">extra.tabEndpoint</code> in a 402 response (with accepted <code className="font-mono">(scheme, network)</code> pairs).
+                          <span className="font-semibold">Advertise the paywall.</span> Serve <code className="font-mono">402 Payment Required</code> with
+                          <code className="font-mono">scheme = &quot;4mica-credit&quot;</code>, a supported <code className="font-mono">network</code> from{' '}
+                          <code className="font-mono">/supported</code>, <code className="font-mono">payTo</code>, <code className="font-mono">asset</code>, and{' '}
+                          <code className="font-mono">maxAmountRequired</code>. Embed your tab endpoint in{' '}
+                          <code className="font-mono">paymentRequirements.extra.tabEndpoint</code>.
                         </li>
                         <li>
-                          <span className="font-semibold">Refresh tab + bind wallet.</span> <code className="font-mono">X402Flow</code> POSTs{' '}
-                          <code className="font-mono">tabEndpoint</code> with <code className="font-mono">{'{ userAddress, paymentRequirements }'}</code>{' '}
-                          so the facilitator opens or reuses the tab and stamps <code className="font-mono">tabId</code>.
+                          <span className="font-semibold">Provision tabs.</span> Your tab endpoint should accept{' '}
+                          <code className="font-mono">{'{ userAddress, paymentRequirements }'}</code>, call the facilitator&rsquo;s{' '}
+                          <code className="font-mono">POST /tabs</code> with <code className="font-mono">recipientAddress = payTo</code>,{' '}
+                          <code className="font-mono">erc20Token = asset</code>, and optional <code className="font-mono">ttlSeconds</code>, then return the tab
+                          response (<code className="font-mono">tabId</code>, <code className="font-mono">userAddress</code>, <code className="font-mono">assetAddress</code>). Cache per{' '}
+                          <code className="font-mono">(user, recipient, asset)</code> to avoid redundant tab opens.
                         </li>
                         <li>
-                          <span className="font-semibold">Sign the guarantee.</span> The helper builds{' '}
-                          <code className="font-mono">PaymentGuaranteeRequestClaimsV1</code> and signs it via EIP-712 (4mica-only schemes),
-                          returning the base64 <code className="font-mono">X-PAYMENT</code> header.
-                        </li>
-                        <li>
-                          <span className="font-semibold">Retry &amp; verify.</span> The resource retries with <code className="font-mono">X-PAYMENT</code>,
-                          forwards the payload to <code className="font-mono">/verify</code>, and receives structured validation without hitting core.
-                        </li>
-                        <li>
-                          <span className="font-semibold">Settle when ready.</span> The resource calls <code className="font-mono">/settle</code> (or uses{' '}
-                          <code className="font-mono">X402Flow::settle_payment</code>) to mint a BLS certificate from the core service. Recipients persist
-                          that certificate for later on-chain remuneration if the payer never clears the tab.
+                          <span className="font-semibold">Verify and settle.</span> When a retried request arrives with{' '}
+                          <code className="font-mono">X-PAYMENT</code>, base64-decode it and send{' '}
+                          <code className="font-mono">{'{ paymentHeader, paymentRequirements }'}</code> to <code className="font-mono">/verify</code> (optional) and{' '}
+                          <code className="font-mono">/settle</code>. <code className="font-mono">/settle</code> returns{' '}
+                          <code className="font-mono">{'{ success, networkId, certificate }'}</code>; save the certificate for remuneration if the payer does not clear the tab before <code className="font-mono">ttlSeconds</code> expires.
                         </li>
                       </ol>
                     </div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                       <div className="bg-white rounded-lg shadow p-4">
-                        <h3 className="text-lg font-semibold text-[#1B1F3B] mb-3">Client side: build the header</h3>
+                        <h3 className="text-lg font-semibold text-[#1B1F3B] mb-3">Client SDK quick start</h3>
+                        <p className="text-sm text-[#1B1F3B] mb-3">
+                          Install <code className="font-mono">sdk-4mica</code> (Python/TypeScript) or <code className="font-mono">rust-sdk-4mica</code>, then wrap the
+                          recipient&rsquo;s advertised <code className="font-mono">paymentRequirements</code> into an <code className="font-mono">X-PAYMENT</code> header:
+                        </p>
                         <CodeBlock
-                          code={`use rust_sdk_4mica::{Client, ConfigBuilder, X402Flow};
-use rust_sdk_4mica::x402::PaymentRequirements;
+                          code={`import { Client, ConfigBuilder, PaymentRequirements, X402Flow } from "sdk-4mica";
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let payer = Client::new(
-        ConfigBuilder::default()
-            .wallet_private_key(std::env::var("PAYER_KEY")?)
-            .build()?,
-    ).await?;
+const cfg = new ConfigBuilder().walletPrivateKey("0x...").build();
+const client = await Client.new(cfg);
+const flow = X402Flow.fromClient(client);
 
-    let payment_requirements: PaymentRequirements = serde_json::from_value(
-        tab_response["paymentRequirements"].clone()
-    )?;
-    let user_address = std::env::var("PAYER_ADDRESS")?;
+const reqRaw = fetchRequirementsSomehow()[0]; // includes extra.tabEndpoint
+const requirements = PaymentRequirements.fromRaw(reqRaw);
 
-    let flow = X402Flow::new(payer)?;
-    let signed = flow
-        .sign_payment(payment_requirements.clone(), user_address.clone())
-        .await?;
-
-    let x_payment_header = signed.header; // send as X-PAYMENT
-    Ok(())
-}`}
-                          language="rust"
+const payment = await flow.signPayment(requirements, "0xUser");
+const headers = { "X-PAYMENT": payment.header };`}
+                          language="typescript"
                           className="p-4"
                         />
+                        <p className="text-sm text-[#1B1F3B] mt-3">
+                          Rust: <code className="font-mono">X402Flow::sign_payment(requirements, user_address)</code> returns the same{' '}
+                          <code className="font-mono">header</code>; Python mirrors the TypeScript API.
+                        </p>
                       </div>
                       <div className="bg-white rounded-lg shadow p-4">
                         <h3 className="text-lg font-semibold text-[#1B1F3B] mb-3">Server side: settle after /verify</h3>
@@ -498,7 +492,7 @@ async fn settle(
 
     let settled = flow
         .settle_payment(payment, payment_requirements, facilitator_url)
-        .await?;
+        .await?; // mirrors POST /settle
     println!("settlement result: {}", settled.settlement);
     Ok(())
 }`}
@@ -507,12 +501,45 @@ async fn settle(
                         />
                       </div>
                     </div>
-                    <p className="text-sm text-[#1B1F3B]">
-                      Notes: <code className="font-mono">scheme</code> must include <code className="font-mono">4mica</code>, claims must match the advertised
-                      <code className="font-mono">paymentRequirements</code>, and <code className="font-mono">X402Flow</code> auto-refreshes tabs via{' '}
-                      <code className="font-mono">extra.tabEndpoint</code> before signing. The facilitator mirrors upstream errors so resources can return
-                      precise HTTP 402 responses.
-                    </p>
+                    <div className="bg-[#F5F9FF] rounded-lg p-6 space-y-3">
+                      <h3 className="text-lg font-semibold text-[#1B1F3B]">`X-PAYMENT` envelope</h3>
+                      <CodeBlock
+                        code={`{
+  "x402Version": 1,
+  "scheme": "4mica-credit",
+  "network": "polygon-amoy",
+  "payload": {
+    "claims": {
+      "user_address": "<0x checksum>",
+      "recipient_address": "<0x checksum>",
+      "tab_id": "<decimal or 0x>",
+      "amount": "<decimal or 0x>",
+      "asset_address": "<0x checksum>",
+      "timestamp": 1716500000,
+      "version": 1
+    },
+    "signature": "<0x wallet sig>",
+    "scheme": "eip712"
+  }
+}`}
+                        language="json"
+                        className="p-4"
+                      />
+                      <p className="text-sm text-[#1B1F3B]">
+                        The facilitator enforces <code className="font-mono">scheme</code>/<code className="font-mono">network</code> matches{' '}
+                        <code className="font-mono">/supported</code>, <code className="font-mono">payTo</code> equals <code className="font-mono">recipient_address</code>, and{' '}
+                        <code className="font-mono">amount</code> matches <code className="font-mono">maxAmountRequired</code> exactly.
+                      </p>
+                    </div>
+                    <div className="space-y-2 text-sm text-[#1B1F3B]">
+                      <h3 className="text-lg font-semibold text-[#1B1F3B]">HTTP endpoints</h3>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li><code className="font-mono">GET /supported</code> – list supported <code className="font-mono">(scheme, network)</code> pairs.</li>
+                        <li><code className="font-mono">POST /tabs</code> – open or reuse tabs; returns <code className="font-mono">{'{ tabId, userAddress, recipientAddress, assetAddress, ttlSeconds }'}</code>.</li>
+                        <li><code className="font-mono">POST /verify</code> – structural validation for <code className="font-mono">paymentHeader</code> + <code className="font-mono">paymentRequirements</code>.</li>
+                        <li><code className="font-mono">POST /settle</code> – re-validates and returns <code className="font-mono">{'{ success, networkId, certificate }'}</code> for downstream remuneration.</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               )}

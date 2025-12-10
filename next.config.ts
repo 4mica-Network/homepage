@@ -1,27 +1,10 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  turbopack: {
-    root: __dirname,
-  },
+  output: 'export',
   images: {
-    unoptimized: true,
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "readdy.ai",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "www.eigencloud.xyz",
-        pathname: "/**",
-      },
-    ],
-  },
-  typescript: {
-    // ignoreBuildErrors: true,
-  },
-};
+    unoptimized: true
+  }
+}
 
-export default nextConfig;
+export default nextConfig

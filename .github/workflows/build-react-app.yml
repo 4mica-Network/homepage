@@ -25,9 +25,27 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Upload to S3
+      - name: Upload hashed assets with immutable cache
         run: |
-          aws s3 sync out/ s3://${{ secrets.S3_BUCKET }} --delete
+          aws s3 sync out/_next/static s3://${{ secrets.S3_BUCKET }}/_next/static \
+            --cache-control "public,max-age=31536000,immutable" \
+            --delete
+
+      - name: Upload HTML with no-cache
+        run: |
+          aws s3 sync out/ s3://${{ secrets.S3_BUCKET }} \
+            --exclude "*" \
+            --include "*.html" \
+            --cache-control "public,max-age=0,must-revalidate" \
+            --delete
+
+      - name: Upload remaining assets with standard cache
+        run: |
+          aws s3 sync out/ s3://${{ secrets.S3_BUCKET }} \
+            --exclude "_next/static/*" \
+            --exclude "*.html" \
+            --cache-control "public,max-age=86400" \
+            --delete
 
       - name: Invalidate CloudFront Cache
         run: |

@@ -18,7 +18,7 @@ export default function TimelineSection() {
       quarter: 'Q4 2025',
       title: 'Strategic Partnerships',
       description: 'Partnerships with AI platforms, AVSs, and DeFI companies to enhance ecosystem integration',
-      done: false
+      done: true
     },
     {
       quarter: 'Q1 2026',

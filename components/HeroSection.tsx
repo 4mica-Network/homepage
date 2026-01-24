@@ -28,7 +28,7 @@ export default function HeroSection() {
 
   if (!isMounted) {
     return (
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A2540] via-[#1B2B50] to-[#102040]">
+      <section className="relative min-h-screen flex items-center justify-center bg-transparent">
         <div className="relative z-10 text-center max-w-5xl mx-auto px-6 w-full">
           <div className="mb-8">
             <h1 className="text-3xl md:text-6xl lg:text-7xl font-bold text-[#F2F4F8] mb-6 leading-tight tracking-tight">
@@ -88,7 +88,7 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A2540] via-[#1B2B50] to-[#102040] overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center bg-transparent overflow-hidden">
       {/* Subtle Decentralized Payment Network Animation */}
       <div className="absolute inset-0 opacity-20">
         <svg className="w-full h-full" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">

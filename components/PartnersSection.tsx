@@ -11,10 +11,10 @@ export default function PartnersSection() {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-transparent">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#1B1F3B] mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
             Partners and Technical Collaborators
           </h2>
           <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
@@ -24,7 +24,7 @@ export default function PartnersSection() {
           {partners.map((partner, index) => (
             <div 
               key={index}
-              className="bg-[#F5F9FF] rounded-lg p-3 flex items-center justify-center hover:shadow-lg transition-shadow duration-300 border-2 border-transparent hover:border-[#5C7CFA]/30"
+              className="glass-panel rounded-lg p-3 flex items-center justify-center transition-all duration-300 border border-white/10 hover:border-[#7BCBFF]/40"
             >
               <Image
                 src={partner.logo}

@@ -25,14 +25,14 @@ export default function TeamSection() {
   ];
 
   return (
-    <section id="team" className="py-20 bg-white">
+    <section id="team" className="py-20 bg-transparent">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#1B1F3B] mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
             Meet Our Team
           </h2>
           <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
-          <p className="text-lg text-[#1B1F3B] max-w-2xl mx-auto">
+          <p className="text-lg text-[#C8D7F2] max-w-2xl mx-auto">
             Leading experts in Cryptography, blockchain, and payment infrastructure
           </p>
         </div>
@@ -41,7 +41,7 @@ export default function TeamSection() {
           {teamMembers.map((member, index) => (
             <div 
               key={index}
-              className="bg-[#F5F9FF] rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 group"
+              className="glass-panel rounded-xl overflow-hidden transition-shadow duration-300 group"
             >
                 <div className="relative overflow-hidden h-[420px]">
                   <Image
@@ -55,13 +55,13 @@ export default function TeamSection() {
                 </div>
               
               <div className="p-6">
-                <h3 className="text-xl font-bold text-[#1B1F3B] mb-2">
+                <h3 className="text-xl font-bold text-[#E7F1FF] mb-2">
                   {member.name}
                 </h3>
-                <p className="text-[#1E4DD8] font-semibold mb-3">
+                <p className="text-[#7BCBFF] font-semibold mb-3">
                   {member.role}
                 </p>
-                <p className="text-[#1B1F3B] text-sm leading-relaxed">
+                <p className="text-[#C8D7F2] text-sm leading-relaxed">
                   {member.bio}
                 </p>
               </div>

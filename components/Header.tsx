@@ -2,14 +2,28 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 0);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <>
-      <header className="bg-[#0A2540] text-white shadow-lg">
+      <header
+        className={`sticky top-0 z-40 text-white transition-all duration-300 ease-out ${
+          isScrolled
+            ? 'translate-y-2 glass-panel-strong'
+            : 'translate-y-0 bg-transparent'
+        }`}
+      >
         <nav className="container mx-auto px-8 py-6 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3">
             <Image 

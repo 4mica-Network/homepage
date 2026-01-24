@@ -41,21 +41,21 @@ export default function TimelineSection() {
   ];
 
   return (
-    <section className="py-20 bg-[#F5F9FF]">
+    <section className="py-20 bg-transparent">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#1B1F3B] mb-6">
+          <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
             Product Roadmap
           </h2>
           <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
-          <p className="text-lg text-[#1B1F3B] max-w-2xl mx-auto">
+          <p className="text-lg text-[#C8D7F2] max-w-2xl mx-auto">
             Our journey to revolutionize web3 commerce
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto">
           <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-[#1E4DD8] hidden md:block"></div>
+            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-[#3CAEF5]/60 hidden md:block"></div>
             
             {milestones.map((milestone, index) => (
               <div 
@@ -63,18 +63,18 @@ export default function TimelineSection() {
                 className={`relative flex items-center mb-12 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} flex-col`}
               >
                 <div className="md:w-1/2 md:px-8 mb-4 md:mb-0">
-                  <div className={`bg-white rounded-lg p-6 shadow-lg ${index % 2 === 0 ? 'md:text-right' : 'md:text-left'} text-center`}>
-                    <h3 className="text-2xl font-bold text-[#1B1F3B] mb-2">
+                  <div className={`glass-panel rounded-lg p-6 ${index % 2 === 0 ? 'md:text-right' : 'md:text-left'} text-center`}>
+                    <h3 className="text-2xl font-bold text-[#E7F1FF] mb-2">
                       {milestone.title}
                     </h3>
-                    <p className="text-[#1B1F3B] leading-relaxed">
+                    <p className="text-[#C8D7F2] leading-relaxed">
                       {milestone.description}
                     </p>
                   </div>
                 </div>
                 
                 <div
-                  className={`absolute left-1/2 transform -translate-x-1/2 rounded-full w-12 h-12 flex items-center justify-center font-bold text-sm border-4 border-white shadow-lg hidden md:flex ${
+                  className={`absolute left-1/2 transform -translate-x-1/2 rounded-full w-12 h-12 flex items-center justify-center font-bold text-sm border-4 border-white/20 shadow-lg hidden md:flex ${
                     milestone.done ? 'bg-green-500' : 'bg-[#5C7CFA] text-white'
                   }`}
                 >

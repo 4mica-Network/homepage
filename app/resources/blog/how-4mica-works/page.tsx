@@ -92,28 +92,28 @@ export default function How4MicaWorksPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F5F9FF] pt-20 pb-24">
+    <div className="min-h-screen pt-20 pb-24 text-[#C8D7F2]">
       <div className="container mx-auto px-6 max-w-4xl">
         <header className="mb-12 text-center">
           <p className="text-sm uppercase tracking-wide text-[#3CAEF5]">Deep Dive</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-[#1B1F3B] mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-4">
             How 4Mica Works: Cryptographic Credit for Web3
           </h1>
-          <p className="text-sm text-gray-500">Published January 15, 2025 · 7 min read · By Mairon</p>
+          <p className="text-sm text-[#9CB7E8]">Published January 15, 2025 · 7 min read · By Mairon</p>
         </header>
 
-        <article className="bg-white rounded-2xl shadow-lg p-8 space-y-10">
+        <article className="glass-panel rounded-2xl p-8 space-y-10">
           {sections.map((section) => (
             <section key={section.heading} className="space-y-4">
-              <h2 className="text-2xl font-bold text-[#1B1F3B]">{section.heading}</h2>
+              <h2 className="text-2xl font-bold text-[#E7F1FF]">{section.heading}</h2>
               {section.paragraphs && section.paragraphs.map((paragraph, idx) => (
-                <p key={idx} className="leading-relaxed text-[#1B1F3B]">
+                <p key={idx} className="leading-relaxed text-[#C8D7F2]">
                   {paragraph}
                 </p>
               ))}
 
               {section.steps && (
-                <ol className="list-decimal list-inside space-y-2 text-[#1B1F3B]">
+                <ol className="list-decimal list-inside space-y-2 text-[#C8D7F2]">
                   {section.steps.map((step) => (
                     <li key={step}>{step}</li>
                   ))}
@@ -121,7 +121,7 @@ export default function How4MicaWorksPage() {
               )}
 
               {section.bullets && (
-                <ul className="list-disc list-inside space-y-2 text-[#1B1F3B]">
+                <ul className="list-disc list-inside space-y-2 text-[#C8D7F2]">
                   {section.bullets.map((bullet) => (
                     <li key={bullet}>{bullet}</li>
                   ))}
@@ -129,7 +129,7 @@ export default function How4MicaWorksPage() {
               )}
 
               {section.paragraphsAfter && section.paragraphsAfter.map((paragraph, idx) => (
-                <p key={`after-${idx}`} className="leading-relaxed text-[#1B1F3B]">
+                <p key={`after-${idx}`} className="leading-relaxed text-[#C8D7F2]">
                   {paragraph}
                 </p>
               ))}
@@ -137,10 +137,10 @@ export default function How4MicaWorksPage() {
           ))}
         </article>
 
-        <footer className="mt-12 flex items-center justify-between text-sm text-[#1B1F3B] flex-col md:flex-row gap-4">
+        <footer className="mt-12 flex items-center justify-between text-sm text-[#9CB7E8] flex-col md:flex-row gap-4">
           <Link
             href="/resources/blog"
-            className="text-[#1E4DD8] hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap"
+            className="text-[#7BCBFF] hover:text-[#A3FFD6] transition-colors cursor-pointer whitespace-nowrap"
           >
             ← Back to Blog
           </Link>

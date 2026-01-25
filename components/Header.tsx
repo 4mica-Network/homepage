@@ -38,17 +38,42 @@ export default function Header() {
           </Link>
           
           <div className="hidden md:flex items-center space-x-8">
+            <div className="relative group">
+              <button
+                type="button"
+                className="text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap inline-flex items-center gap-2"
+              >
+                Company
+                <i className="ri-arrow-down-s-line text-lg"></i>
+              </button>
+              <div
+                className="absolute left-0 mt-3 w-52 rounded-xl glass-panel-strong border border-white/10 shadow-lg opacity-0 translate-y-2 pointer-events-none transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:pointer-events-auto"
+              >
+                <Link
+                  href="/about"
+                  className="block px-4 py-3 text-sm text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors"
+                >
+                  4Mica Mission
+                </Link>
+                <Link
+                  href="/leadership"
+                  className="block px-4 py-3 text-sm text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors border-t border-white/10"
+                >
+                  Team
+                </Link>
+                <Link
+                  href="/roadmap"
+                  className="block px-4 py-3 text-sm text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors border-t border-white/10"
+                >
+                  Roadmap
+                </Link>
+              </div>
+            </div>
             <Link 
               href="/#resources" 
               className="text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap"
             >
               Resources
-            </Link>
-            <Link 
-              href="/#team" 
-              className="text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap"
-            >
-              Team
             </Link>
             <button 
               onClick={() => setIsContactOpen(true)}

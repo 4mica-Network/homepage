@@ -11,13 +11,16 @@ export default function PartnersSection() {
   ];
 
   return (
-    <section className="py-20 bg-transparent">
+    <section className="py-20 section-gloss">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
-            Partners and Technical Collaborators
+          <p className="text-sm uppercase tracking-[0.3em] text-[#7BCBFF] mb-4">Powering</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-4">
+            Teams building with 4Mica
           </h2>
-          <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
+          <p className="text-lg text-[#C8D7F2] max-w-2xl mx-auto">
+            Partners and technical collaborators shipping instant, credit-backed payments.
+          </p>
         </div>
         
         <div className="flex flex-wrap justify-center items-center gap-8 mb-12">

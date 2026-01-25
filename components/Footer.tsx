@@ -21,13 +21,23 @@ export default function Footer() {
             <h4 className="text-lg font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="#team" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
+                <Link href="/about" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
+                  4Mica Mission
+                </Link>
+              </li>
+              <li>
+                <Link href="/leadership" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
                   Team
                 </Link>
               </li>
               <li>
-                <Link href="#resources" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
+                <Link href="/#resources" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
                   Resources
+                </Link>
+              </li>
+              <li>
+                <Link href="/roadmap" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
+                  Roadmap
                 </Link>
               </li>
               <li>
@@ -56,7 +66,7 @@ export default function Footer() {
                   <i className="ri-github-line text-xl"></i>
                 </div>
               </Link>
-              <Link href="#" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
+              <Link href="https://discord.gg/bb8Pn5qX" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
                 <div className="w-6 h-6 flex items-center justify-center">
                   <i className="ri-discord-line text-xl"></i>
                 </div>
@@ -68,7 +78,7 @@ export default function Footer() {
         <div className="border-t border-[#F0F4FF]/20 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-[#F0F4FF]/80 mb-4 md:mb-0">
-              © 2025 4Mica. All rights reserved.
+              © 2026 4Mica. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <Link href="/privacy" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap">

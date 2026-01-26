@@ -5,18 +5,18 @@ export default function HowItWorksSection() {
     {
       step: '01',
       title: 'Recipient opens a tab',
-      description: 'Create a tab_id with asset and limits for a user.',
+      description: 'Create a tab_id with asset and limits for a user',
     },
     {
       step: '02',
       title: 'User spends on credit',
-      description: 'Users sign guarantees per request with no prefunding.',
+      description: 'Users sign guarantees per request with no prefunding',
     },
     {
       step: '03',
       title: 'User settles after 7 days',
       description:
-        'Settle later, or claim collateral after the on-chain grace period.',
+        'Settle later, or claim collateral after the on-chain grace period',
     },
   ];
 
@@ -29,7 +29,7 @@ export default function HowItWorksSection() {
             Three steps to instant spend
           </h2>
           <p className="text-lg text-[#C8D7F2] leading-relaxed mt-6">
-            Plain flow first, cryptographic guarantees underneath.
+            Plain flow first, cryptographic guarantees underneath
           </p>
         </div>
 

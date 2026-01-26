@@ -12,15 +12,15 @@ export default function PartnersSection() {
   const proofPoints = [
     {
       title: 'Open-source core',
-      description: 'Contracts and SDKs are public on GitHub.',
+      description: 'Contracts and SDKs are public on GitHub',
     },
     {
       title: 'Holesky live',
-      description: 'Core4Mica contracts deployed for public testing.',
+      description: 'Core4Mica contracts deployed for public testing',
     },
     {
       title: 'Non-custodial design',
-      description: 'Collateral stays on-chain until settlement or claim.',
+      description: 'Collateral stays on-chain until settlement or claim',
     },
   ];
 
@@ -30,10 +30,10 @@ export default function PartnersSection() {
         <div className="text-center mb-16">
           <p className="text-sm uppercase tracking-[0.3em] text-[#7BCBFF] mb-4">Powering</p>
           <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-4">
-            Early partners building with 4Mica
+            Our early partners
           </h2>
           <p className="text-lg text-[#C8D7F2] max-w-2xl mx-auto">
-            Collaborators integrating payment tabs and credit-backed UX.
+            Collaborators integrating payment tabs and credit-backed UX
           </p>
         </div>
         
@@ -67,7 +67,7 @@ export default function PartnersSection() {
           <button
             className="bg-[#1E4DD8] hover:bg-[#3CAEF5] text-[#F0F4FF] px-8 py-4 rounded-lg text-lg font-semibold transition-colors cursor-pointer whitespace-nowrap"
             onClick={() => {
-              window.location.href = "mailto:akash@4mica.xyz";
+              window.location.href = "mailto:mairon@4mica.xyz";
             }}
           >
             Build with us

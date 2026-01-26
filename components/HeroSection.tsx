@@ -19,19 +19,19 @@ export default function HeroSection() {
   const highlights = [
     {
       title: 'Non-custodial collateral',
-      description: 'Funds stay on-chain with the user until settlement.',
+      description: 'Funds stay on-chain with the user until settlement',
     },
     {
       title: 'BLS-backed guarantees',
-      description: 'Cryptographic proofs for each spend request.',
+      description: 'Cryptographic proofs for each spend request',
     },
     {
       title: 'Settle after 7 days',
-      description: 'Users pay later without prefunding balances.',
+      description: 'Users pay later without prefunding balances',
     },
     {
       title: 'ETH, USDC, USDT',
-      description: 'Default assets with versioned guarantees.',
+      description: 'Default assets with versioned guarantees',
     },
   ];
 

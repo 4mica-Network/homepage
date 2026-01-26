@@ -14,7 +14,7 @@ export default function DocsCalloutSection() {
                 Start with tabs, ship in a day
               </h2>
               <p className="mt-4 text-lg text-[#C8D7F2] leading-relaxed">
-                Quickstart, SDKs, and API endpoints for /tabs, /verify, and /settle.
+                Quickstart, SDKs, and API endpoints for /tabs, /verify, and /settle
               </p>
               <div className="mt-6 flex flex-col sm:flex-row gap-4">
                 <Link
@@ -50,7 +50,7 @@ export default function DocsCalloutSection() {
                 </div>
               </div>
               <p className="mt-4 text-xs text-[#6A7AA3]">
-                SDKs: Rust, TypeScript, Python.
+                SDKs: Rust, TypeScript, Python
               </p>
             </div>
           </div>

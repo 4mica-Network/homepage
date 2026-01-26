@@ -7,17 +7,17 @@ export default function AboutSection() {
   const aboutCards = [
     {
       title: '4Mica Mission',
-      description: 'Mission, product focus, and how 4Mica unlocks credit-backed payments.',
+      description: 'Mission, product focus, and how 4Mica unlocks credit-backed payments',
       href: '/about',
     },
     {
       title: 'Team',
-      description: 'Meet the founders building the payment layer for instant commerce.',
+      description: 'Meet the founders building the payment layer for instant commerce',
       href: '/leadership',
     },
     {
       title: 'Roadmap',
-      description: 'Track delivery milestones for the credit layer and network rollout.',
+      description: 'Track delivery milestones for the credit layer and network rollout',
       href: '/roadmap',
     },
   ];

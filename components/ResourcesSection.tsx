@@ -6,35 +6,35 @@ export default function ResourcesSection() {
     {
       title: 'One-Pager',
       href: '/resources/one-pager',
-      description: "Comprehensive overview of 4Mica's real-time, non-custodial payment infrastructure.",
+      description: "Comprehensive overview of 4Mica's real-time, non-custodial payment infrastructure",
       icon: 'ri-file-text-line',
       gradient: 'from-[#1E4DD8] to-[#3CAEF5]'
     },
     {
       title: 'Rust SDK Docs',
       href: '/resources/technical-docs',
-      description: 'Updated SDK (v0.3.3) with config defaults, typed errors, and end-to-end Rust examples.',
+      description: 'Updated SDK (v0.3.3) with config defaults, typed errors, and end-to-end Rust examples',
       icon: 'ri-book-line',
       gradient: 'from-[#3CAEF5] to-[#5C7CFA]'
     },
     {
       title: 'HTTP 402 / x402',
       href: '/resources/technical-docs?section=x402',
-      description: 'Quick-start for 4Mica credit paywalls: scheme/network, tab endpoints, and the X-PAYMENT envelope via x402-4mica.',
+      description: 'Quick-start for 4Mica credit paywalls: scheme/network, tab endpoints, and the X-PAYMENT envelope via x402-4mica',
       icon: 'ri-key-2-line',
       gradient: 'from-[#5C7CFA] to-[#1E4DD8]'
     },
     {
       title: 'Protocol Overview',
       href: '/resources/technical-docs?section=payment-flow',
-      description: 'Latest sequence diagrams covering tab provisioning, guarantees, withdrawals, and settlement.',
+      description: 'Latest sequence diagrams covering tab provisioning, guarantees, withdrawals, and settlement',
       icon: 'ri-route-line',
       gradient: 'from-[#1E4DD8] to-[#2ED6FF]'
     },
     {
       title: 'Blog',
       href: '/resources/blog',
-      description: 'Insights, updates, and thought leadership on AVS payments and infrastructure.',
+      description: 'Insights, updates, and thought leadership on AVS payments and infrastructure',
       icon: 'ri-article-line',
       gradient: 'from-[#2ED6FF] to-[#1E4DD8]'
     }

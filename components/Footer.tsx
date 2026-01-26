@@ -12,8 +12,8 @@ export default function Footer() {
               4Mica
             </Link>
             <p className="text-[#F0F4FF]/80 leading-relaxed max-w-md">
-              Instant, cryptographically-backed lines-of-credit for any product. 
-              Secure, seamless, and decentralized.
+              Instant, cryptographically-backed lines-of-credit for any product
+              Secure, seamless, and decentralized
             </p>
           </div>
           
@@ -56,7 +56,7 @@ export default function Footer() {
                   <i className="ri-twitter-line text-xl"></i>
                 </div>
               </Link>
-              <Link href="#" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
+              <Link href="https://www.linkedin.com/company/4mica" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer">
                 <div className="w-6 h-6 flex items-center justify-center">
                   <i className="ri-linkedin-line text-xl"></i>
                 </div>
@@ -78,7 +78,7 @@ export default function Footer() {
         <div className="border-t border-[#F0F4FF]/20 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-[#F0F4FF]/80 mb-4 md:mb-0">
-              © 2026 4Mica. All rights reserved.
+              © 2026 4Mica. All rights reserved
             </p>
             <div className="flex space-x-6">
               <Link href="/privacy" className="text-[#F0F4FF]/80 hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap">

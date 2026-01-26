@@ -109,18 +109,20 @@ export default function Header() {
                 Company
                 <i className="ri-arrow-down-s-line text-lg"></i>
               </button>
-              <div className="absolute left-0 mt-3 w-52 rounded-xl glass-panel-strong border border-white/10 shadow-lg opacity-0 translate-y-2 pointer-events-none transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:pointer-events-auto">
-                {companyLinks.map((item, index) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`block px-4 py-3 text-sm text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors ${
-                      index > 0 ? 'border-t border-white/10' : ''
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+              <div className="absolute left-0 top-full pt-2 opacity-0 translate-y-2 pointer-events-none transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:pointer-events-auto">
+                <div className="w-52 rounded-xl glass-panel-strong border border-white/10 shadow-lg">
+                  {companyLinks.map((item, index) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`block px-4 py-3 text-sm text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors ${
+                        index > 0 ? 'border-t border-white/10' : ''
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
             {primaryLinks.map((link) => (

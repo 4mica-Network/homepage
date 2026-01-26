@@ -4,15 +4,15 @@ export default function UseCasesSection() {
   const useCases = [
     {
       title: 'API monetization',
-      description: 'Meter requests in real time and settle after 7 days without prepaid balances.',
+      description: 'Meter requests in real time and settle after 7 days without prepaid balances',
     },
     {
       title: 'Infra and AVS compute',
-      description: 'Let builders run workloads now and pay later with verifiable guarantees.',
+      description: 'Let builders run workloads now and pay later with verifiable guarantees',
     },
     {
       title: 'Agentic commerce',
-      description: 'Wallets and agents can transact instantly while collateral backs every spend.',
+      description: 'Wallets and agents can transact instantly while collateral backs every spend',
     },
   ];
 
@@ -25,7 +25,7 @@ export default function UseCasesSection() {
             Built for developer-first products
           </h2>
           <p className="text-lg text-[#C8D7F2] leading-relaxed mt-6">
-            Drop tabs into any flow where usage is real time and settlement can wait.
+            Drop tabs into any flow where usage is real time and settlement can wait
           </p>
         </div>
 

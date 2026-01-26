@@ -2,9 +2,9 @@
 
 export default function SecuritySection() {
   const items = [
-    'Non-custodial collateral stays in Core4Mica until settlement or claim.',
-    'Guarantees are BLS-signed with domain separation and versioned configs.',
-    'AccessManaged roles, Pausable, and ReentrancyGuard protect critical flows.',
+    'Non-custodial collateral stays in Core4Mica until settlement or claim',
+    'Guarantees are BLS-signed with domain separation and versioned configs',
+    'AccessManaged roles, Pausable, and ReentrancyGuard protect critical flows',
   ];
 
   return (
@@ -17,7 +17,7 @@ export default function SecuritySection() {
               Plain UX, hard guarantees
             </h2>
             <p className="mt-6 text-lg text-[#C8D7F2] leading-relaxed">
-              Keep funds on-chain and verify every claim before collateral moves.
+              Keep funds on-chain and verify every claim before collateral moves
             </p>
           </div>
           <div className="glass-panel rounded-2xl p-6 sm:p-8">

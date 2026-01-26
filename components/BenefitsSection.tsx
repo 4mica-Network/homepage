@@ -2,11 +2,11 @@
 
 export default function BenefitsSection() {
   const benefits = [
-    'Users spend now and settle after 7 days.',
-    'No prefunding or prepaid balances for customers.',
-    'Every charge is backed by on-chain collateral.',
-    'BLS-signed guarantees prevent replay and double spend.',
-    'Default assets: ETH, USDC, USDT with versioned guarantees.',
+    'Users spend now and settle after 7 days',
+    'No prefunding or prepaid balances for customers',
+    'Every charge is backed by on-chain collateral',
+    'BLS-signed guarantees prevent replay and double spend',
+    'Default assets: ETH, USDC, USDT with versioned guarantees',
   ];
 
   return (

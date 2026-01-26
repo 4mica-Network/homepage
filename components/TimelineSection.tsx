@@ -1,6 +1,10 @@
 'use client';
 
-export default function TimelineSection() {
+type TimelineSectionProps = {
+  showHeader?: boolean;
+};
+
+export default function TimelineSection({ showHeader = true }: TimelineSectionProps) {
   const milestones = [
     {
       quarter: 'Q2 2025',
@@ -41,17 +45,19 @@ export default function TimelineSection() {
   ];
 
   return (
-    <section className="py-20 bg-transparent">
+    <section id="roadmap" className="py-20 section-gloss">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
-            Product Roadmap
-          </h2>
-          <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
-          <p className="text-lg text-[#C8D7F2] max-w-2xl mx-auto">
-            Our journey to revolutionize web3 commerce
-          </p>
-        </div>
+        {showHeader && (
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
+              Product Roadmap
+            </h2>
+            <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
+            <p className="text-lg text-[#C8D7F2] max-w-2xl mx-auto">
+              Our journey to revolutionize web3 commerce
+            </p>
+          </div>
+        )}
 
         <div className="max-w-4xl mx-auto">
           <div className="relative">

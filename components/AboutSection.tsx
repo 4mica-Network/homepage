@@ -1,21 +1,55 @@
 
 'use client';
 
+import Link from 'next/link';
+
 export default function AboutSection() {
+  const aboutCards = [
+    {
+      title: '4Mica Mission',
+      description: 'Mission, product focus, and how 4Mica unlocks credit-backed payments.',
+      href: '/about',
+    },
+    {
+      title: 'Team',
+      description: 'Meet the founders building the payment layer for instant commerce.',
+      href: '/leadership',
+    },
+    {
+      title: 'Roadmap',
+      description: 'Track delivery milestones for the credit layer and network rollout.',
+      href: '/roadmap',
+    },
+  ];
+
   return (
-    <section id="about" className="py-20 bg-transparent">
-      <div className="container mx-auto px-6 max-w-4xl">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
-            About 4Mica
+    <section id="about" className="py-24 section-gloss">
+      <div className="container mx-auto px-6">
+        <div className="text-center max-w-3xl mx-auto">
+          <p className="text-sm uppercase tracking-[0.3em] text-[#7BCBFF]">About Us</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mt-4">
+            The credit layer for instant, on-chain commerce
           </h2>
-          <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
-        </div>
-        
-        <div className="glass-panel rounded-2xl p-8 md:p-12">
-          <p className="text-lg md:text-xl text-[#C8D7F2] leading-relaxed text-center">
-            4Mica is a lightweight overlay that enables services to extend cryptographically backed lines of credit across any blockchain, from Bitcoin and Ethereum to Solana and beyond. Acting as a credit layer for instant, low-friction settlements and built on guaranteed fair exchange, 4Mica fixes Web3’s inefficient pre-funded model. In short, 4Mica makes programmable credit accessible to all.
+          <p className="text-lg text-[#C8D7F2] leading-relaxed mt-6">
+            4Mica issues cryptographic payment tabs that keep capital productive while delivering real-time UX. We help teams
+            monetize APIs, AVS services, and on-chain commerce without forcing users to pre-fund every request.
           </p>
+        </div>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {aboutCards.map((card) => (
+            <Link
+              key={card.title}
+              href={card.href}
+              className="glass-panel rounded-2xl p-6 transition-all duration-300 hover:translate-y-[-2px]"
+            >
+              <h3 className="text-xl font-semibold text-[#E7F1FF]">{card.title}</h3>
+              <p className="text-sm text-[#C8D7F2] leading-relaxed mt-3">{card.description}</p>
+              <span className="mt-4 inline-flex items-center text-sm font-semibold text-[#7BCBFF]">
+                Learn more
+                <i className="ri-arrow-right-line ml-2 text-base"></i>
+              </span>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

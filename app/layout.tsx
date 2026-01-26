@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Pacifico } from "next/font/google";
 import "./globals.css";
+import GlobalNetworkBackground from "../components/GlobalNetworkBackground";
 
 const pacifico = Pacifico({
   weight: '400',
@@ -35,7 +36,10 @@ export default function RootLayout({
         suppressHydrationWarning={true}
         className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable} antialiased`}
       >
-        {children}
+        <GlobalNetworkBackground />
+        <div className="relative z-10 min-h-screen">
+          {children}
+        </div>
       </body>
     </html>
   );

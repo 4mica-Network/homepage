@@ -50,15 +50,15 @@ export default function BlogContent() {
     : blogPosts.filter(post => post.category === selectedCategory);
 
   return (
-    <div className="min-h-screen bg-[#F5F9FF] pt-20">
+    <div className="min-h-screen pt-20 text-[#C8D7F2]">
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#1B1F3B] mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
             4Mica Blog
           </h1>
           <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
-          <p className="text-xl text-[#1B1F3B] max-w-3xl mx-auto">
+          <p className="text-xl text-[#C8D7F2] max-w-3xl mx-auto">
             Insights, updates, and thought leadership on AVS payments, blockchain infrastructure, and the future of decentralized finance.
           </p>
         </div>
@@ -76,7 +76,7 @@ export default function BlogContent() {
                     className={`px-4 py-2 rounded-full transition-colors cursor-pointer whitespace-nowrap ${
                       selectedCategory === category
                         ? 'bg-[#1E4DD8] text-white'
-                        : 'bg-white text-[#1B1F3B] hover:bg-[#3CAEF5] hover:text-white'
+                        : 'bg-white/10 text-[#C8D7F2] hover:bg-white/15 hover:text-[#E7F1FF]'
                     }`}
                   >
                     {category}
@@ -88,7 +88,7 @@ export default function BlogContent() {
             {/* Blog Posts Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredPosts.map((post) => (
-                <article key={post.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <article key={post.id} className="glass-panel rounded-lg overflow-hidden transition-all hover:translate-y-[-2px]">
                   <Image 
                     src={post.image} 
                     alt={post.title}
@@ -103,14 +103,14 @@ export default function BlogContent() {
                       <span className="bg-[#1E4DD8] text-white px-3 py-1 rounded-full text-sm font-medium">
                         {post.category}
                       </span>
-                      <span className="text-sm text-gray-500">{post.readTime}</span>
+                      <span className="text-sm text-[#9CB7E8]">{post.readTime}</span>
                     </div>
                     
-                    <h2 className="text-xl font-bold text-[#1B1F3B] mb-3 line-clamp-2">
+                    <h2 className="text-xl font-bold text-[#E7F1FF] mb-3 line-clamp-2">
                       {post.title}
                     </h2>
                     
-                    <p className="text-[#1B1F3B] mb-4 line-clamp-3">
+                    <p className="text-[#C8D7F2] mb-4 line-clamp-3">
                       {post.excerpt}
                     </p>
                     
@@ -122,14 +122,14 @@ export default function BlogContent() {
                           </span>
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-[#1B1F3B]">{post.author}</p>
-                          <p className="text-xs text-gray-500">{post.date}</p>
+                          <p className="text-sm font-medium text-[#E7F1FF]">{post.author}</p>
+                          <p className="text-xs text-[#9CB7E8]">{post.date}</p>
                         </div>
                       </div>
                       
                       <Link 
                         href={`/resources/blog/${post.id}`}
-                        className="text-[#1E4DD8] hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap"
+                        className="text-[#7BCBFF] hover:text-[#A3FFD6] transition-colors cursor-pointer whitespace-nowrap"
                       >
                         Read More →
                       </Link>
@@ -151,20 +151,20 @@ export default function BlogContent() {
           <div className="lg:col-span-1">
             <div className="space-y-8">
               {/* Newsletter Signup */}
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-xl font-bold text-[#1B1F3B] mb-4">Stay Updated</h3>
-                <p className="text-[#1B1F3B] mb-4">
+              <div className="glass-panel rounded-lg p-6">
+                <h3 className="text-xl font-bold text-[#E7F1FF] mb-4">Stay Updated</h3>
+                <p className="text-[#C8D7F2] mb-4">
                   Get the latest insights on AVS payments and blockchain infrastructure.
                 </p>
                 
                 {isSubscribed ? (
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
-                    <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <div className="bg-emerald-500/15 border border-emerald-400/30 rounded-lg p-4 text-center">
+                    <div className="w-8 h-8 bg-emerald-400 rounded-full flex items-center justify-center mx-auto mb-2">
                       <div className="w-4 h-4 flex items-center justify-center">
                         <i className="ri-check-line text-white"></i>
                       </div>
                     </div>
-                    <p className="text-green-800 text-sm">Successfully subscribed!</p>
+                    <p className="text-emerald-200 text-sm">Successfully subscribed!</p>
                   </div>
                 ) : (
                   <form onSubmit={handleNewsletterSubmit} data-readdy-form id="newsletter-signup">
@@ -175,7 +175,7 @@ export default function BlogContent() {
                       onChange={(e) => setSubscribedEmail(e.target.value)}
                       placeholder="Enter your email"
                       required
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E4DD8] mb-3 text-sm"
+                      className="w-full px-3 py-2 border border-white/15 bg-white/5 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3CAEF5] mb-3 text-sm text-[#E7F1FF] placeholder:text-[#6A7AA3]"
                     />
                     <button
                       type="submit"
@@ -188,8 +188,8 @@ export default function BlogContent() {
               </div>
 
               {/* Recent Posts */}
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-xl font-bold text-[#1B1F3B] mb-4">Recent Posts</h3>
+              <div className="glass-panel rounded-lg p-6">
+                <h3 className="text-xl font-bold text-[#E7F1FF] mb-4">Recent Posts</h3>
                 <div className="space-y-4">
                   {blogPosts.slice(0, 3).map((post) => (
                     <Link 
@@ -197,7 +197,7 @@ export default function BlogContent() {
                       href={`/resources/blog/${post.id}`}
                       className="block cursor-pointer"
                     >
-                      <div className="flex space-x-3 hover:bg-[#F5F9FF] p-2 rounded transition-colors">
+                      <div className="flex space-x-3 hover:bg-white/5 p-2 rounded transition-colors">
                         <Image 
                           src={post.image} 
                           alt={post.title}
@@ -206,10 +206,10 @@ export default function BlogContent() {
                           className="h-16 w-16 rounded object-cover object-top flex-shrink-0"
                         />
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-semibold text-[#1B1F3B] line-clamp-2 mb-1">
+                          <h4 className="text-sm font-semibold text-[#E7F1FF] line-clamp-2 mb-1">
                             {post.title}
                           </h4>
-                          <p className="text-xs text-gray-500">{post.date}</p>
+                          <p className="text-xs text-[#9CB7E8]">{post.date}</p>
                         </div>
                       </div>
                     </Link>
@@ -218,13 +218,13 @@ export default function BlogContent() {
               </div>
 
               {/* Popular Tags */}
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-xl font-bold text-[#1B1F3B] mb-4">Popular Tags</h3>
+              <div className="glass-panel rounded-lg p-6">
+                <h3 className="text-xl font-bold text-[#E7F1FF] mb-4">Popular Tags</h3>
                 <div className="flex flex-wrap gap-2">
                   {['AVS', 'Payments', 'Blockchain', 'DeFi', 'EigenLayer', 'Security', 'Integration', 'Architecture'].map((tag) => (
                     <span 
                       key={tag}
-                      className="bg-[#F5F9FF] text-[#1B1F3B] px-3 py-1 rounded-full text-sm hover:bg-[#1E4DD8] hover:text-white transition-colors cursor-pointer"
+                      className="bg-white/10 text-[#C8D7F2] px-3 py-1 rounded-full text-sm hover:bg-[#1E4DD8] hover:text-white transition-colors cursor-pointer"
                     >
                       {tag}
                     </span>

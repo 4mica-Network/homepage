@@ -25,7 +25,7 @@ export default function TeamSection() {
   ];
 
   return (
-    <section id="team" className="py-20 bg-transparent">
+    <section id="team" className="py-20 section-gloss">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">

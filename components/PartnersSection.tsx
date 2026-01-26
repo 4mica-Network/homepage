@@ -9,6 +9,20 @@ export default function PartnersSection() {
     { name: 'Ensemble', logo: '/assets/ensemble_logo.png' },
     { name: 'Vistara', logo: '/assets/Vistaara.jpeg' }
   ];
+  const proofPoints = [
+    {
+      title: 'Open-source core',
+      description: 'Contracts and SDKs are public on GitHub.',
+    },
+    {
+      title: 'Holesky live',
+      description: 'Core4Mica contracts deployed for public testing.',
+    },
+    {
+      title: 'Non-custodial design',
+      description: 'Collateral stays on-chain until settlement or claim.',
+    },
+  ];
 
   return (
     <section className="py-20 section-gloss">
@@ -16,10 +30,10 @@ export default function PartnersSection() {
         <div className="text-center mb-16">
           <p className="text-sm uppercase tracking-[0.3em] text-[#7BCBFF] mb-4">Powering</p>
           <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-4">
-            Teams building with 4Mica
+            Early partners building with 4Mica
           </h2>
           <p className="text-lg text-[#C8D7F2] max-w-2xl mx-auto">
-            Partners and technical collaborators shipping instant, credit-backed payments.
+            Collaborators integrating payment tabs and credit-backed UX.
           </p>
         </div>
         
@@ -39,6 +53,15 @@ export default function PartnersSection() {
             </div>
           ))}
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12">
+          {proofPoints.map((point) => (
+            <div key={point.title} className="glass-panel rounded-2xl p-6">
+              <h3 className="text-lg font-semibold text-[#E7F1FF]">{point.title}</h3>
+              <p className="mt-3 text-sm text-[#C8D7F2] leading-relaxed">{point.description}</p>
+            </div>
+          ))}
+        </div>
         
         <div className="text-center">
           <button
@@ -47,7 +70,7 @@ export default function PartnersSection() {
               window.location.href = "mailto:akash@4mica.xyz";
             }}
           >
-            Become a Partner
+            Build with us
           </button>
         </div>
       </div>

@@ -216,53 +216,29 @@ client.recipient.remunerate(cert).await?;`,
 
 type TokenPattern = {
   regex: RegExp;
-  classMap: Record<string, string>;
+  classes: string[];
 };
 
 const tokenPatterns: Record<LanguageId, TokenPattern> = {
   typescript: {
     regex:
-      /(?<comment>\/\/.*$)|(?<string>`[^`]*`|'[^'\\]*(?:\\.[^'\\]*)*'|"[^"\\]*(?:\\.[^"\\]*)*")|(?<number>\b0x[0-9a-fA-F]+\b|\b\d+(?:_\d+)*(?:\.\d+)?\b)|(?<keyword>\b(?:import|from|async|function|const|let|await|return|new|class|export|default|try|catch|throw|if|else|for|while)\b)|(?<builtin>\b(?:console|Math|Date|BigInt|Number|String|Boolean|Object|process|Promise)\b)/g,
-    classMap: {
-      comment: 'comment',
-      string: 'string',
-      number: 'number',
-      keyword: 'keyword',
-      builtin: 'builtin',
-    },
+      /(\/\/.*$)|(`[^`]*`|'[^'\\]*(?:\\.[^'\\]*)*'|"[^"\\]*(?:\\.[^"\\]*)*")|(\b0x[0-9a-fA-F]+\b|\b\d+(?:_\d+)*(?:\.\d+)?\b)|(\b(?:import|from|async|function|const|let|await|return|new|class|export|default|try|catch|throw|if|else|for|while)\b)|(\b(?:console|Math|Date|BigInt|Number|String|Boolean|Object|process|Promise)\b)/g,
+    classes: ['comment', 'string', 'number', 'keyword', 'builtin'],
   },
   python: {
     regex:
-      /(?<comment>#.*$)|(?<string>'''[^']*'''|"""[^"]*"""|'[^'\\]*(?:\\.[^'\\]*)*'|"[^"\\]*(?:\\.[^"\\]*)*")|(?<number>\b0x[0-9a-fA-F]+\b|\b\d+(?:_\d+)*(?:\.\d+)?\b)|(?<keyword>\b(?:import|from|async|def|await|return|class|try|except|raise|if|elif|else|for|while|with|as|in|None|True|False)\b)/g,
-    classMap: {
-      comment: 'comment',
-      string: 'string',
-      number: 'number',
-      keyword: 'keyword',
-    },
+      /(#.*$)|('''[^']*'''|"""[^"]*"""|'[^'\\]*(?:\\.[^'\\]*)*'|"[^"\\]*(?:\\.[^"\\]*)*")|(\b0x[0-9a-fA-F]+\b|\b\d+(?:_\d+)*(?:\.\d+)?\b)|(\b(?:import|from|async|def|await|return|class|try|except|raise|if|elif|else|for|while|with|as|in|None|True|False)\b)/g,
+    classes: ['comment', 'string', 'number', 'keyword'],
   },
   rust: {
     regex:
-      /(?<comment>\/\/.*$)|(?<string>b?"[^"\\]*(?:\\.[^"\\]*)*"|b?'[^'\\]*(?:\\.[^'\\]*)*')|(?<number>\b0x[0-9a-fA-F_]+\b|\b\d+(?:_\d+)*(?:\.\d+)?\b)|(?<keyword>\b(?:use|let|mut|async|await|fn|pub|struct|impl|match|if|else|for|while|loop|return|crate|mod|enum|trait|Result|Ok|Err|Some|None)\b)|(?<macro>\b\w+!)/g,
-    classMap: {
-      comment: 'comment',
-      string: 'string',
-      number: 'number',
-      keyword: 'keyword',
-      macro: 'macro',
-    },
+      /(\/\/.*$)|(b?"[^"\\]*(?:\\.[^"\\]*)*"|b?'[^'\\]*(?:\\.[^'\\]*)*')|(\b0x[0-9a-fA-F_]+\b|\b\d+(?:_\d+)*(?:\.\d+)?\b)|(\b(?:use|let|mut|async|await|fn|pub|struct|impl|match|if|else|for|while|loop|return|crate|mod|enum|trait|Result|Ok|Err|Some|None)\b)|(\b\w+!)/g,
+    classes: ['comment', 'string', 'number', 'keyword', 'macro'],
   },
   api: {
     regex:
-      /(?<comment>#.*$)|(?<string>'[^'\\]*(?:\\.[^'\\]*)*'|"[^"\\]*(?:\\.[^"\\]*)*")|(?<number>\b\d+(?:\.\d+)?\b)|(?<keyword>\b(?:curl|POST|GET|PUT|PATCH|DELETE)\b)|(?<flag>--?[A-Za-z-]+)|(?<variable>\$[A-Z0-9_]+)\b/g,
-    classMap: {
-      comment: 'comment',
-      string: 'string',
-      number: 'number',
-      keyword: 'keyword',
-      flag: 'flag',
-      variable: 'variable',
-    },
+      /(#.*$)|('[^'\\]*(?:\\.[^'\\]*)*'|"[^"\\]*(?:\\.[^"\\]*)*")|(\b\d+(?:\.\d+)?\b)|(\b(?:curl|POST|GET|PUT|PATCH|DELETE)\b)|(--?[A-Za-z-]+)|(\$[A-Z0-9_]+)\b/g,
+    classes: ['comment', 'string', 'number', 'keyword', 'flag', 'variable'],
   },
 };
 
@@ -281,17 +257,19 @@ const highlightLine = (line: string, language: LanguageId) => {
   }
   let result = '';
   let lastIndex = 0;
-  for (const match of line.matchAll(pattern.regex)) {
+  pattern.regex.lastIndex = 0;
+  let match = pattern.regex.exec(line);
+  while (match) {
     const index = match.index ?? 0;
     if (index > lastIndex) {
       result += escapeHtml(line.slice(lastIndex, index));
     }
-    const groups = match.groups ?? {};
-    const tokenClass = Object.keys(pattern.classMap).find((key) => groups[key]);
-    const className = tokenClass ? pattern.classMap[tokenClass] : '';
+    const groupIndex = match.slice(1).findIndex((group) => group !== undefined);
+    const className = groupIndex >= 0 ? pattern.classes[groupIndex] : '';
     const tokenValue = escapeHtml(match[0]);
     result += className ? `<span class="code-token ${className}">${tokenValue}</span>` : tokenValue;
     lastIndex = index + match[0].length;
+    match = pattern.regex.exec(line);
   }
   if (lastIndex < line.length) {
     result += escapeHtml(line.slice(lastIndex));

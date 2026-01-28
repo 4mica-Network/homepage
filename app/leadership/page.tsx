@@ -9,18 +9,21 @@ export default function LeadershipPage() {
       name: 'Akash Madhusudan',
       role: 'CEO & Co-Founder',
       image: '/assets/akash.jpg',
+      imagePosition: '50% 18%',
       bio: 'Spent a decade solving real problems across banking, AI, and cryptography to build 4Mica.',
     },
     {
       name: 'Mairon Mahzoun',
       role: 'CTO & Co-Founder',
       image: '/assets/mairon.jpg',
+      imagePosition: '50% 20%',
       bio: 'Focused on building payment infrastructure that scales across chains and real-world commerce.',
     },
     {
       name: 'Tomer Ashur',
       role: 'Co-Founder',
       image: '/assets/tomer.png',
+      imagePosition: '50% 15%',
       bio: 'Cryptography expert leading the instant transaction layer for next-gen commerce.',
     },
   ];
@@ -44,12 +47,13 @@ export default function LeadershipPage() {
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {teamMembers.map((member) => (
               <div key={member.name} className="glass-panel rounded-xl overflow-hidden">
-                <div className="relative h-80">
+                <div className="relative aspect-[4/5] bg-[#0A2540]/35">
                   <Image
                     src={member.image}
                     alt={member.name}
                     fill
-                    className="object-cover object-center"
+                    className="object-cover"
+                    style={{ objectPosition: member.imagePosition ?? '50% 20%' }}
                     quality={100}
                   />
                 </div>

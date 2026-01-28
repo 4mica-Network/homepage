@@ -8,18 +8,21 @@ export default function TeamSection() {
       name: 'Akash Madhusudan',
       role: 'CEO & Co-Founder',
       image: '/assets/akash.jpg',
+      imagePosition: '50% 18%',
       bio: 'Spent a decade solving real problems across banking, AI, and cryptography to build 4Mica',
     },
     {
       name: 'Mairon Mahzoun',
       role: 'CTO & Co-Founder',
       image: '/assets/mairon.jpg',
+      imagePosition: '50% 20%',
       bio: 'Everyone talks about AI and web3. Few understand money. 4mica exists because I grew tired of watching the web3 community claiming it had solved payments. It didn’t. So I decided to.',
     },
     {
       name: 'Tomer Ashur',
       role: 'Co-Founder',
       image: '/assets/tomer.png',
+      imagePosition: '50% 15%',
       bio: 'Cryptography-savant, ex-professor, ex-captain, now leading the instant transaction layer for commerce 2.0'
     },
   ];
@@ -43,12 +46,13 @@ export default function TeamSection() {
               key={index}
               className="glass-panel rounded-xl overflow-hidden transition-shadow duration-300 group"
             >
-                <div className="relative overflow-hidden h-[420px]">
+                <div className="relative overflow-hidden aspect-[4/5] bg-[#0A2540]/35">
                   <Image
                     src={member.image}
                     alt={member.name}
                     fill
-                    className="object-cover object-center w-full h-full group-hover:scale-110 transition-transform duration-300"
+                    className="object-cover w-full h-full group-hover:scale-[1.02] transition-transform duration-300"
+                    style={{ objectPosition: member.imagePosition ?? '50% 20%' }}
                     quality={100}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

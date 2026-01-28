@@ -1,13 +1,14 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function PartnersSection() {
   const partners = [
-    { name: 'EigenCloud', logo: 'https://www.eigencloud.xyz/images/Eigen_Cloud_Logo.png' },
-    { name: 'Aligned Layer', logo: '/assets/aligned_layer_logo.png' },
-    { name: 'Ensemble', logo: '/assets/ensemble_logo.png' },
-    { name: 'Vistara', logo: '/assets/Vistaara.jpeg' }
+    { name: 'Eigen', logo: '/assets/eigen.svg', href: 'https://www.eigencloud.xyz/' },
+    { name: 'Aligned Layer', logo: '/assets/aligned_layer_logo.png', href: 'https://alignedlayer.com/' },
+    { name: 'Vistara', logo: '/assets/Vistaara.jpeg', href: 'https://www.vistara.dev/' },
+    { name: 'ChaosChain', logo: '/assets/chaos_chain_logo.svg', href: 'https://chaoscha.in/' }
   ];
   const proofPoints = [
     {
@@ -15,7 +16,7 @@ export default function PartnersSection() {
       description: 'Contracts and SDKs are public on GitHub',
     },
     {
-      title: 'Holesky live',
+      title: 'Testnet live',
       description: 'Core4Mica contracts deployed for public testing',
     },
     {
@@ -39,9 +40,13 @@ export default function PartnersSection() {
         
         <div className="flex flex-wrap justify-center items-center gap-8 mb-12">
           {partners.map((partner, index) => (
-            <div 
+            <Link 
               key={index}
+              href={partner.href}
+              target="_blank"
+              rel="noreferrer"
               className="glass-panel rounded-lg p-3 flex items-center justify-center transition-all duration-300 border border-white/10 hover:border-[#7BCBFF]/40"
+              aria-label={`${partner.name} homepage`}
             >
               <Image
                 src={partner.logo}
@@ -50,7 +55,7 @@ export default function PartnersSection() {
                 height={64}
                 className="max-h-16 w-auto object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
               />
-            </div>
+            </Link>
           ))}
         </div>
 

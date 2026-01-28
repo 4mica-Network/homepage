@@ -87,6 +87,24 @@
     backdrop-filter: blur(20px);
   }
 
+  .form-surface-dark {
+    background: rgba(8, 12, 20, 0.88);
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    box-shadow: 0 22px 50px rgba(4, 10, 20, 0.55);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+  }
+
+  .form-field-dark {
+    background: rgba(10, 14, 22, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    color: #e7f1ff;
+  }
+
+  .form-field-dark::placeholder {
+    color: rgba(156, 183, 232, 0.7);
+  }
+
   .section-gloss {
     background: transparent;
     background-image: none;

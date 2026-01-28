@@ -175,7 +175,7 @@ export default function BlogContent() {
                       onChange={(e) => setSubscribedEmail(e.target.value)}
                       placeholder="Enter your email"
                       required
-                      className="w-full px-3 py-2 border border-white/15 bg-white/5 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3CAEF5] mb-3 text-sm text-[#E7F1FF] placeholder:text-[#6A7AA3]"
+                      className="w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3CAEF5] mb-3 text-sm form-field-dark"
                     />
                     <button
                       type="submit"

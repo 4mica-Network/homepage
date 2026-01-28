@@ -238,15 +238,15 @@ export default function Header() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="contact-title"
-            className="bg-white rounded-lg max-w-md w-full p-6"
+            className="form-surface-dark rounded-lg max-w-md w-full p-6"
           >
             <div className="flex justify-between items-center mb-6">
-              <h3 id="contact-title" className="text-xl font-bold text-[#1B1F3B]">
+              <h3 id="contact-title" className="text-xl font-bold text-[#E7F1FF]">
                 Contact Us
               </h3>
               <button 
                 onClick={() => setIsContactOpen(false)}
-                className="text-gray-500 hover:text-gray-700 cursor-pointer"
+                className="text-[#9CB7E8] hover:text-[#E7F1FF] cursor-pointer"
               >
                 <div className="w-6 h-6 flex items-center justify-center">
                   <i className="ri-close-line text-xl"></i>
@@ -259,15 +259,15 @@ export default function Header() {
                 <div className="w-12 h-12 rounded-full bg-[#1E4DD8]/10 text-[#1E4DD8] flex items-center justify-center mx-auto">
                   <i className="ri-check-line text-2xl"></i>
                 </div>
-                <p className="mt-4 text-base font-semibold text-[#1B1F3B]">Thanks for reaching out.</p>
-                <p className="mt-2 text-sm text-[#4A5568]">
+                <p className="mt-4 text-base font-semibold text-[#E7F1FF]">Thanks for reaching out.</p>
+                <p className="mt-2 text-sm text-[#9CB7E8]">
                   We will reply soon. You can also email akash@4mica.xyz.
                 </p>
                 <div className="mt-6 grid gap-3">
                   <button
                     type="button"
                     onClick={() => setContactStatus('idle')}
-                    className="w-full border border-gray-300 text-[#1B1F3B] py-2 px-4 rounded-md hover:border-gray-400 transition-colors cursor-pointer"
+                    className="w-full border border-white/20 text-[#E7F1FF] py-2 px-4 rounded-md hover:border-white/40 transition-colors cursor-pointer"
                   >
                     Send another message
                   </button>
@@ -290,7 +290,7 @@ export default function Header() {
                 }}
               >
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-[#1B1F3B] mb-1">
+                  <label htmlFor="name" className="block text-sm font-medium text-[#E7F1FF] mb-1">
                     Name
                   </label>
                   <input
@@ -300,12 +300,12 @@ export default function Header() {
                     name="name"
                     autoComplete="name"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E4DD8] text-sm"
+                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#3CAEF5] text-sm form-field-dark"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-[#1B1F3B] mb-1">
+                  <label htmlFor="email" className="block text-sm font-medium text-[#E7F1FF] mb-1">
                     Email
                   </label>
                   <input
@@ -314,12 +314,12 @@ export default function Header() {
                     name="email"
                     autoComplete="email"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E4DD8] text-sm"
+                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#3CAEF5] text-sm form-field-dark"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-[#1B1F3B] mb-1">
+                  <label htmlFor="message" className="block text-sm font-medium text-[#E7F1FF] mb-1">
                     Message
                   </label>
                   <textarea
@@ -328,7 +328,7 @@ export default function Header() {
                     rows={4}
                     maxLength={500}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1E4DD8] text-sm resize-none"
+                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#3CAEF5] text-sm resize-none form-field-dark"
                     placeholder="Your message (max 500 characters)"
                   ></textarea>
                 </div>

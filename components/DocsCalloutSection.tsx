@@ -37,16 +37,16 @@ export default function DocsCalloutSection() {
               </p>
               <div className="mt-4 space-y-2 text-sm text-[#C8D7F2]">
                 <div className="flex items-center justify-between">
-                  <span>POST /tabs</span>
-                  <span className="text-[#48C9B0]">open</span>
+                  <span>Recipient: POST /tabs</span>
+                  <span className="text-[#48C9B0]">open tab</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>POST /verify</span>
-                  <span className="text-[#48C9B0]">guarantee</span>
+                  <span>Agent: POST /settle</span>
+                  <span className="text-[#48C9B0]">credit guarantee</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span>POST /settle</span>
-                  <span className="text-[#48C9B0]">pay later</span>
+                  <span>Agent: payTabInERC20Token</span>
+                  <span className="text-[#48C9B0]">T+7 days</span>
                 </div>
               </div>
               <p className="mt-4 text-xs text-[#6A7AA3]">

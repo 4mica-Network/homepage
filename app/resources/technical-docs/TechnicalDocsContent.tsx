@@ -445,58 +445,73 @@ println!("Transaction hash: {:?}", receipt.transaction_hash);`}
                         </li>
                       </ol>
                     </div>
+                    <div className="bg-white/10 border border-white/10 rounded-lg p-6 space-y-3">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Minimal flow (no auth)</h3>
+                      <ol className="list-decimal list-inside space-y-2 text-sm text-[#C8D7F2]">
+                        <li>Recipient serves <code className="font-mono">402 Payment Required</code> with <code className="font-mono">paymentRequirements</code> and <code className="font-mono">extra.tabEndpoint</code>.</li>
+                        <li>Client SDK calls the tab endpoint (which opens/reuses a tab via <code className="font-mono">POST /tabs</code>), signs the guarantee, and retries with <code className="font-mono">X-PAYMENT</code>.</li>
+                        <li>Recipient calls <code className="font-mono">/verify</code> then <code className="font-mono">/settle</code> to receive a certificate.</li>
+                        <li>Payer settles on-chain later (e.g., <code className="font-mono">payTab</code> / <code className="font-mono">payTabInERC20Token</code>) after the agreed grace period (for example, 7 days).</li>
+                      </ol>
+                    </div>
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                       <div className="glass-panel rounded-lg p-4">
-                        <h3 className="text-lg font-semibold text-[#E7F1FF] mb-3">Client SDK quick start</h3>
+                        <h3 className="text-lg font-semibold text-[#E7F1FF] mb-3">Client SDK quick start (TypeScript)</h3>
                         <p className="text-sm text-[#C8D7F2] mb-3">
-                          Install <code className="font-mono">sdk-4mica</code> (Python/TypeScript) or <code className="font-mono">rust-sdk-4mica</code>, then wrap the
-                          recipient&rsquo;s advertised <code className="font-mono">paymentRequirements</code> into an <code className="font-mono">X-PAYMENT</code> header:
+                          Sign the recipient&rsquo;s <code className="font-mono">paymentRequirements</code> and attach the
+                          resulting <code className="font-mono">X-PAYMENT</code> header on the retry request:
                         </p>
                         <CodeBlock
                           code={`import { Client, ConfigBuilder, PaymentRequirements, X402Flow } from "sdk-4mica";
 
-const cfg = new ConfigBuilder().walletPrivateKey("0x...").build();
-const client = await Client.new(cfg);
-const flow = X402Flow.fromClient(client);
+async function run() {
+  const cfg = new ConfigBuilder().walletPrivateKey("0x...").build();
+  const client = await Client.new(cfg);
+  const flow = X402Flow.fromClient(client);
 
-const reqRaw = fetchRequirementsSomehow()[0]; // includes extra.tabEndpoint
-const requirements = PaymentRequirements.fromRaw(reqRaw);
+  const reqRaw = fetchRequirementsSomehow()[0]; // includes extra.tabEndpoint
+  const requirements = PaymentRequirements.fromRaw(reqRaw);
 
-const payment = await flow.signPayment(requirements, "0xUser");
-const headers = { "X-PAYMENT": payment.header };`}
+  const payment = await flow.signPayment(requirements, "0xUser");
+  const headers = { "X-PAYMENT": payment.header };
+
+  await fetch("https://recipient/resource", { headers });
+  await client.aclose();
+}
+
+run();`}
                           language="typescript"
                           className="p-4"
                         />
-                        <p className="text-sm text-[#C8D7F2] mt-3">
-                          Rust: <code className="font-mono">X402Flow::sign_payment(requirements, user_address)</code> returns the same{' '}
-                          <code className="font-mono">header</code>; Python mirrors the TypeScript API.
-                        </p>
                       </div>
                       <div className="glass-panel rounded-lg p-4">
-                        <h3 className="text-lg font-semibold text-[#E7F1FF] mb-3">Server side: settle after /verify</h3>
+                        <h3 className="text-lg font-semibold text-[#E7F1FF] mb-3">Client SDK quick start (Python)</h3>
                         <CodeBlock
-                          code={`use rust_sdk_4mica::{Client, ConfigBuilder, X402Flow, X402SignedPayment};
-use rust_sdk_4mica::x402::PaymentRequirements;
+                          code={`import asyncio
+import httpx
+from fourmica_sdk import Client, ConfigBuilder, PaymentRequirements, X402Flow
 
-async fn settle(
-    facilitator_url: &str,
-    payment_requirements: PaymentRequirements,
-    payment: X402SignedPayment,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let core = Client::new(
-        ConfigBuilder::default()
-            .wallet_private_key(std::env::var("RESOURCE_SIGNER_KEY")?)
-            .build()?,
-    ).await?;
-    let flow = X402Flow::new(core)?;
+payer_key = "0x..."
+user_address = "0x..."
 
-    let settled = flow
-        .settle_payment(payment, payment_requirements, facilitator_url)
-        .await?; // mirrors POST /settle
-    println!("settlement result: {}", settled.settlement);
-    Ok(())
-}`}
-                          language="rust"
+async def main():
+    cfg = ConfigBuilder().wallet_private_key(payer_key).build()
+    client = await Client.new(cfg)
+    flow = X402Flow.from_client(client)
+
+    req_raw = fetch_requirements_somehow()[0]  # includes extra.tabEndpoint
+    requirements = PaymentRequirements.from_raw(req_raw)
+
+    payment = await flow.sign_payment(requirements, user_address)
+    headers = {"X-PAYMENT": payment.header}
+
+    async with httpx.AsyncClient() as session:
+        await session.get("https://recipient/resource", headers=headers)
+
+    await client.aclose()
+
+asyncio.run(main())`}
+                          language="python"
                           className="p-4"
                         />
                       </div>

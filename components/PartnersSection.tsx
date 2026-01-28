@@ -17,7 +17,7 @@ export default function PartnersSection() {
     },
     {
       title: 'Testnet live',
-      description: 'Core4Mica contracts deployed for public testing',
+      description: '4Mica is now live on the testnet',
     },
     {
       title: 'Non-custodial design',

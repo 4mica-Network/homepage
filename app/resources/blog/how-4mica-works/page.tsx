@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import CodeTabs from '../CodeTabs';
 
 export const metadata: Metadata = {
   title: 'Getting Paid with 4Mica',
@@ -135,6 +134,32 @@ export default function How4MicaWorksPage() {
       ],
     },
     {
+      heading: 'SDK Installation',
+      paragraphs: [
+        'Pick the SDK that matches your stack. Source repos: `~/4mica-core/sdk`, `~/py-sdk-4mica`, `~/ts-sdk-4mica`.',
+      ],
+      codeBlocks: [
+        {
+          language: 'bash',
+          label: 'Rust',
+          code: String.raw`cargo add rust-sdk-4mica
+
+# Cargo.toml
+rust-sdk-4mica = "0.4.0"`,
+        },
+        {
+          language: 'bash',
+          label: 'Python',
+          code: "pip install 'sdk-4mica[bls]'",
+        },
+        {
+          language: 'bash',
+          label: 'TypeScript',
+          code: 'npm i sdk-4mica',
+        },
+      ],
+    },
+    {
       heading: 'Return 402 Payment Required',
       paragraphs: [
         'When a request arrives without a valid `X-PAYMENT` header, respond with HTTP 402 and include `paymentRequirements` so the client can request a tab and retry.',
@@ -159,7 +184,8 @@ Content-Type: application/json
     "maxTimeoutSeconds": 300,
     "asset": "0xAssetAddress",
     "extra": {
-      "tabEndpoint": "https://your.api.example.com/x402/tab" // recipient-owned endpoint for tab management
+      // recipient-owned endpoint for tab management
+      "tabEndpoint": "https://your.api.example.com/x402/tab"
     }
   }
 }`,
@@ -252,6 +278,31 @@ async fn main() -> anyhow::Result<()> {
     let x_payment_header = signed.header; // send as X-PAYMENT
     Ok(())
 }`,
+        },
+        {
+          language: 'python',
+          caption: 'Client signs X-PAYMENT with sdk-4mica (Python)',
+          code: String.raw`import asyncio
+from fourmica_sdk import Client, ConfigBuilder, PaymentRequirements, X402Flow
+
+payer_key = "0x..."    # wallet private key
+user_address = "0x..." # address to embed in the claims
+
+async def main():
+    cfg = ConfigBuilder().wallet_private_key(payer_key).rpc_url("https://api.4mica.xyz/").build()
+    client = await Client.new(cfg)
+    flow = X402Flow.from_client(client)
+
+    # Fetch the recipient's paymentRequirements (must include extra.tabEndpoint)
+    req_raw = fetch_requirements_somehow()[0]
+    requirements = PaymentRequirements.from_raw(req_raw)
+
+    payment = await flow.sign_payment(requirements, user_address)
+    headers = {"X-PAYMENT": payment.header}  # base64 string to send with the retry
+
+    await client.aclose()
+
+asyncio.run(main())`,
         },
       ],
     },
@@ -415,30 +466,7 @@ async fn main() -> anyhow::Result<()> {
                   {renderInlineCode(paragraph)}
                 </p>
               ))}
-              {section.codeBlocks && section.codeBlocks.map((block, idx) => (
-                <div key={`code-${idx}`} className="rounded-xl border border-white/10 bg-[#050B1D] p-5 text-sm text-[#C8D7F2] space-y-3">
-                  {block.caption && (
-                    <p className="text-xs uppercase tracking-wide text-[#7BCBFF]">
-                      {block.caption}
-                    </p>
-                  )}
-                  <div className="overflow-x-auto">
-                    <SyntaxHighlighter
-                      language={block.language ?? 'text'}
-                      style={vscDarkPlus}
-                      customStyle={{
-                        background: 'transparent',
-                        margin: 0,
-                        padding: 0,
-                      }}
-                      codeTagProps={{ className: 'font-mono' }}
-                      wrapLongLines
-                    >
-                      {block.code}
-                    </SyntaxHighlighter>
-                  </div>
-                </div>
-              ))}
+              {section.codeBlocks && <CodeTabs blocks={section.codeBlocks} />}
               {section.sequence && (
                 <div className="rounded-xl border border-white/10 bg-[#050B1D] p-5 text-sm text-[#C8D7F2] space-y-2">
                   {section.sequence.map((line) => (

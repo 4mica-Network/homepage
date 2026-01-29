@@ -238,18 +238,7 @@ export async function POST(req: Request) {
   }
 
   const tab = await tabRes.json();
-
-  return Response.json({
-    paymentRequirements: {
-      ...paymentRequirements,
-      extra: {
-        ...extra,
-        tabId: tab.tabId,
-        tabEndpoint: "https://api.example.com/x402/tab",
-      },
-    },
-    tab,
-  });
+  return Response.json(tab);
 }`,
         },
         {
@@ -268,8 +257,7 @@ async fn main() -> anyhow::Result<()> {
     .await?;
 
     let flow = X402Flow::new(payer)?;
-    let requirements: PaymentRequirements =
-        serde_json::from_value(tab_response["paymentRequirements"].clone())?;
+    let requirements: PaymentRequirements = fetch_resource_server().await?;
 
     let signed = flow
         .sign_payment(requirements, "0xUserAddress".to_string())
@@ -362,7 +350,7 @@ asyncio.run(main())`,
       ],
       bullets: [
         '/verify returns { isValid, invalidReason?, certificate: null }.',
-        '/settle returns { success, networkId, certificate }.',
+        '/settle returns { success, networkId, txHash, certificate }.',
         'Both enforce scheme/network, payTo, asset, and exact amount matching.',
       ],
     },

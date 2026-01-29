@@ -1,7 +1,6 @@
 
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -14,35 +13,34 @@ export default function BlogContent() {
     const formData = new FormData();
     formData.append('email', subscribedEmail);
     
-    try {
-      const response = await fetch('https://readdy.ai/api/form/d2sprdo194fldsa6vk1g', {
-        method: 'POST',
-        body: new URLSearchParams({ email: subscribedEmail })
-      });
-      
-      if (response.ok) {
-        setIsSubscribed(true);
-        setSubscribedEmail('');
-      }
-    } catch (error) {
-      console.error('Newsletter subscription failed:', error);
-    }
+    setIsSubscribed(true);
+    setSubscribedEmail('');
   };
 
   const blogPosts = [
     {
       id: 1,
-      title: 'The Future of AVS Payments: Why 4Mica Matters',
-      excerpt: '4Mica issues cryptographic “tabs” backed by user collateral, so services can deliver instantly while settlement catches up later—Visa-like UX with on-chain guarantees.',
+      title: 'Getting Paid with 4Mica',
+      excerpt: 'This post is a deep dive into the concrete concepts: tabs, req_ids, payment guarantees, certificates, and how each path behaves (happy path, default path, and optional exact/debit fallback).',
       author: 'Mairon',
-      date: '2025-01-15',
-      readTime: '5 min read',
-      category: 'Technology',
-      image: 'https://readdy.ai/api/search-image?query=futuristic%20payment%20technology%20visualization%20with%20blockchain%20networks%20and%20digital%20transactions%2C%20modern%20fintech%20infrastructure%20with%20blue%20and%20teal%20gradients%2C%20clean%20tech%20illustration%20showing%20real-time%20payment%20flows%20and%20cryptocurrency%20systems&width=400&height=250&seq=blog-post-1&orientation=landscape'
+      date: '2026-01-29',
+      readTime: '15 min read',
+      category: 'Integration',
+      href: '/resources/blog/how-4mica-works',
+    },
+    {
+      id: 2,
+      title: 'Paying with 4Mica',
+      excerpt: 'This guide is for payers and agents who want to consume paid resources using 4Mica credit.',
+      author: 'Mairon',
+      date: '2026-01-29',
+      readTime: '10 min read',
+      category: 'Integration',
+      href: '/resources/blog/paying-with-4mica',
     },
   ];
 
-  const categories = ['All', 'Technology', 'Architecture', 'Integration', 'Security', 'Case Study', 'Economics'];
+  const categories = ['All', 'Payments', 'Technology', 'Architecture', 'Integration', 'Security', 'Case Study', 'Economics'];
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   const filteredPosts = selectedCategory === 'All' 
@@ -89,15 +87,6 @@ export default function BlogContent() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {filteredPosts.map((post) => (
                 <article key={post.id} className="glass-panel rounded-lg overflow-hidden transition-all hover:translate-y-[-2px]">
-                  <Image 
-                    src={post.image} 
-                    alt={post.title}
-                    width={400}
-                    height={250}
-                    className="h-48 w-full object-cover object-top"
-                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                  />
-                  
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
                       <span className="bg-[#1E4DD8] text-white px-3 py-1 rounded-full text-sm font-medium">
@@ -128,7 +117,7 @@ export default function BlogContent() {
                       </div>
                       
                       <Link 
-                        href={`/resources/blog/${post.id}`}
+                        href={post.href}
                         className="text-[#7BCBFF] hover:text-[#A3FFD6] transition-colors cursor-pointer whitespace-nowrap"
                       >
                         Read More →
@@ -167,7 +156,7 @@ export default function BlogContent() {
                     <p className="text-emerald-200 text-sm">Successfully subscribed!</p>
                   </div>
                 ) : (
-                  <form onSubmit={handleNewsletterSubmit} data-readdy-form id="newsletter-signup">
+                  <form onSubmit={handleNewsletterSubmit} id="newsletter-signup">
                     <input
                       type="email"
                       name="email"
@@ -194,17 +183,10 @@ export default function BlogContent() {
                   {blogPosts.slice(0, 3).map((post) => (
                     <Link 
                       key={post.id} 
-                      href={`/resources/blog/${post.id}`}
+                      href={post.href}
                       className="block cursor-pointer"
                     >
                       <div className="flex space-x-3 hover:bg-white/5 p-2 rounded transition-colors">
-                        <Image 
-                          src={post.image} 
-                          alt={post.title}
-                          width={64}
-                          height={64}
-                          className="h-16 w-16 rounded object-cover object-top flex-shrink-0"
-                        />
                         <div className="flex-1 min-w-0">
                           <h4 className="text-sm font-semibold text-[#E7F1FF] line-clamp-2 mb-1">
                             {post.title}

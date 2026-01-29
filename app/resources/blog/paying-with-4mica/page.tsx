@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import CodeTabs from '../CodeTabs';
 
 export const metadata: Metadata = {
   title: 'Paying with 4Mica',
@@ -17,24 +18,88 @@ export default function PayingWith4MicaPage() {
       ],
     },
     {
+      heading: 'Switching from x402 Debit to 4Mica Credit',
+      paragraphs: [
+        'If a resource migrates from an x402 debit facilitator to the 4Mica credit facilitator, the flow changes from immediate on-chain payment to credit-backed guarantees.',
+      ],
+      steps: [
+        'Expect `paymentRequirements.scheme = "4mica-credit"` (or another scheme containing "4mica") plus `extra.tabEndpoint` in the 402 response.',
+        'Deposit collateral before your first credit request; the facilitator refuses tabs for empty balances.',
+        'Use the 4Mica SDK X402Flow to sign the guarantee and produce the `X-PAYMENT` header.',
+        'Retry the request with `X-PAYMENT`, then pay the tab later using the `req_id` from the certificate.',
+        'Keep your old debit path as a fallback if the scheme is not 4mica.',
+      ],
+    },
+    {
       heading: 'What You Need',
       bullets: [
         'A wallet private key with collateral available (ETH or ERC20).',
         'The recipient endpoint you want to call.',
         'Access to the 4Mica core API (default: https://api.4mica.xyz/).',
-        'The recipient tabEndpoint (advertised in the 402 response).',
+        'A 402 response that advertises `scheme: "4mica-credit"` and `extra.tabEndpoint`.',
       ],
     },
     {
-      heading: 'Step 1: Fund Collateral',
+      heading: 'Step 1: Fund Collateral (Payer SDK)',
       paragraphs: [
         'Credit requires collateral in the Core4Mica vault. Deposit once per asset and reuse the same collateral for multiple tabs.',
         'For ERC20 assets, approve first, then deposit.',
       ],
       codeBlocks: [
         {
+          language: 'ts',
+          caption: 'Deposit collateral (TypeScript SDK)',
+          code: String.raw`import { Client, ConfigBuilder } from "sdk-4mica";
+
+const cfg = new ConfigBuilder()
+  .rpcUrl(process.env["4MICA_RPC_URL"] ?? "https://api.4mica.xyz/")
+  .walletPrivateKey(process.env.PAYER_KEY!)
+  .build();
+
+const client = await Client.new(cfg);
+
+// ETH deposit
+await client.user.deposit(10_000n);
+
+// ERC20 flow (approve then deposit)
+// const token = "0xTokenAddress";
+// await client.user.approveErc20(token, 1_000_000n);
+// await client.user.deposit(1_000_000n, token);
+
+await client.aclose();`,
+        },
+        {
+          language: 'python',
+          caption: 'Deposit collateral (Python SDK)',
+          code: String.raw`import asyncio
+from fourmica_sdk import Client, ConfigBuilder
+
+PAYER_KEY = "0x..."
+
+async def main():
+    cfg = (
+        ConfigBuilder()
+        .wallet_private_key(PAYER_KEY)
+        .rpc_url("https://api.4mica.xyz/")
+        .build()
+    )
+    client = await Client.new(cfg)
+    try:
+        # ETH deposit
+        await client.user.deposit(10_000)
+
+        # ERC20 flow (approve then deposit)
+        # token = "0xTokenAddress"
+        # await client.user.approve_erc20(token, 1_000_000)
+        # await client.user.deposit(1_000_000, token)
+    finally:
+        await client.aclose()
+
+asyncio.run(main())`,
+        },
+        {
           language: 'rust',
-          caption: 'Deposit collateral with rust-sdk-4mica',
+          caption: 'Deposit collateral (Rust SDK)',
           code: String.raw`use rust_sdk_4mica::{Client, ConfigBuilder, U256};
 
 #[tokio::main]
@@ -60,43 +125,98 @@ async fn main() -> anyhow::Result<()> {
       ],
     },
     {
-      heading: 'Step 2: Discover Payment Requirements',
+      heading: 'Step 2: Parse 402 Requirements & Select 4Mica Credit',
       paragraphs: [
-        'Make the request without payment to receive a 402 response. The response includes paymentRequirements and extra.tabEndpoint.',
-        'You will use these requirements to create a tab and sign the payment header.',
-      ],
-    },
-    {
-      heading: 'Step 3: Request a Tab',
-      paragraphs: [
-        'Call the tabEndpoint with your wallet address and the payment requirements. The recipient will create or reuse a tab via the facilitator.',
-        'The response includes tabId and nextReqId, which are required for signing.',
+        'Make the request without payment to receive a 402 response. Then parse the requirements and ensure the scheme is 4mica credit.',
       ],
       codeBlocks: [
         {
-          language: 'http',
-          caption: 'POST tabEndpoint',
-          code: String.raw`POST /x402/tab HTTP/1.1
-Content-Type: application/json
+          language: 'ts',
+          caption: 'Parse requirements (TypeScript SDK)',
+          code: String.raw`import { PaymentRequirements } from "sdk-4mica";
 
-{
-  "userAddress": "0xUserAddress",
-  "paymentRequirements": { "...": "from 402 response" }
+const requirements = PaymentRequirements.fromRaw(reqRaw); // from 402 response
+if (!requirements.scheme.includes("4mica")) {
+  throw new Error("Unsupported scheme; expected 4mica credit.");
+}`,
+        },
+        {
+          language: 'python',
+          caption: 'Parse requirements (Python SDK)',
+          code: String.raw`from fourmica_sdk import PaymentRequirements
+
+requirements = PaymentRequirements.from_raw(req_raw)
+if "4mica" not in requirements.scheme:
+    raise ValueError("Unsupported scheme; expected 4mica credit.")`,
+        },
+        {
+          language: 'rust',
+          caption: 'Parse requirements (Rust SDK)',
+          code: String.raw`use rust_sdk_4mica::x402::PaymentRequirements;
+
+let requirements: PaymentRequirements = serde_json::from_value(req_raw)?;
+if !requirements.scheme.contains("4mica") {
+    anyhow::bail!("Unsupported scheme; expected 4mica credit.");
 }`,
         },
       ],
     },
     {
-      heading: 'Step 4: Sign X-PAYMENT',
+      heading: 'Step 3: Sign X-PAYMENT (Payer SDK)',
       paragraphs: [
-        'Use the SDK to build and sign the payment guarantee. The SDK will refresh the tab via tabEndpoint and return the base64 X-PAYMENT header.',
+        'Use the SDK to build and sign the payment guarantee. The SDK automatically calls the tabEndpoint to refresh the tab and returns the base64 X-PAYMENT header.',
       ],
       codeBlocks: [
         {
+          language: 'ts',
+          caption: 'Sign X-PAYMENT (TypeScript SDK)',
+          code: String.raw`import { Client, ConfigBuilder, X402Flow } from "sdk-4mica";
+
+const cfg = new ConfigBuilder()
+  .rpcUrl(process.env["4MICA_RPC_URL"] ?? "https://api.4mica.xyz/")
+  .walletPrivateKey(process.env.PAYER_KEY!)
+  .build();
+
+const client = await Client.new(cfg);
+const flow = X402Flow.fromClient(client);
+
+// requirements from Step 2
+const payment = await flow.signPayment(requirements, "0xUserAddress");
+const xPaymentHeader = payment.header;
+
+await client.aclose();`,
+        },
+        {
+          language: 'python',
+          caption: 'Sign X-PAYMENT (Python SDK)',
+          code: String.raw`import asyncio
+from fourmica_sdk import Client, ConfigBuilder, X402Flow
+
+PAYER_KEY = "0x..."
+USER_ADDRESS = "0x..."
+
+async def main():
+    cfg = (
+        ConfigBuilder()
+        .wallet_private_key(PAYER_KEY)
+        .rpc_url("https://api.4mica.xyz/")
+        .build()
+    )
+    client = await Client.new(cfg)
+    flow = X402Flow.from_client(client)
+
+    # requirements from Step 2
+    payment = await flow.sign_payment(requirements, USER_ADDRESS)
+    x_payment_header = payment.header
+
+    await client.aclose()
+
+asyncio.run(main())`,
+        },
+        {
           language: 'rust',
-          caption: 'Sign the payment header',
+          caption: 'Sign X-PAYMENT (Rust SDK)',
           code: String.raw`use rust_sdk_4mica::{Client, ConfigBuilder, X402Flow};
-use rust_sdk_4mica::x402::PaymentRequirements;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -108,11 +228,9 @@ async fn main() -> anyhow::Result<()> {
     .await?;
 
     let flow = X402Flow::new(payer)?;
-    let requirements: PaymentRequirements =
-        serde_json::from_value(tab_response["paymentRequirements"].clone())?;
-
+    // requirements from Step 2
     let signed = flow
-        .sign_payment(requirements, "0xUserAddress".to_string())
+        .sign_payment(requirements, std::env::var("USER_ADDRESS")?)
         .await?;
 
     let x_payment_header = signed.header; // send as X-PAYMENT
@@ -122,29 +240,43 @@ async fn main() -> anyhow::Result<()> {
       ],
     },
     {
-      heading: 'Step 5: Retry the Request with X-PAYMENT',
+      heading: 'Step 4: Retry the Request with X-PAYMENT',
       paragraphs: [
         'Retry the same request with the X-PAYMENT header. The recipient will call /verify and /settle and then serve the response.',
       ],
-      codeBlocks: [
-        {
-          language: 'http',
-          caption: 'Retry the protected request',
-          code: String.raw`GET /v1/report HTTP/1.1
-X-PAYMENT: <base64-envelope>`,
-        },
-      ],
     },
     {
-      heading: 'Step 6: Settle the Tab On-Chain',
+      heading: 'Step 5: Pay the Tab On-Chain (Payer SDK)',
       paragraphs: [
         'After receiving the response, settle the tab on-chain using the req_id in the certificate.',
         'This unlocks collateral and keeps your account healthy for future requests.',
       ],
       codeBlocks: [
         {
+          language: 'ts',
+          caption: 'Pay the tab (TypeScript SDK)',
+          code: String.raw`const receipt = await client.user.payTab(
+  tabId,
+  reqId,          // from certificate
+  amountWei,
+  recipientAddress,
+  undefined       // or ERC20 token address
+);`,
+        },
+        {
+          language: 'python',
+          caption: 'Pay the tab (Python SDK)',
+          code: String.raw`await client.user.pay_tab(
+    tab_id=tab_id,
+    req_id=req_id,          # from certificate
+    amount=amount_wei,
+    recipient_address=recipient_address,
+    erc20_token=None,
+)`,
+        },
+        {
           language: 'rust',
-          caption: 'Pay the tab',
+          caption: 'Pay the tab (Rust SDK)',
           code: String.raw`use rust_sdk_4mica::U256;
 
 // req_id comes from the certificate returned by /settle
@@ -156,11 +288,50 @@ client
       ],
     },
     {
+      heading: 'Optional: Settle via the Facilitator (SDK helper)',
+      paragraphs: [
+        'If a recipient delegates settlement to the payer (less common), you can call the facilitator /settle endpoint using the SDK.',
+      ],
+      codeBlocks: [
+        {
+          language: 'ts',
+          caption: 'Settle with the facilitator (TypeScript SDK)',
+          code: String.raw`const settled = await flow.settlePayment(
+  payment,
+  requirements,
+  "https://x402.4mica.xyz"
+);
+
+const certificate = settled.settlement;`,
+        },
+        {
+          language: 'python',
+          caption: 'Settle with the facilitator (Python SDK)',
+          code: String.raw`settled = await flow.settle_payment(
+    payment,
+    requirements,
+    facilitator_url="https://x402.4mica.xyz/"
+)
+
+certificate = settled.settlement`,
+        },
+        {
+          language: 'rust',
+          caption: 'Settle with the facilitator (Rust SDK)',
+          code: String.raw`let settled = flow
+    .settle_payment(payment, requirements, "https://x402.4mica.xyz")
+    .await?;
+
+let certificate = settled.settlement;`,
+        },
+      ],
+    },
+    {
       heading: 'Handle 402 Responses in Client Code',
       steps: [
         'Call the resource and check for HTTP 402.',
-        'Parse paymentRequirements and call tabEndpoint with your wallet.',
-        'Sign X-PAYMENT with the SDK.',
+        'Parse paymentRequirements and confirm the scheme is 4mica credit (fallback to debit if not).',
+        'Sign X-PAYMENT with the SDK (it calls tabEndpoint internally).',
         'Retry the request with X-PAYMENT.',
         'If 402 returns again, surface the error and refresh the tab.',
       ],
@@ -168,7 +339,8 @@ client
     {
       heading: 'Operational Tips',
       bullets: [
-        'Track tab TTL and settle before expiry to avoid remuneration.',
+        'Track tab TTL and settle before expiry (default 21 days) to avoid remuneration.',
+        'If unpaid, recipients can remunerate after the grace period (default 14 days).',
         'Always use the req_id from the certificate, not a cached value.',
         'Reuse collateral across tabs, but monitor balances if you issue many guarantees.',
         'If you rotate keys, create fresh tabs to avoid mismatched user addresses.',
@@ -219,21 +391,7 @@ client
                 </ul>
               )}
 
-              {section.codeBlocks && section.codeBlocks.map((block, idx) => (
-                <div
-                  key={`code-${idx}`}
-                  className="rounded-xl border border-white/10 bg-[#050B1D] p-5 text-sm text-[#C8D7F2] space-y-3"
-                >
-                  {block.caption && (
-                    <p className="text-xs uppercase tracking-wide text-[#7BCBFF]">
-                      {block.caption}
-                    </p>
-                  )}
-                  <pre className="overflow-x-auto">
-                    <code className="font-mono">{block.code}</code>
-                  </pre>
-                </div>
-              ))}
+              {section.codeBlocks && <CodeTabs blocks={section.codeBlocks} />}
             </section>
           ))}
         </article>

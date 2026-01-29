@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 
-const TARGET_PATH = '/resources/blog/how-4mica-works';
+const TARGET_PATH = '/resources/blog/getting-paid-by-4mica';
 
 export default function LegacyBlogRedirect() {
   useEffect(() => {

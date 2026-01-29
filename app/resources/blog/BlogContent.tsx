@@ -26,7 +26,7 @@ export default function BlogContent() {
       date: '2026-01-29',
       readTime: '15 min read',
       category: 'Integration',
-      href: '/resources/blog/how-4mica-works',
+      href: '/resources/blog/getting-paid-by-4mica',
     },
     {
       id: 2,

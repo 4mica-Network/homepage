@@ -189,7 +189,7 @@ rust-sdk-4mica = "0.3.3"`}
                       </ul>
                       <p className="text-sm text-[#C8D7F2]">
                         The Ethereum <code className="font-mono">chain_id</code>, contract metadata, and operator parameters are fetched and
-                        validated from the core service automatically.
+                        validated from the 4Mica operator automatically.
                       </p>
                     </div>
                     <div className="space-y-4">

@@ -35,7 +35,7 @@ export default function PayingWith4MicaPage() {
       bullets: [
         'A wallet private key with collateral available (ETH or ERC20).',
         'The recipient endpoint you want to call.',
-        'Access to the 4Mica core API (default: https://api.4mica.xyz/).',
+        'Access to the 4Mica operator API (default: https://api.4mica.xyz/).',
         'A 402 response that advertises `scheme: "4mica-credit"` and `extra.tabEndpoint`.',
       ],
     },

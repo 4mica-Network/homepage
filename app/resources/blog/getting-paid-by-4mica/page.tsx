@@ -202,7 +202,7 @@ Content-Type: application/json
         'Persist the certificate, then serve the protected response immediately. You can also fetch all your certificates later if needed.',
       ],
       paragraphsAfter: [
-        'Only `/settle` touches the 4Mica core to issue a BLS certificate. `/verify` is purely structural and is safe to use as a preflight check before doing any expensive work.',
+        'Only `/settle` touches the 4Mica operator to issue a BLS certificate. `/verify` is purely structural and is safe to use as a preflight check before doing any expensive work.',
       ],
     },
     {

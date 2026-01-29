@@ -20,7 +20,7 @@ export default function Header() {
   ];
 
   const primaryLinks = [
-    { href: '/#docs', label: 'Docs' },
+    { href: '/resources/technical-docs', label: 'Docs' },
     { href: '/#resources', label: 'Resources' },
     { href: '/#community', label: 'Community' },
   ];

@@ -105,6 +105,17 @@
     color: rgba(156, 183, 232, 0.7);
   }
 
+  .mermaid-diagram {
+    overflow-x: auto;
+  }
+
+  .mermaid-diagram svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+
   .section-gloss {
     background: transparent;
     background-image: none;

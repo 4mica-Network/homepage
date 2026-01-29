@@ -3,17 +3,17 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import CodeBlock from '../../../components/CodeBlock';
+import MermaidDiagram from '../../../components/MermaidDiagram';
+import CodeTabs from '../blog/CodeTabs';
 
 const navigationItems = [
   { id: 'overview', title: 'Overview', icon: 'ri-eye-line' },
   { id: 'installation', title: 'Installation', icon: 'ri-download-cloud-2-line' },
-  { id: 'configuration', title: 'Configuration', icon: 'ri-equalizer-line' },
-  { id: 'usage', title: 'Usage Guide', icon: 'ri-terminal-box-line' },
-  { id: 'x402', title: 'X402 Integration', icon: 'ri-key-2-line' },
+  { id: 'server-integration', title: 'Server Integration', icon: 'ri-server-line' },
+  { id: 'client-integration', title: 'Client Integration', icon: 'ri-user-line' },
+  { id: 'facilitator-api', title: 'Facilitator API', icon: 'ri-cloud-line' },
+  { id: 'operator-api', title: 'Operator API', icon: 'ri-database-2-line' },
   { id: 'payment-flow', title: 'Protocol Flow', icon: 'ri-route-line' },
-  { id: 'error-handling', title: 'Error Handling', icon: 'ri-error-warning-line' },
-  { id: 'development', title: 'Development', icon: 'ri-tools-line' },
-  { id: 'security', title: 'Security', icon: 'ri-shield-check-line' },
   { id: 'examples', title: 'Code Examples', icon: 'ri-file-code-line' },
   { id: 'support', title: 'Support', icon: 'ri-customer-service-2-line' }
 ];
@@ -83,8 +83,9 @@ function TechnicalDocsContentInner() {
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Overview</h2>
                   <div className="space-y-6">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      The latest 4Mica Rust SDK (v0.3.3) powers cryptographically enforced, non-custodial credit lines. It wraps the
-                      Core4Mica contracts, facilitator, and HTTP 402 helper into a single toolkit so you can collateralize, issue
+                      The 4Mica SDKs ship across Rust (v0.4.0), Python (v0.4.3), and TypeScript (v0.3.0) with shared primitives for
+                      tabs, sequential <code className="font-mono">req_id</code> guarantees, and HTTP 402/X402 flows. They wrap the
+                      Core4Mica contracts, facilitator, and X402 helper into a single toolkit so you can collateralize, issue
                       guarantees, and settle tabs without forcing users to pre-fund every request.
                     </p>
                     <p className="text-[#C8D7F2] leading-relaxed">
@@ -136,19 +137,34 @@ function TechnicalDocsContentInner() {
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Installation</h2>
                   <div className="space-y-6">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      The SDK ships as <code className="font-mono">rust-sdk-4mica</code> on crates.io (currently <code className="font-mono">0.3.3</code>).
-                      It targets the Core4Mica contracts and x402 facilitator APIs with Tokio + async support baked in.
+                      The SDKs ship as <code className="font-mono">rust-sdk-4mica</code> (v0.4.0), <code className="font-mono">sdk-4mica</code>{' '}
+                      for Python (v0.4.3), and <code className="font-mono">sdk-4mica</code> for TypeScript (v0.3.0). Each targets the
+                      Core4Mica contracts and x402 facilitator APIs with async support baked in.
                     </p>
                     <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Cargo Dependency</h3>
-                      <CodeBlock
-                        code={`[dependencies]
-rust-sdk-4mica = "0.3.3"`}
-                        language="toml"
-                        className="p-4"
+                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Install the SDK</h3>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'Rust',
+                            language: 'toml',
+                            code: `[dependencies]
+rust-sdk-4mica = "0.4.0"`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'bash',
+                            code: `pip install sdk-4mica==0.4.3`,
+                          },
+                          {
+                            label: 'TypeScript',
+                            language: 'bash',
+                            code: `npm install sdk-4mica@0.3.0`,
+                          },
+                        ]}
                       />
                       <p className="text-sm text-[#C8D7F2] mt-3">
-                        You can also run <code className="font-mono">cargo add rust-sdk-4mica@0.3.3</code>. After updating{' '}
+                        For Rust, you can also run <code className="font-mono">cargo add rust-sdk-4mica@0.4.0</code>. After updating{' '}
                         <code className="font-mono">Cargo.toml</code>, run <code className="font-mono">cargo build</code> to pull the crate and
                         verify your toolchain.
                       </p>
@@ -157,402 +173,1114 @@ rust-sdk-4mica = "0.3.3"`}
                 </div>
               )}
 
-              {activeSection === 'configuration' && (
+              {activeSection === 'server-integration' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Configuration</h2>
+                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Server Integration</h2>
                   <div className="space-y-8">
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Required Parameters</h3>
-                      <ul className="space-y-2 text-[#C8D7F2]">
-                        <li>
-                          <span className="font-semibold">wallet_private_key:</span> Hex-encoded signer key with or without a{' '}
-                          <code className="font-mono">0x</code> prefix. This is the only required setting.
-                        </li>
-                        <li>
-                          <span className="font-semibold">rpc_url:</span> 4Mica RPC endpoint. Defaults to{' '}
-                          <code className="font-mono">https://api.4mica.xyz/</code>; override for local stacks.
-                        </li>
-                      </ul>
+                    <p className="text-[#C8D7F2] leading-relaxed">
+                      Recipient flow for getting paid: respond with 402, provision tabs, then verify + settle
+                      guarantees to receive certificates.
+                    </p>
+                    <div className="space-y-2 text-sm text-[#C8D7F2]">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Steps</h3>
+                      <ol className="list-decimal list-inside space-y-1">
+                        <li>Return 402 with <code className="font-mono">paymentRequirements</code> and <code className="font-mono">extra.tabEndpoint</code>.</li>
+                        <li>Tab endpoint calls <code className="font-mono">POST /tabs</code> to open or reuse a tab.</li>
+                        <li>When the retry arrives, call <code className="font-mono">/verify</code>.</li>
+                        <li>Call <code className="font-mono">/settle</code> to mint the certificate.</li>
+                        <li>Persist the certificate and serve the protected response.</li>
+                      </ol>
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Optional Parameters</h3>
-                      <p className="text-[#C8D7F2]">
-                        The SDK fetches most public params automatically. Override these when pointing at custom infrastructure.
-                      </p>
-                      <ul className="space-y-2 text-[#C8D7F2]">
-                        <li>
-                          <span className="font-semibold">ethereum_http_rpc_url:</span> Upstream Ethereum JSON-RPC endpoint.
-                        </li>
-                        <li>
-                          <span className="font-semibold">contract_address:</span> Deployed Core4Mica contract address.
-                        </li>
-                      </ul>
-                      <p className="text-sm text-[#C8D7F2]">
-                        The Ethereum <code className="font-mono">chain_id</code>, contract metadata, and operator parameters are fetched and
-                        validated from the 4Mica operator automatically.
-                      </p>
-                    </div>
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Config Builder Example</h3>
-                      <CodeBlock
-                        code={`use rust_sdk_4mica::{Config, ConfigBuilder, Client};
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Return 402 Payment Required</h3>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'HTTP',
+                            language: 'http',
+                            code: `HTTP/1.1 402 Payment Required
+Content-Type: application/json
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let config = ConfigBuilder::default()
-        .wallet_private_key("0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string())
-        .build()?;
-
-    let client = Client::new(config).await?;
-    Ok(())
-}`}
-                        language="rust"
-                        className="p-4"
+{
+  "paymentRequirements": {
+    "scheme": "4mica-credit",
+    "network": "polygon-amoy",
+    "maxAmountRequired": "100",
+    "resource": "/v1/report",
+    "description": "Generate report",
+    "mimeType": "application/json",
+    "payTo": "0xRecipientAddress",
+    "maxTimeoutSeconds": 300,
+    "asset": "0xAssetAddress",
+    "extra": {
+      "tabEndpoint": "https://your.api.example.com/x402/tab"
+    }
+  }
+}`,
+                          },
+                        ]}
                       />
                     </div>
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Environment Variable Setup</h3>
-                      <CodeBlock
-                        code={`export 4MICA_WALLET_PRIVATE_KEY="0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Create or Reuse Tabs (Recipient SDK)</h3>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `import { Client, ConfigBuilder } from "sdk-4mica";
 
-# Optional: override defaults (api.4mica.xyz is used automatically if unset)
-export 4MICA_RPC_URL="https://api.4mica.xyz/"
-export 4MICA_ETHEREUM_HTTP_RPC_URL="http://localhost:8545"
-export 4MICA_CONTRACT_ADDRESS="0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0"`}
-                        language="bash"
-                        className="p-4"
-                      />
-                      <CodeBlock
-                        code={`use rust_sdk_4mica::{ConfigBuilder, Client};
+const cfg = new ConfigBuilder()
+  .rpcUrl(process.env["4MICA_RPC_URL"] ?? "https://api.4mica.xyz/")
+  .walletPrivateKey(process.env.RECIPIENT_KEY!)
+  .build();
+
+const client = await Client.new(cfg);
+const tabId = await client.recipient.createTab(
+  "0xUserAddress",
+  "0xRecipientAddress",
+  null,
+  3600
+);
+await client.aclose();`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `import asyncio
+from fourmica_sdk import Client, ConfigBuilder
+
+async def main():
+    cfg = ConfigBuilder().wallet_private_key("0x...").build()
+    client = await Client.new(cfg)
+    tab_id = await client.recipient.create_tab(
+        user_address="0xUserAddress",
+        recipient_address="0xRecipientAddress",
+        erc20_token=None,
+        ttl=3600,
+    )
+    await client.aclose()
+
+asyncio.run(main())`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `use rust_sdk_4mica::{Client, ConfigBuilder};
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let config = ConfigBuilder::default()
-        .from_env()
+async fn main() -> anyhow::Result<()> {
+    let cfg = ConfigBuilder::default()
+        .wallet_private_key(std::env::var("RECIPIENT_KEY")?)
         .build()?;
+    let client = Client::new(cfg).await?;
 
-    let client = Client::new(config).await?;
+    let tab_id = client
+        .recipient
+        .create_tab("0xUserAddress".to_string(), "0xRecipientAddress".to_string(), None, Some(3600))
+        .await?;
+    println!("tab_id={tab_id}");
     Ok(())
-}`}
-                        language="rust"
-                        className="p-4"
+}`,
+                          },
+                        ]}
                       />
                     </div>
                   </div>
                 </div>
               )}
 
-              {activeSection === 'usage' && (
+              {activeSection === 'client-integration' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Usage Guide</h2>
+                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Client Integration</h2>
                   <div className="space-y-8">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      <code className="font-mono">Client</code> exposes <code className="font-mono">user</code> and{' '}
-                      <code className="font-mono">recipient</code> helpers that share signer + public parameters. Layer{' '}
-                      <code className="font-mono">X402Flow</code> on top when you need HTTP 402 integration (see the next section).
+                      Payer flow for consuming paid resources: fund collateral, parse requirements,
+                      sign <code className="font-mono">X-PAYMENT</code>, retry, then settle on-chain later.
                     </p>
-                    <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-4">API Methods Summary</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="border border-[#E5E5E5] rounded-lg p-4">
-                          <h4 className="font-semibold text-[#C8D7F2] mb-3">UserClient Methods</h4>
-                          <ul className="space-y-2 text-[#C8D7F2] text-sm">
-                            <li>
-                              <span className="font-semibold">deposit(amount: U256, erc20_token?: String)</span> → TransactionReceipt | DepositError
-                            </li>
-                            <li>
-                              <span className="font-semibold">get_user()</span> → UserInfo | GetUserError
-                            </li>
-                            <li>
-                              <span className="font-semibold">get_tab_payment_status(tab_id: U256)</span> → TabPaymentStatus | TabPaymentStatusError
-                            </li>
-                            <li>
-                              <span className="font-semibold">sign_payment(claims, scheme)</span> → PaymentSignature | SignPaymentError
-                            </li>
-                            <li>
-                              <span className="font-semibold">pay_tab(tab_id, req_id, amount, recipient)</span> → TransactionReceipt | PayTabError
-                            </li>
-                            <li>
-                              <span className="font-semibold">request_withdrawal(amount)</span> → TransactionReceipt | RequestWithdrawalError
-                            </li>
-                            <li>
-                              <span className="font-semibold">cancel_withdrawal()</span> → TransactionReceipt | CancelWithdrawalError
-                            </li>
-                            <li>
-                              <span className="font-semibold">finalize_withdrawal()</span> → TransactionReceipt | FinalizeWithdrawalError
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="border border-[#E5E5E5] rounded-lg p-4">
-                          <h4 className="font-semibold text-[#C8D7F2] mb-3">RecipientClient Methods</h4>
-                          <ul className="space-y-2 text-[#C8D7F2] text-sm">
-                            <li>
-                              <span className="font-semibold">create_tab(user_address, recipient_address, ttl)</span> → U256 | CreateTabError
-                            </li>
-                            <li>
-                              <span className="font-semibold">get_tab_payment_status(tab_id)</span> → TabPaymentStatus | TabPaymentStatusError
-                            </li>
-                            <li>
-                              <span className="font-semibold">issue_payment_guarantee(claims, signature, scheme)</span> → BLSCert | IssuePaymentGuaranteeError
-                            </li>
-                            <li>
-                              <span className="font-semibold">remunerate(cert)</span> → TransactionReceipt | RemunerateError
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
+                    <div className="space-y-2 text-sm text-[#C8D7F2]">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Steps</h3>
+                      <ol className="list-decimal list-inside space-y-1">
+                        <li>Fund collateral (ETH or ERC20).</li>
+                        <li>Parse 402 <code className="font-mono">paymentRequirements</code> and confirm <code className="font-mono">4mica</code> scheme.</li>
+                        <li>Sign <code className="font-mono">X-PAYMENT</code> with the SDK.</li>
+                        <li>Retry the request with the <code className="font-mono">X-PAYMENT</code> header.</li>
+                        <li>Pay the tab on-chain later using <code className="font-mono">req_id</code> from the certificate.</li>
+                      </ol>
                     </div>
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Instantiate once, reuse everywhere</h3>
-                      <CodeBlock
-                        code={`use rust_sdk_4mica::{Client, ConfigBuilder};
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Fund Collateral</h3>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `import { Client, ConfigBuilder } from "sdk-4mica";
+
+const cfg = new ConfigBuilder()
+  .rpcUrl(process.env["4MICA_RPC_URL"] ?? "https://api.4mica.xyz/")
+  .walletPrivateKey(process.env.PAYER_KEY!)
+  .build();
+
+const client = await Client.new(cfg);
+await client.user.deposit(10_000n);
+await client.aclose();`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `import asyncio
+from fourmica_sdk import Client, ConfigBuilder
+
+async def main():
+    cfg = ConfigBuilder().wallet_private_key("0x...").build()
+    client = await Client.new(cfg)
+    await client.user.deposit(10_000)
+    await client.aclose()
+
+asyncio.run(main())`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `use rust_sdk_4mica::{Client, ConfigBuilder, U256};
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> anyhow::Result<()> {
     let client = Client::new(
         ConfigBuilder::default()
             .wallet_private_key(std::env::var("PAYER_KEY")?)
             .build()?,
-    ).await?;
+    )
+    .await?;
 
-    // client.user and client.recipient share the same signer + params
-    println!("ready: {}", client.user.address()?);
+    client.user.deposit(U256::from(10_000u64), None).await?;
     Ok(())
-}`}
-                        language="rust"
+}`,
+                          },
+                        ]}
                       />
                     </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">User Client (Payer)</h3>
-                      <div className="space-y-4">
-                        <CodeBlock
-                          code={`use rust_sdk_4mica::U256;
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Parse 402 Requirements</h3>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `import { PaymentRequirements } from "sdk-4mica";
 
-// Deposit 1 ETH as collateral
-let amount = U256::from(1_000_000_000_000_000_000u128);
-match client.user.deposit(amount).await {
-    Ok(receipt) => println!("Deposit successful: {:?}", receipt.transaction_hash),
-    Err(e) => eprintln!("Deposit failed: {}", e),
+const requirements = PaymentRequirements.fromRaw(reqRaw);
+if (!requirements.scheme.includes("4mica")) {
+  throw new Error("Unsupported scheme; expected 4mica credit.");
+}`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `from fourmica_sdk import PaymentRequirements
+
+requirements = PaymentRequirements.from_raw(req_raw)
+if "4mica" not in requirements.scheme:
+    raise ValueError("Unsupported scheme; expected 4mica credit.")`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `use rust_sdk_4mica::x402::PaymentRequirements;
+
+let requirements: PaymentRequirements = serde_json::from_value(req_raw)?;
+if !requirements.scheme.contains("4mica") {
+    anyhow::bail!("Unsupported scheme; expected 4mica credit.");
+}`,
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Sign X-PAYMENT</h3>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `import { Client, ConfigBuilder, PaymentRequirements, X402Flow } from "sdk-4mica";
+
+const cfg = new ConfigBuilder().walletPrivateKey("0x...").build();
+const client = await Client.new(cfg);
+const flow = X402Flow.fromClient(client);
+
+const requirements = PaymentRequirements.fromRaw(reqRaw);
+const payment = await flow.signPayment(requirements, "0xUserAddress");
+const xPaymentHeader = payment.header;
+await client.aclose();`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `import asyncio
+from fourmica_sdk import Client, ConfigBuilder, PaymentRequirements, X402Flow
+
+async def main():
+    cfg = ConfigBuilder().wallet_private_key("0x...").build()
+    client = await Client.new(cfg)
+    flow = X402Flow.from_client(client)
+    requirements = PaymentRequirements.from_raw(req_raw)
+    payment = await flow.sign_payment(requirements, "0xUserAddress")
+    x_payment_header = payment.header
+    await client.aclose()
+
+asyncio.run(main())`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `use rust_sdk_4mica::{Client, ConfigBuilder, X402Flow};
+use rust_sdk_4mica::x402::PaymentRequirements;
+
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    let client = Client::new(
+        ConfigBuilder::default()
+            .wallet_private_key(std::env::var("PAYER_KEY")?)
+            .build()?,
+    )
+    .await?;
+    let flow = X402Flow::new(client)?;
+    let requirements: PaymentRequirements = serde_json::from_value(req_raw)?;
+    let signed = flow.sign_payment(requirements, "0xUserAddress".to_string()).await?;
+    let x_payment_header = signed.header;
+    Ok(())
+}`,
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Pay the Tab On-Chain</h3>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `const receipt = await client.user.payTab(
+  tabId,
+  reqId,
+  amountWei,
+  recipientAddress,
+  undefined
+);`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `await client.user.pay_tab(
+    tab_id=tab_id,
+    req_id=req_id,
+    amount=amount_wei,
+    recipient_address=recipient_address,
+    erc20_token=None,
+)`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `use rust_sdk_4mica::U256;
+
+client
+    .user
+    .pay_tab(tab_id, req_id, U256::from(amount_wei), recipient_address, None)
+    .await?;`,
+                          },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeSection === 'facilitator-api' && (
+                <div>
+                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Facilitator API Reference</h2>
+                  <div className="space-y-6">
+                    <p className="text-[#C8D7F2] leading-relaxed">
+                      Resource servers call the facilitator directly; end users and SDK clients only hit your
+                      <code className="font-mono">tabEndpoint</code> and protected resources. The hosted base URL is typically
+                      <code className="font-mono">https://x402.4mica.xyz/</code>, but any compatible deployment exposes the same
+                      endpoints.
+                    </p>
+                    <div className="grid grid-cols-1 gap-4">
+                      <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
+                        <h3 className="text-lg font-semibold text-[#E7F1FF]">GET /</h3>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">What it does:</span> Returns service metadata and a quick
+                          pointer to supported schemes/networks.
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Gets:</span> No body.
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Returns:</span>{' '}
+                          <code className="font-mono">
+                            {'{ message, supported: SupportedKind[], health: "/health", docs }'}
+                          </code>
+                        </p>
+                        <CodeBlock
+                          code={`{
+  "message": "Welcome to the 4mica credit facilitator...",
+  "supported": [{ "scheme": "4mica-credit", "network": "polygon-amoy", "x402Version": 1 }],
+  "health": "/health",
+  "docs": "See README.md for a full flow walkthrough."
 }`}
-                          language="rust"
+                          language="json"
                         />
-                        <CodeBlock
-                          code={`use rust_sdk_4mica::UserInfo;
+                      </div>
 
-// Inspect current collateral and withdrawal state
-let user_info = client.user.get_user().await?;
-println!("Collateral: {}", user_info.collateral);
-println!("Withdrawal request amount: {}", user_info.withdrawal_request_amount);
-println!("Withdrawal request timestamp: {}", user_info.withdrawal_request_timestamp);`}
-                          language="rust"
+                      <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
+                        <h3 className="text-lg font-semibold text-[#E7F1FF]">GET /health</h3>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">What it does:</span> Liveness probe for load balancers.
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Gets:</span> No body.
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Returns:</span>{' '}
+                          <code className="font-mono">{'{ status: "ok" }'}</code>
+                        </p>
+                        <CodeBlock code={`{ "status": "ok" }`} language="json" />
+                      </div>
+
+                      <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
+                        <h3 className="text-lg font-semibold text-[#E7F1FF]">GET /supported</h3>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">What it does:</span> Lists all supported (scheme, network) pairs
+                          for credit and any delegated exact/debit flows.
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Gets:</span> No body.
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Returns:</span>{' '}
+                          <code className="font-mono">
+                            {'{ kinds: [{ scheme, network, x402Version?, extra? }] }'}
+                          </code>
+                        </p>
+                        <CodeBlock
+                          code={`{
+  "kinds": [
+    { "scheme": "4mica-credit", "network": "polygon-amoy", "x402Version": 1 }
+  ]
+}`}
+                          language="json"
                         />
-                        <CodeBlock
-                          code={`use rust_sdk_4mica::{PaymentGuaranteeClaims, SigningScheme, U256};
+                      </div>
 
-let claims = PaymentGuaranteeClaims {
-    user_address: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8".to_string(),
-    recipient_address: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC".to_string(),
-    tab_id: U256::from(1),
-    req_id: U256::from(1),
-    amount: U256::from(1_000_000_000_000_000_000u128),
-    timestamp: 1704067200,
-};
+                      <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
+                        <h3 className="text-lg font-semibold text-[#E7F1FF]">POST /tabs</h3>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">What it does:</span> Opens or reuses a payment tab for a
+                          (user, recipient, asset) triple. Used by your tab endpoint.
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Gets:</span>{' '}
+                          <code className="font-mono">
+                            {'{ userAddress, recipientAddress, erc20Token?, ttlSeconds? }'}
+                          </code>
+                          . Use <code className="font-mono">erc20Token</code> = null or omit for ETH. Alias:{' '}
+                          <code className="font-mono">assetAddress</code> is accepted.
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Returns:</span>{' '}
+                          <code className="font-mono">
+                            {'{ tabId, userAddress, recipientAddress, assetAddress, startTimestamp, ttlSeconds, nextReqId }'}
+                          </code>
+                          . <code className="font-mono">tabId</code> is a canonical hex string and{' '}
+                          <code className="font-mono">nextReqId</code> is the next sequential request id.
+                        </p>
+                        <CodeTabs
+                          blocks={[
+                            {
+                              label: 'Request',
+                              language: 'json',
+                              code: `{
+  "userAddress": "0xUser",
+  "recipientAddress": "0xRecipient",
+  "erc20Token": null,
+  "ttlSeconds": 86400
+}`,
+                            },
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "tabId": "0x0000000000000000000000000000000000000000000000000000000000000042",
+  "userAddress": "0xUser",
+  "recipientAddress": "0xRecipient",
+  "assetAddress": "0xAsset",
+  "startTimestamp": 1716500000,
+  "ttlSeconds": 86400,
+  "nextReqId": "0x0"
+}`,
+                            },
+                          ]}
+                        />
+                      </div>
 
-match client.user.sign_payment(claims.clone(), SigningScheme::Eip712).await {
-    Ok(sig) => {
-        println!("Signature: {}", sig.signature);
-        println!("Scheme: {:?}", sig.scheme);
-    }
-    Err(e) => eprintln!("Signing failed: {}", e),
-}
+                      <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
+                        <h3 className="text-lg font-semibold text-[#E7F1FF]">POST /verify</h3>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">What it does:</span> Validates the structure of the X-PAYMENT
+                          header against the original payment requirements. No on-chain work is done here.
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Gets:</span>{' '}
+                          <code className="font-mono">
+                            {'{ x402Version: 1, paymentHeader: "<base64>", paymentRequirements }'}
+                          </code>
+                          .
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Returns:</span>{' '}
+                          <code className="font-mono">
+                            {'{ isValid: true|false, invalidReason?, certificate? }'}
+                          </code>
+                          . Invalid requests return <code className="font-mono">isValid: false</code> with a reason.
+                        </p>
+                        <CodeTabs
+                          blocks={[
+                            {
+                              label: 'Request',
+                              language: 'json',
+                              code: `{
+  "x402Version": 1,
+  "paymentHeader": "<base64 X-PAYMENT>",
+  "paymentRequirements": {
+    "scheme": "4mica-credit",
+    "network": "polygon-amoy",
+    "maxAmountRequired": "10000000000000000",
+    "payTo": "0xRecipient",
+    "asset": "0xAsset",
+    "extra": { "tabEndpoint": "https://api.example.com/x402/tab" }
+  }
+}`,
+                            },
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "isValid": true,
+  "invalidReason": null,
+  "certificate": null
+}`,
+                            },
+                          ]}
+                        />
+                      </div>
 
-let fallback_sig = client.user.sign_payment(claims, SigningScheme::Eip191).await?;`}
-                          language="rust"
+                      <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
+                        <h3 className="text-lg font-semibold text-[#E7F1FF]">POST /settle</h3>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">What it does:</span> Re-validates the X-PAYMENT header and
+                          issues a BLS certificate for 4mica-credit (or proxies exact/debit settlements).
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Gets:</span>{' '}
+                          <code className="font-mono">
+                            {'{ x402Version: 1, paymentHeader: "<base64>", paymentRequirements }'}
+                          </code>
+                          .
+                        </p>
+                        <p className="text-sm text-[#C8D7F2]">
+                          <span className="font-semibold">Returns:</span>{' '}
+                          <code className="font-mono">
+                            {'{ success, error?, txHash?, networkId?, certificate? }'}
+                          </code>
+                          . For 4mica-credit, <code className="font-mono">success</code> is true and a{' '}
+                          <code className="font-mono">certificate</code> is included. Delegated exact flows may return{' '}
+                          <code className="font-mono">txHash</code> instead.
+                        </p>
+                        <CodeTabs
+                          blocks={[
+                            {
+                              label: 'Request',
+                              language: 'json',
+                              code: `{
+  "x402Version": 1,
+  "paymentHeader": "<base64 X-PAYMENT>",
+  "paymentRequirements": {
+    "scheme": "4mica-credit",
+    "network": "polygon-amoy",
+    "maxAmountRequired": "10000000000000000",
+    "payTo": "0xRecipient",
+    "asset": "0xAsset",
+    "extra": { "tabEndpoint": "https://api.example.com/x402/tab" }
+  }
+}`,
+                            },
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "success": true,
+  "error": null,
+  "txHash": null,
+  "networkId": "polygon-amoy",
+  "certificate": {
+    "claims": "0x...",
+    "signature": "0x..."
+  }
+}`,
+                            },
+                          ]}
                         />
                       </div>
                     </div>
-                    <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Recipient Client</h3>
-                      <div className="space-y-4">
-                        <CodeBlock
-                          code={`let user_address = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8".to_string();
-let recipient_address = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC".to_string();
-let tab_id = client.recipient.create_tab(user_address, recipient_address, Some(3600)).await?;
-println!("Created tab with ID: {}", tab_id);`}
-                          language="rust"
-                        />
-                        <CodeBlock
-                          code={`let status = client.recipient.get_tab_payment_status(tab_id).await?;
-println!("Paid: {}", status.paid);
-println!("Remunerated: {}", status.remunerated);`}
-                          language="rust"
-                        />
-                        <CodeBlock
-                          code={`let payment_sig = client.user.sign_payment(claims.clone(), SigningScheme::Eip712).await?;
-let bls_cert = client.recipient.issue_payment_guarantee(
-    claims,
-    payment_sig.signature,
-    payment_sig.scheme,
-).await?;
-println!("BLS Certificate: {:?}", bls_cert);`}
-                          language="rust"
-                        />
-                        <CodeBlock
-                          code={`let receipt = client.recipient.remunerate(bls_cert).await?;
-println!("Claimed from user collateral!");
-println!("Transaction hash: {:?}", receipt.transaction_hash);`}
-                          language="rust"
-                        />
+
+                    <div className="border border-white/10 rounded-lg p-6 space-y-3">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Shared payloads</h3>
+                      <div className="text-sm text-[#C8D7F2] space-y-2">
+                        <p>
+                          <span className="font-semibold">paymentRequirements</span> must include{' '}
+                          <code className="font-mono">scheme</code>, <code className="font-mono">network</code>,{' '}
+                          <code className="font-mono">maxAmountRequired</code>, <code className="font-mono">payTo</code>,{' '}
+                          <code className="font-mono">asset</code>, plus optional{' '}
+                          <code className="font-mono">resource</code>, <code className="font-mono">description</code>,{' '}
+                          <code className="font-mono">mimeType</code>, <code className="font-mono">outputSchema</code>,{' '}
+                          <code className="font-mono">maxTimeoutSeconds</code>, and <code className="font-mono">extra</code>.
+                        </p>
+                        <p>
+                          <span className="font-semibold">certificate</span> is returned as{' '}
+                          <code className="font-mono">{'{ claims, signature }'}</code>, both hex strings suitable for
+                          on-chain remuneration.
+                        </p>
+                        <p>
+                          <span className="font-semibold">Versioning:</span> the facilitator only accepts{' '}
+                          <code className="font-mono">x402Version = 1</code>; mismatches return validation errors in the
+                          response body.
+                        </p>
                       </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {activeSection === 'x402' && (
+              {activeSection === 'operator-api' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">HTTP 402 / X402 Integration</h2>
+                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Operator API Reference</h2>
                   <div className="space-y-6">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      The <code className="font-mono">x402-4mica</code> facilitator turns x402 paywalls into 4Mica credit certificates. It opens tabs,
-                      validates <code className="font-mono">X-PAYMENT</code> headers against the advertised <code className="font-mono">paymentRequirements</code>, and settles
-                      by returning a BLS certificate that recipients can persist or redeem on-chain.
+                      Core operator endpoints are served by <code className="font-mono">4mica-core/core</code> under the
+                      <code className="font-mono">/core</code> prefix. Admin routes require the{' '}
+                      <code className="font-mono">x-api-key</code> header with the matching scope.
                     </p>
-                    <div className="bg-white/10 border border-white/10 rounded-lg p-6 space-y-4">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Resource servers: quick integration</h3>
-                      <ol className="list-decimal list-inside space-y-3 text-[#C8D7F2]">
-                        <li>
-                          <span className="font-semibold">Advertise the paywall.</span> Serve <code className="font-mono">402 Payment Required</code> with
-                          <code className="font-mono">scheme = &quot;4mica-credit&quot;</code>, a supported <code className="font-mono">network</code> from{' '}
-                          <code className="font-mono">/supported</code>, <code className="font-mono">payTo</code>, <code className="font-mono">asset</code>, and{' '}
-                          <code className="font-mono">maxAmountRequired</code>. Embed your tab endpoint in{' '}
-                          <code className="font-mono">paymentRequirements.extra.tabEndpoint</code>.
-                        </li>
-                        <li>
-                          <span className="font-semibold">Provision tabs.</span> Your tab endpoint should accept{' '}
-                          <code className="font-mono">{'{ userAddress, paymentRequirements }'}</code>, call the facilitator&rsquo;s{' '}
-                          <code className="font-mono">POST /tabs</code> with <code className="font-mono">recipientAddress = payTo</code>,{' '}
-                          <code className="font-mono">erc20Token = asset</code>, and optional <code className="font-mono">ttlSeconds</code>, then return the tab
-                          response (<code className="font-mono">tabId</code>, <code className="font-mono">userAddress</code>, <code className="font-mono">assetAddress</code>). Cache per{' '}
-                          <code className="font-mono">(user, recipient, asset)</code> to avoid redundant tab opens.
-                        </li>
-                        <li>
-                          <span className="font-semibold">Verify and settle.</span> When a retried request arrives with{' '}
-                          <code className="font-mono">X-PAYMENT</code>, base64-decode it and send{' '}
-                          <code className="font-mono">{'{ paymentHeader, paymentRequirements }'}</code> to <code className="font-mono">/verify</code> (optional) and{' '}
-                          <code className="font-mono">/settle</code>. <code className="font-mono">/settle</code> returns{' '}
-                          <code className="font-mono">{'{ success, networkId, certificate }'}</code>; save the certificate for remuneration if the payer does not clear the tab before <code className="font-mono">ttlSeconds</code> expires.
-                        </li>
-                      </ol>
-                    </div>
-                    <div className="bg-white/10 border border-white/10 rounded-lg p-6 space-y-3">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Minimal flow (no auth)</h3>
-                      <ol className="list-decimal list-inside space-y-2 text-sm text-[#C8D7F2]">
-                        <li>Recipient serves <code className="font-mono">402 Payment Required</code> with <code className="font-mono">paymentRequirements</code> and <code className="font-mono">extra.tabEndpoint</code>.</li>
-                        <li>Client SDK calls the tab endpoint (which opens/reuses a tab via <code className="font-mono">POST /tabs</code>), signs the guarantee, and retries with <code className="font-mono">X-PAYMENT</code>.</li>
-                        <li>Recipient calls <code className="font-mono">/verify</code> then <code className="font-mono">/settle</code> to receive a certificate.</li>
-                        <li>Payer settles on-chain later (e.g., <code className="font-mono">payTab</code> / <code className="font-mono">payTabInERC20Token</code>) after the agreed grace period (for example, 7 days).</li>
-                      </ol>
-                    </div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                      <div className="glass-panel rounded-lg p-4">
-                        <h3 className="text-lg font-semibold text-[#E7F1FF] mb-3">Client SDK quick start (TypeScript)</h3>
-                        <p className="text-sm text-[#C8D7F2] mb-3">
-                          Sign the recipient&rsquo;s <code className="font-mono">paymentRequirements</code> and attach the
-                          resulting <code className="font-mono">X-PAYMENT</code> header on the retry request:
-                        </p>
-                        <CodeBlock
-                          code={`import { Client, ConfigBuilder, PaymentRequirements, X402Flow } from "sdk-4mica";
-
-async function run() {
-  const cfg = new ConfigBuilder().walletPrivateKey("0x...").build();
-  const client = await Client.new(cfg);
-  const flow = X402Flow.fromClient(client);
-
-  const reqRaw = fetchRequirementsSomehow()[0]; // includes extra.tabEndpoint
-  const requirements = PaymentRequirements.fromRaw(reqRaw);
-
-  const payment = await flow.signPayment(requirements, "0xUser");
-  const headers = { "X-PAYMENT": payment.header };
-
-  await fetch("https://recipient/resource", { headers });
-  await client.aclose();
-}
-
-run();`}
-                          language="typescript"
-                          className="p-4"
-                        />
-                      </div>
-                      <div className="glass-panel rounded-lg p-4">
-                        <h3 className="text-lg font-semibold text-[#E7F1FF] mb-3">Client SDK quick start (Python)</h3>
-                        <CodeBlock
-                          code={`import asyncio
-import httpx
-from fourmica_sdk import Client, ConfigBuilder, PaymentRequirements, X402Flow
-
-payer_key = "0x..."
-user_address = "0x..."
-
-async def main():
-    cfg = ConfigBuilder().wallet_private_key(payer_key).build()
-    client = await Client.new(cfg)
-    flow = X402Flow.from_client(client)
-
-    req_raw = fetch_requirements_somehow()[0]  # includes extra.tabEndpoint
-    requirements = PaymentRequirements.from_raw(req_raw)
-
-    payment = await flow.sign_payment(requirements, user_address)
-    headers = {"X-PAYMENT": payment.header}
-
-    async with httpx.AsyncClient() as session:
-        await session.get("https://recipient/resource", headers=headers)
-
-    await client.aclose()
-
-asyncio.run(main())`}
-                          language="python"
-                          className="p-4"
-                        />
-                      </div>
-                    </div>
-                    <div className="bg-white/10 border border-white/10 rounded-lg p-6 space-y-3">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">`X-PAYMENT` envelope</h3>
-                      <CodeBlock
-                        code={`{
-  "x402Version": 1,
-  "scheme": "4mica-credit",
-  "network": "polygon-amoy",
-  "payload": {
-    "claims": {
-      "user_address": "<0x checksum>",
-      "recipient_address": "<0x checksum>",
-      "tab_id": "<decimal or 0x>",
-      "amount": "<decimal or 0x>",
-      "asset_address": "<0x checksum>",
-      "timestamp": 1716500000,
-      "version": 1
-    },
-    "signature": "<0x wallet sig>",
-    "scheme": "eip712"
-  }
-}`}
-                        language="json"
-                        className="p-4"
-                      />
-                      <p className="text-sm text-[#C8D7F2]">
-                        The facilitator enforces <code className="font-mono">scheme</code>/<code className="font-mono">network</code> matches{' '}
-                        <code className="font-mono">/supported</code>, <code className="font-mono">payTo</code> equals <code className="font-mono">recipient_address</code>, and{' '}
-                        <code className="font-mono">amount</code> matches <code className="font-mono">maxAmountRequired</code> exactly.
+                    <div className="bg-white/10 border border-white/10 rounded-lg p-5 text-sm text-[#C8D7F2] space-y-2">
+                      <p>
+                        <span className="font-semibold">Admin scopes:</span>{' '}
+                        <code className="font-mono">admin_api_keys:manage</code>,{' '}
+                        <code className="font-mono">user_suspension:write</code>
+                      </p>
+                      <p>
+                        <span className="font-semibold">Admin header:</span>{' '}
+                        <code className="font-mono">x-api-key</code>
                       </p>
                     </div>
-                    <div className="space-y-2 text-sm text-[#C8D7F2]">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">HTTP endpoints</h3>
+                    <div className="grid grid-cols-1 gap-4">
+                      {[
+                        {
+                          method: 'GET',
+                          path: '/core/health',
+                          desc: 'Liveness + listener readiness.',
+                          expects: 'No body.',
+                          returns: '{ status: "ok", listener_ready: true }',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "status": "ok",
+  "listener_ready": true
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/public-params',
+                          desc: 'Public operator parameters.',
+                          expects: 'No body.',
+                          returns:
+                            '{ public_key, contract_address, ethereum_http_rpc_url, eip712_name, eip712_version, chain_id }',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "public_key": [1, 2, 3],
+  "contract_address": "0xCoreContract",
+  "ethereum_http_rpc_url": "https://rpc.example.com",
+  "eip712_name": "4Mica",
+  "eip712_version": "1",
+  "chain_id": 1
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'POST',
+                          path: '/core/payment-tabs',
+                          desc: 'Create or reuse a payment tab.',
+                          expects:
+                            '{ user_address, recipient_address, erc20_token?, ttl? }',
+                          returns:
+                            '{ id, user_address, recipient_address, erc20_token?, next_req_id }',
+                          examples: [
+                            {
+                              label: 'Request',
+                              language: 'json',
+                              code: `{
+  "user_address": "0xUser",
+  "recipient_address": "0xRecipient",
+  "erc20_token": null,
+  "ttl": 3600
+}`,
+                            },
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "id": "0x1",
+  "user_address": "0xUser",
+  "recipient_address": "0xRecipient",
+  "erc20_token": null,
+  "next_req_id": "0x0"
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'POST',
+                          path: '/core/guarantees',
+                          desc: 'Issue a BLS guarantee for a signed request.',
+                          expects:
+                            '{ claims: { version: "v1", user_address, recipient_address, tab_id, req_id, amount, asset_address, timestamp }, signature, scheme }',
+                          returns: '{ claims, signature } (BLSCert)',
+                          examples: [
+                            {
+                              label: 'Request',
+                              language: 'json',
+                              code: `{
+  "claims": {
+    "version": "v1",
+    "user_address": "0xUser",
+    "recipient_address": "0xRecipient",
+    "tab_id": "0x1",
+    "req_id": "0x0",
+    "amount": "0x64",
+    "asset_address": "0xAsset",
+    "timestamp": 1716500000
+  },
+  "signature": "0xUserSig",
+  "scheme": "eip712"
+}`,
+                            },
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "claims": "0xClaimsBytes",
+  "signature": "0xBlsSignature"
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/recipients/{recipient_address}/settled-tabs',
+                          desc: 'List settled + remunerated tabs for a recipient.',
+                          expects: 'Path param: recipient_address.',
+                          returns: 'TabInfo[]',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `[
+  {
+    "tab_id": "0x1",
+    "user_address": "0xUser",
+    "recipient_address": "0xRecipient",
+    "asset_address": "0xAsset",
+    "start_timestamp": 1716500000,
+    "ttl_seconds": 3600,
+    "status": "open",
+    "settlement_status": "settled",
+    "created_at": 1716500000,
+    "updated_at": 1716500300
+  }
+]`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/recipients/{recipient_address}/pending-remunerations',
+                          desc: 'List pending remunerations for a recipient.',
+                          expects: 'Path param: recipient_address.',
+                          returns: 'PendingRemunerationInfo[]',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `[
+  {
+    "tab": {
+      "tab_id": "0x1",
+      "user_address": "0xUser",
+      "recipient_address": "0xRecipient",
+      "asset_address": "0xAsset",
+      "start_timestamp": 1716500000,
+      "ttl_seconds": 3600,
+      "status": "open",
+      "settlement_status": "pending",
+      "created_at": 1716500000,
+      "updated_at": 1716500300
+    },
+    "latest_guarantee": {
+      "tab_id": "0x1",
+      "req_id": "0x0",
+      "from_address": "0xUser",
+      "to_address": "0xRecipient",
+      "asset_address": "0xAsset",
+      "amount": "0x64",
+      "start_timestamp": 1716500000,
+      "certificate": "0xCertificateBytes"
+    }
+  }
+]`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/tabs/{tab_id}',
+                          desc: 'Fetch a single tab.',
+                          expects: 'Path param: tab_id.',
+                          returns: 'TabInfo | null',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "tab_id": "0x1",
+  "user_address": "0xUser",
+  "recipient_address": "0xRecipient",
+  "asset_address": "0xAsset",
+  "start_timestamp": 1716500000,
+  "ttl_seconds": 3600,
+  "status": "open",
+  "settlement_status": "pending",
+  "created_at": 1716500000,
+  "updated_at": 1716500300
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/recipients/{recipient_address}/tabs',
+                          desc: 'List tabs for a recipient.',
+                          expects:
+                            'Path param: recipient_address. Optional query: settlement_status (repeatable).',
+                          returns: 'TabInfo[]',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `[
+  {
+    "tab_id": "0x1",
+    "user_address": "0xUser",
+    "recipient_address": "0xRecipient",
+    "asset_address": "0xAsset",
+    "start_timestamp": 1716500000,
+    "ttl_seconds": 3600,
+    "status": "open",
+    "settlement_status": "pending",
+    "created_at": 1716500000,
+    "updated_at": 1716500300
+  }
+]`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/tabs/{tab_id}/guarantees',
+                          desc: 'List all guarantees for a tab.',
+                          expects: 'Path param: tab_id.',
+                          returns: 'GuaranteeInfo[]',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `[
+  {
+    "tab_id": "0x1",
+    "req_id": "0x0",
+    "from_address": "0xUser",
+    "to_address": "0xRecipient",
+    "asset_address": "0xAsset",
+    "amount": "0x64",
+    "start_timestamp": 1716500000,
+    "certificate": "0xCertificateBytes"
+  }
+]`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/tabs/{tab_id}/guarantees/latest',
+                          desc: 'Get the latest guarantee for a tab.',
+                          expects: 'Path param: tab_id.',
+                          returns: 'GuaranteeInfo | null',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "tab_id": "0x1",
+  "req_id": "0x0",
+  "from_address": "0xUser",
+  "to_address": "0xRecipient",
+  "asset_address": "0xAsset",
+  "amount": "0x64",
+  "start_timestamp": 1716500000,
+  "certificate": "0xCertificateBytes"
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/tabs/{tab_id}/guarantees/{req_id}',
+                          desc: 'Get a specific guarantee by req_id.',
+                          expects: 'Path params: tab_id, req_id.',
+                          returns: 'GuaranteeInfo | null',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "tab_id": "0x1",
+  "req_id": "0x0",
+  "from_address": "0xUser",
+  "to_address": "0xRecipient",
+  "asset_address": "0xAsset",
+  "amount": "0x64",
+  "start_timestamp": 1716500000,
+  "certificate": "0xCertificateBytes"
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/recipients/{recipient_address}/payments',
+                          desc: 'List on-chain payments observed for a recipient.',
+                          expects: 'Path param: recipient_address.',
+                          returns: 'UserTransactionInfo[]',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `[
+  {
+    "user_address": "0xUser",
+    "recipient_address": "0xRecipient",
+    "tx_hash": "0xTxHash",
+    "amount": "0x64",
+    "verified": true,
+    "finalized": true,
+    "failed": false,
+    "created_at": 1716500000
+  }
+]`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/tabs/{tab_id}/collateral-events',
+                          desc: 'List collateral events tied to a tab.',
+                          expects: 'Path param: tab_id.',
+                          returns: 'CollateralEventInfo[]',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `[
+  {
+    "id": "evt_1",
+    "user_address": "0xUser",
+    "asset_address": "0xAsset",
+    "amount": "0x64",
+    "event_type": "guarantee_issued",
+    "tab_id": "0x1",
+    "req_id": "0x0",
+    "tx_id": null,
+    "created_at": 1716500000
+  }
+]`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/users/{user_address}/assets/{asset_address}',
+                          desc: 'Get a user’s asset balance.',
+                          expects: 'Path params: user_address, asset_address.',
+                          returns: 'AssetBalanceInfo | null',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "user_address": "0xUser",
+  "asset_address": "0xAsset",
+  "total": "0x64",
+  "locked": "0x10",
+  "version": 1,
+  "updated_at": 1716500000
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'POST',
+                          path: '/core/users/{user_address}/suspension',
+                          desc: 'Suspend or unsuspend a user.',
+                          expects:
+                            'Header: x-api-key (scope user_suspension:write). Body: { suspended: boolean }',
+                          returns: '{ user_address, suspended, updated_at }',
+                          examples: [
+                            {
+                              label: 'Request',
+                              language: 'json',
+                              code: `{
+  "suspended": true
+}`,
+                            },
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "user_address": "0xUser",
+  "suspended": true,
+  "updated_at": 1716500000
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/admin/api-keys',
+                          desc: 'List admin API keys.',
+                          expects: 'Header: x-api-key (scope admin_api_keys:manage).',
+                          returns: 'AdminApiKeyInfo[]',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `[
+  {
+    "id": "uuid",
+    "name": "ops",
+    "scopes": ["admin_api_keys:manage"],
+    "created_at": 1716500000,
+    "revoked_at": null
+  }
+]`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'POST',
+                          path: '/core/admin/api-keys',
+                          desc: 'Create a new admin API key.',
+                          expects:
+                            'Header: x-api-key (scope admin_api_keys:manage). Body: { name, scopes }',
+                          returns: '{ id, name, scopes, created_at, api_key }',
+                          examples: [
+                            {
+                              label: 'Request',
+                              language: 'json',
+                              code: `{
+  "name": "ops",
+  "scopes": ["admin_api_keys:manage"]
+}`,
+                            },
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "id": "uuid",
+  "name": "ops",
+  "scopes": ["admin_api_keys:manage"],
+  "created_at": 1716500000,
+  "api_key": "ak_..."
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'POST',
+                          path: '/core/admin/api-keys/{id}/revoke',
+                          desc: 'Revoke an admin API key.',
+                          expects:
+                            'Header: x-api-key (scope admin_api_keys:manage). Path param: id (uuid).',
+                          returns: '{ id, name, scopes, created_at, revoked_at? }',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "id": "uuid",
+  "name": "ops",
+  "scopes": ["admin_api_keys:manage"],
+  "created_at": 1716500000,
+  "revoked_at": 1716501000
+}`,
+                            },
+                          ],
+                        },
+                      ].map((endpoint) => (
+                        <div key={`${endpoint.method}-${endpoint.path}`} className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
+                          <h3 className="text-lg font-semibold text-[#E7F1FF]">
+                            {endpoint.method} {endpoint.path}
+                          </h3>
+                          <p className="text-sm text-[#C8D7F2]">
+                            <span className="font-semibold">What it does:</span> {endpoint.desc}
+                          </p>
+                          <p className="text-sm text-[#C8D7F2]">
+                            <span className="font-semibold">Gets:</span> {endpoint.expects}
+                          </p>
+                          <p className="text-sm text-[#C8D7F2]">
+                            <span className="font-semibold">Returns:</span> {endpoint.returns}
+                          </p>
+                          {endpoint.examples && <CodeTabs blocks={endpoint.examples} />}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="border border-white/10 rounded-lg p-5 text-sm text-[#C8D7F2] space-y-2">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Response shape notes</h3>
                       <ul className="list-disc list-inside space-y-1">
-                        <li><code className="font-mono">GET /supported</code> – list supported <code className="font-mono">(scheme, network)</code> pairs.</li>
-                        <li><code className="font-mono">POST /tabs</code> – open or reuse tabs; returns <code className="font-mono">{'{ tabId, userAddress, recipientAddress, assetAddress, ttlSeconds }'}</code>.</li>
-                        <li><code className="font-mono">POST /verify</code> – structural validation for <code className="font-mono">paymentHeader</code> + <code className="font-mono">paymentRequirements</code>.</li>
-                        <li><code className="font-mono">POST /settle</code> – re-validates and returns <code className="font-mono">{'{ success, networkId, certificate }'}</code> for downstream remuneration.</li>
+                        <li><code className="font-mono">TabInfo</code>: tab_id, user_address, recipient_address, asset_address, start_timestamp, ttl_seconds, status, settlement_status, created_at, updated_at.</li>
+                        <li><code className="font-mono">GuaranteeInfo</code>: tab_id, req_id, from_address, to_address, asset_address, amount, start_timestamp, certificate?.</li>
+                        <li><code className="font-mono">PendingRemunerationInfo</code>: tab, latest_guarantee?.</li>
+                        <li><code className="font-mono">CollateralEventInfo</code>: id, user_address, asset_address, amount, event_type, tab_id?, req_id?, tx_id?, created_at.</li>
+                        <li><code className="font-mono">UserTransactionInfo</code>: user_address, recipient_address, tx_hash, amount, verified, finalized, failed, created_at.</li>
+                        <li><code className="font-mono">AssetBalanceInfo</code>: user_address, asset_address, total, locked, version, updated_at.</li>
                       </ul>
                     </div>
                   </div>
@@ -561,205 +1289,122 @@ asyncio.run(main())`}
 
               {activeSection === 'payment-flow' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Payment Flow</h2>
+                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Protocol Flow</h2>
                   <div className="space-y-6">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      Tabs model ongoing work between a payer and a recipient. The sequence below condenses the refreshed protocol overview
-                      (see <code className="font-mono">4mica_protocol_overview.md</code> and <code className="font-mono">4mica_protocol_credit.txt</code>):
+                      This flow summarizes the internal protocol sequence for credit guarantees, from collateral to settlement and
+                      remuneration. It mirrors the internal sequence diagrams in <code className="font-mono">Sequence Diagrams</code>.
                     </p>
                     <div className="bg-white/10 border border-white/10 rounded-lg p-6">
                       <ol className="list-decimal list-inside space-y-3 text-[#C8D7F2]">
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Deposit collateral.</span> Users lock ETH or ERC-20 in Core4Mica; the
-                          API syncs events so wallets become eligible for guarantees.
+                          <span className="font-semibold text-[#C8D7F2]">Deposit collateral.</span> Payers deposit ETH or ERC-20 into the
+                          Core4Mica vault; the core listener persists collateral events so wallets are eligible.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Discover payment options.</span> Recipients respond with 402 templates listing accepted{' '}
-                          <code className="font-mono">(scheme, network)</code> pairs and a <code className="font-mono">tabEndpoint</code> for minting tabs.
+                          <span className="font-semibold text-[#C8D7F2]">Discovery.</span> The resource returns a 402 template with accepted
+                          <code className="font-mono"> (scheme, network)</code> pairs and a <code className="font-mono">tabEndpoint</code>.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Provision a tab.</span> Resource servers (or <code className="font-mono">X402Flow</code>) POST{' '}
-                          <code className="font-mono">/tabs</code> through the facilitator to bind <code className="font-mono">tabId</code> to the payer wallet and asset/TTL.
+                          <span className="font-semibold text-[#C8D7F2]">Tab provisioning.</span> The resource calls the facilitator
+                          <code className="font-mono"> /tabs</code> (typically via <code className="font-mono">tabEndpoint</code>) to open or reuse a tab.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Compose guarantees.</span> Payers sign{' '}
-                          <code className="font-mono">PaymentGuaranteeRequestClaimsV1</code> for each request. The facilitator upgrades them to include{' '}
-                          <code className="font-mono">req_id</code>, running totals, and domain info before BLS signing.
+                          <span className="font-semibold text-[#C8D7F2]">Header composition.</span> The payer (or SDK helper) signs
+                          <code className="font-mono"> PaymentGuaranteeRequestClaimsV1</code> and wraps it into a base64
+                          <code className="font-mono"> X-PAYMENT</code> header.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Pre-flight &amp; settle.</span> Resources call <code className="font-mono">/verify</code> to validate
-                          structure, then <code className="font-mono">/settle</code> to mint certificates. Certificates let work proceed while the user still holds funds.
+                          <span className="font-semibold text-[#C8D7F2]">Verification.</span> The resource calls
+                          <code className="font-mono"> /verify</code> for structural validation (no core call).
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Close the tab.</span> Happy path: payer calls <code className="font-mono">pay_tab</code> on-chain using the latest{' '}
-                          <code className="font-mono">req_id</code>. Fallback: after grace period, recipients call <code className="font-mono">remunerate</code> on-chain with the certificate.
+                          <span className="font-semibold text-[#C8D7F2]">Settlement.</span> The resource calls
+                          <code className="font-mono"> /settle</code>, the facilitator requests a BLS certificate from core, verifies it, and returns it.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Withdraw safely.</span> Withdrawal requests pause guarantee issuance for that wallet until
-                          the contract events finalize, ensuring no double spends across tabs and withdrawals.
+                          <span className="font-semibold text-[#C8D7F2]">Tab closure.</span> Happy path: the payer settles on-chain using the
+                          <code className="font-mono"> req_id</code> in the certificate. Default path: after grace period, the recipient
+                          remunerates on-chain with the certificate.
+                        </li>
+                        <li>
+                          <span className="font-semibold text-[#C8D7F2]">Withdrawals &amp; sync.</span> Withdrawal requests pause guarantees while
+                          events settle; background operators stream events to keep core state aligned.
                         </li>
                       </ol>
+                    </div>
+                    <div className="border border-white/10 rounded-lg p-6 space-y-3">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">High-level sequence</h3>
+                      <MermaidDiagram
+                        code={`sequenceDiagram
+    autonumber
+    participant Client as Payer SDK
+    participant Resource as Recipient Resource
+    participant Facilitator as x402-4Mica Facilitator
+    participant CoreService as 4Mica Core
+    participant Contract as Vault
+
+    Client->>Contract: Deposit collateral
+    Contract-->>CoreService: Collateral event
+    CoreService->>CoreService: Sync collateral state
+
+    Client->>Resource: Request protected content
+    Resource-->>Client: 402 Payment Required (template + tabEndpoint)
+    Client->>Resource: POST tabEndpoint (wallet + requirements)
+    Resource->>Facilitator: POST /tabs
+    Facilitator->>CoreService: Create/reuse tab
+    CoreService-->>Facilitator: Tab metadata
+    Facilitator-->>Resource: Tab info
+    Resource-->>Client: paymentRequirements + tabId (bound to wallet)
+
+    Client->>Resource: Retry with X-PAYMENT header
+    Resource->>Facilitator: POST /verify
+    Facilitator-->>Resource: Valid / invalid decision
+
+    Resource->>Facilitator: POST /settle
+    Facilitator->>CoreService: Request guarantee
+    CoreService-->>Facilitator: BLS certificate
+    Facilitator-->>Resource: Success + certificate
+    Resource-->>Client: Serve protected response
+
+    alt User pays tab
+        Client->>Contract: payTab/payTabInERC20Token
+        Contract-->>CoreService: Payment events
+        CoreService->>CoreService: Record payment & unlock collateral
+        CoreService-->>Resource: Tab marked settled
+    else User defaults and Recipient redeems guarantee
+        Resource->>Contract: remunerate(guarantee, signature)
+        Contract-->>CoreService: RecipientRemunerated event
+        CoreService->>CoreService: Update repo, reduce collateral
+        Contract->>Resource: Pay amount of tab from User collateral
+    end
+
+    Client->>Contract: Request/cancel/finalize withdrawal
+    Contract-->>CoreService: Withdrawal events
+    CoreService->>CoreService: Pause/unpause wallet & update balances`}
+                      />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="border border-[#E5E5E5] rounded-lg p-4">
                         <h4 className="font-semibold text-[#C8D7F2] mb-3">Actors</h4>
                         <ul className="space-y-2 text-sm text-[#C8D7F2]">
-                          <li>Payer SDK (<code className="font-mono">rust-sdk-4mica</code>): signs guarantees, pays tabs, requests withdrawals.</li>
-                          <li>Resource + facilitator (<code className="font-mono">x402-4mica</code>): exposes <code className="font-mono">/supported</code>,{' '}
-                            <code className="font-mono">/tabs</code>, <code className="font-mono">/verify</code>, and <code className="font-mono">/settle</code>.</li>
-                          <li>Core service (<code className="font-mono">api.4mica.xyz</code>): issues BLS guarantees, tracks tabs, streams contract events.</li>
-                          <li>Core4Mica contract: enforces grace periods, verifies BLS certs, and moves collateral.</li>
+                          <li>Payer SDK: deposits collateral, signs guarantees, pays tabs.</li>
+                          <li>Recipient resource: issues 402 templates, calls verify/settle.</li>
+                          <li>Facilitator (<code className="font-mono">x402-4mica</code>): /tabs, /verify, /settle orchestration.</li>
+                          <li>Core service: issues BLS guarantees and tracks tab state.</li>
+                          <li>Core4Mica contract: custodies collateral and pays/remunerates.</li>
                         </ul>
                       </div>
                       <div className="border border-[#E5E5E5] rounded-lg p-4">
                         <h4 className="font-semibold text-[#C8D7F2] mb-3">Guards &amp; guarantees</h4>
                         <ul className="space-y-2 text-sm text-[#C8D7F2]">
-                          <li>Zero-amount claims, invalid recipients, and double spends are rejected before signing.</li>
-                          <li>BLS certificates are verified against operator public parameters (domain-separated).</li>
-                          <li>Remuneration fails if the tab is expired, already paid, or previously remunerated.</li>
-                          <li>Collateral and withdrawal events are synchronized so payouts never exceed locked funds.</li>
+                          <li>/verify is structural only; no core calls.</li>
+                          <li>/settle upgrades claims with monotonic <code className="font-mono">req_id</code> and running totals.</li>
+                          <li>Certificates are verified against operator public parameters and domain.</li>
+                          <li>Remuneration only succeeds after grace period and if the tab is unpaid.</li>
                         </ul>
                       </div>
                     </div>
-                  </div>
-                </div>
-              )}
-
-              {activeSection === 'error-handling' && (
-                <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Error Handling</h2>
-                  <div className="space-y-6">
-                    <p className="text-[#C8D7F2] leading-relaxed">
-                      The SDK exposes precise error enums per operation so you can react to specific failure cases, surface actionable
-                      messages, and retry safely.
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {[
-                        {
-                          title: 'Configuration',
-                          items: ['ConfigError::InvalidValue', 'ConfigError::Missing']
-                        },
-                        {
-                          title: 'Client & RPC',
-                          items: ['ClientError::Rpc', 'ClientError::Provider']
-                        },
-                        {
-                          title: 'Signing',
-                          items: [
-                            'SignPaymentError::AddressMismatch',
-                            'SignPaymentError::InvalidUserAddress',
-                            'SignPaymentError::InvalidRecipientAddress',
-                            'SignPaymentError::Failed',
-                            'SignPaymentError::Rpc'
-                          ]
-                        },
-                        {
-                          title: 'Deposits & Withdrawals',
-                          items: [
-                            'DepositError::{InvalidParams, AmountZero, UnknownRevert, Transport}',
-                            'RequestWithdrawalError::{InvalidParams, AmountZero, InsufficientAvailable, UnknownRevert, Transport}',
-                            'CancelWithdrawalError::{InvalidParams, NoWithdrawalRequested, UnknownRevert, Transport}',
-                            'FinalizeWithdrawalError::{InvalidParams, NoWithdrawalRequested, GracePeriodNotElapsed, TransferFailed, UnknownRevert, Transport}'
-                          ]
-                        },
-                        {
-                          title: 'Tabs & Payments',
-                          items: [
-                            'CreateTabError::InvalidParams',
-                            'PayTabError::{InvalidParams, Transport}',
-                            'TabPaymentStatusError::{UnknownRevert, Transport}'
-                          ]
-                        },
-                        {
-                          title: 'Guarantees & Remuneration',
-                          items: [
-                            'IssuePaymentGuaranteeError::{InvalidParams, Rpc}',
-                            'RemunerateError::InvalidParams',
-                            'RemunerateError::TabNotYetOverdue',
-                            'RemunerateError::TabExpired',
-                            'RemunerateError::TabPreviouslyRemunerated',
-                            'RemunerateError::TabAlreadyPaid',
-                            'RemunerateError::InvalidSignature',
-                            'RemunerateError::DoubleSpendingDetected',
-                            'RemunerateError::InvalidRecipient',
-                            'RemunerateError::AmountZero',
-                            'RemunerateError::TransferFailed',
-                            'RemunerateError::Transport'
-                          ]
-                        }
-                      ].map((group, index) => (
-                        <div key={index} className="border border-[#E5E5E5] rounded-lg p-4">
-                          <h4 className="font-semibold text-[#C8D7F2] mb-3">{group.title}</h4>
-                          <ul className="space-y-2 text-sm text-[#C8D7F2]">
-                            {group.items.map((item) => (
-                              <li key={item}>{item}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                    <CodeBlock
-                      code={`use rust_sdk_4mica::error::{
-    DepositError,
-    FinalizeWithdrawalError,
-    RemunerateError,
-    RequestWithdrawalError,
-    SignPaymentError,
-};`}
-                      language="rust"
-                      className="p-4"
-                    />
-                  </div>
-                </div>
-              )}
-
-              {activeSection === 'development' && (
-                <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Development</h2>
-                  <div className="space-y-6 text-[#C8D7F2]">
-                    <p>
-                      The SDK ships with unit and integration tests targeting contract behavior, serialization, and x402 helpers. Use the
-                      following commands while developing new integrations or contributing upstream.
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {[
-                        { title: 'Run Test Suite', command: 'cargo test' },
-                        { title: 'Format & Lint', command: 'cargo fmt && cargo clippy -- -D warnings' },
-                        { title: 'Build for Release', command: 'cargo build --release' }
-                      ].map((item, index) => (
-                        <div key={index} className="bg-white/10 border border-white/10 rounded-lg p-4">
-                          <h4 className="font-semibold text-[#C8D7F2] mb-2">{item.title}</h4>
-                          <CodeBlock code={item.command} language="bash" className="p-3" />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {activeSection === 'security' && (
-                <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Security Considerations</h2>
-                  <div className="space-y-6 text-[#C8D7F2]">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {[
-                        'Never commit private keys. Use environment variables or secure key management services instead.',
-                        'Validate addresses. The SDK verifies signer/claims alignment and raises AddressMismatch when they differ.',
-                        'Prefer EIP-712 signing. Structured data hashing reduces replay and serialization ambiguity.',
-                        'Monitor collateral levels. Double spending attempts fail, but operational alerts prevent disruption.',
-                        'Use multi-signature wallets for large collateral deposits and production remitters.',
-                        'Audit payment flows and settlement patterns regularly, especially when adjusting grace periods.',
-                        'When using HTTP 402, enforce scheme/network matching before settling and log facilitator responses.'
-                      ].map((advice, index) => (
-                        <div key={index} className="border border-[#E5E5E5] rounded-lg p-4 text-sm leading-relaxed">
-                          {advice}
-                        </div>
-                      ))}
-                    </div>
-                    <p className="text-sm">
-                      The Core4Mica contract prohibits zero-value transfers, enforces grace periods, and validates BLS signatures before
-                      funds are released, reducing the attack surface for both users and recipients.
-                    </p>
                   </div>
                 </div>
               )}
@@ -772,7 +1417,7 @@ asyncio.run(main())`}
                       <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">End-to-End Payment Flow</h3>
                       <CodeBlock
                         code={`use rust_sdk_4mica::{
-    Client, ConfigBuilder, PaymentGuaranteeClaims, SigningScheme, U256,
+    Client, ConfigBuilder, PaymentGuaranteeRequestClaims, SigningScheme, U256,
 };
 
 #[tokio::main]
@@ -799,16 +1444,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await?;
     println!("Created tab: {}", tab_id);
 
-    let claims = PaymentGuaranteeClaims {
-        user_address: user_address.clone(),
-        recipient_address: recipient_address.clone(),
+    let claims = PaymentGuaranteeRequestClaims::new(
+        user_address.clone(),
+        recipient_address.clone(),
         tab_id,
-        req_id: U256::from(1),
-        amount: U256::from(1_000_000_000_000_000_000u128),
-        timestamp: std::time::SystemTime::now()
+        U256::ZERO,
+        U256::from(1_000_000_000_000_000_000u128),
+        std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)?
             .as_secs(),
-    };
+        None,
+    );
     let payment_sig = user_client.user.sign_payment(claims.clone(), SigningScheme::Eip712).await?;
     println!("Payment signed");
 
@@ -825,7 +1471,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }`}
                         language="rust"
-                        className="p-4"
                       />
                     </div>
                   </div>

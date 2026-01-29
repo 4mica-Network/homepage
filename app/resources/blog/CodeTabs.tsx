@@ -122,14 +122,20 @@ const highlightLine = (line: string, language: LanguageId) => {
 export default function CodeTabs({
   blocks,
   className,
+  contentClassName,
+  hideTabs,
 }: {
   blocks: CodeBlock[];
   className?: string;
+  contentClassName?: string;
+  hideTabs?: boolean;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const baseId = useId();
   const activeBlock = blocks[activeIndex] ?? blocks[0];
   const languageId = resolveLanguageId(activeBlock?.language);
+  const showTabs = !(hideTabs || blocks.length <= 1);
+  const contentPadding = contentClassName ?? 'p-4 sm:p-5';
 
   const codeLines = useMemo(
     () => (activeBlock?.code ?? '').trimEnd().split('\n'),
@@ -154,35 +160,37 @@ export default function CodeTabs({
           {activeBlock.caption}
         </div>
       )}
-      <div
-        role="tablist"
-        aria-label="Code languages"
-        className={`flex flex-wrap items-center gap-2 border-b border-white/10 bg-[#050B1D] px-3 py-2 ${
-          activeBlock?.caption ? 'mt-3' : ''
-        }`}
-      >
-        {blocks.map((block, idx) => {
-          const isActive = idx === activeIndex;
-          return (
-            <button
-              key={`${baseId}-tab-${idx}`}
-              id={`${baseId}-tab-${idx}`}
-              role="tab"
-              type="button"
-              aria-selected={isActive}
-              aria-controls={`${baseId}-panel-${idx}`}
-              onClick={() => setActiveIndex(idx)}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
-                isActive
-                  ? 'bg-white/15 text-[#F2F4F8] shadow-sm'
-                  : 'text-[#9CB7E8] hover:text-[#E7F1FF]'
-              }`}
-            >
-              {getLabel(block, idx)}
-            </button>
-          );
-        })}
-      </div>
+      {showTabs && (
+        <div
+          role="tablist"
+          aria-label="Code languages"
+          className={`flex flex-wrap items-center gap-2 border-b border-white/10 bg-[#050B1D] px-3 py-2 ${
+            activeBlock?.caption ? 'mt-3' : ''
+          }`}
+        >
+          {blocks.map((block, idx) => {
+            const isActive = idx === activeIndex;
+            return (
+              <button
+                key={`${baseId}-tab-${idx}`}
+                id={`${baseId}-tab-${idx}`}
+                role="tab"
+                type="button"
+                aria-selected={isActive}
+                aria-controls={`${baseId}-panel-${idx}`}
+                onClick={() => setActiveIndex(idx)}
+                className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
+                  isActive
+                    ? 'bg-white/15 text-[#F2F4F8] shadow-sm'
+                    : 'text-[#9CB7E8] hover:text-[#E7F1FF]'
+                }`}
+              >
+                {getLabel(block, idx)}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       {blocks.map((block, idx) => {
         const isActive = idx === activeIndex;
@@ -190,12 +198,12 @@ export default function CodeTabs({
           <div
             key={`${baseId}-panel-${idx}`}
             id={`${baseId}-panel-${idx}`}
-            role="tabpanel"
-            aria-labelledby={`${baseId}-tab-${idx}`}
+            role={showTabs ? 'tabpanel' : undefined}
+            aria-labelledby={showTabs ? `${baseId}-tab-${idx}` : undefined}
             hidden={!isActive}
             className={!isActive ? 'hidden' : undefined}
           >
-            <div className="bg-[#050B1D] p-4 sm:p-5">
+            <div className={`bg-[#050B1D] ${contentPadding}`}>
               <div className="space-y-1 font-mono text-xs sm:text-sm leading-relaxed text-[#E7F1FF]">
                 {codeLines.map((line, lineIndex) => (
                   <div

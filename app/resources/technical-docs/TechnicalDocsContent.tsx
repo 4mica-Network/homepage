@@ -1556,6 +1556,17 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                 <div>
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Code Examples</h2>
                   <div className="space-y-6">
+                    <div className="text-sm text-[#C8D7F2]">
+                      Grab the full demo repo and run it locally:{' '}
+                      <a
+                        className="text-[#1E4DD8]"
+                        href="https://github.com/4mica-Network/x402-4mica/blob/feat/x402-ts-utils/packages/typescript/x402/demo/README.md"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        github.com/4mica-Network/x402-4mica/blob/feat/x402-ts-utils/packages/typescript/x402/demo/README.md
+                      </a>
+                    </div>
                     <div>
                       <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Complete Example (Server)</h3>
                       <CodeTabs

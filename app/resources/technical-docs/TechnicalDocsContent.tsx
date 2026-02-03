@@ -1636,11 +1636,11 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                       Grab the full demo repo and run it locally:{' '}
                       <a
                         className="text-[#1E4DD8]"
-                        href="https://github.com/4mica-Network/x402-4mica/blob/feat/x402-ts-utils/packages/typescript/x402/demo/README.md"
+                        href="https://github.com/4mica-Network/x402-4mica/blob/feat/x402-ts-utils/packages/typescript/x402/demo"
                         target="_blank"
                         rel="noreferrer"
                       >
-                        github.com/4mica-Network/x402-4mica/blob/feat/x402-ts-utils/packages/typescript/x402/demo/README.md
+                        github.com/4mica-Network/x402-4mica/blob/feat/x402-ts-utils/packages/typescript/x402/demo
                       </a>
                     </div>
                     <div>
@@ -1741,7 +1741,7 @@ Payment required: $0.05 (4mica credit on Sepolia)`}
                             </li>
                             <li>
                               The client makes a request, receives <code className="font-mono">402 Payment Required</code>, opens a tab,
-                              signs a guarantee, and retries with <code className="font-mono">X-PAYMENT</code>.
+                              signs a guarantee, and retries with <code className="font-mono">PAYMENT-SIGNATURE</code>.
                             </li>
                             <li>The server verifies and settles the payment, then returns the protected response.</li>
                           </ol>

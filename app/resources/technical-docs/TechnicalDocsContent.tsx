@@ -1576,6 +1576,150 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                       </a>
                     </div>
                     <div>
+                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Demo Walkthrough</h3>
+                      <div className="space-y-5 text-sm text-[#C8D7F2]">
+                        <p>
+                          This demo shows how to use <code className="font-mono">@4mica/x402</code> to protect an API endpoint with
+                          4mica payments. Follow the steps below to build the package, start the server, and run the client.
+                        </p>
+                        <div className="space-y-3">
+                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Step 1: Install dependencies</h4>
+                          <p>
+                            Build the parent package first, then install the demo dependencies from the demo directory.
+                          </p>
+                          <CodeBlock
+                            code={`cd ..
+yarn install
+yarn build`}
+                            language="bash"
+                          />
+                          <CodeBlock
+                            code={`cd demo
+yarn install`}
+                            language="bash"
+                          />
+                        </div>
+                        <div className="space-y-3">
+                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Step 2: Configure environment variables</h4>
+                          <p>
+                            Copy the example env file and update it with your key and optional pay-to address.
+                          </p>
+                          <CodeBlock
+                            code={`cp .env.example .env
+# Edit .env with your private key and settings`}
+                            language="bash"
+                          />
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>
+                              <code className="font-mono">PRIVATE_KEY</code>: Ethereum private key (0x-prefixed) on Sepolia.
+                            </li>
+                            <li>
+                              <code className="font-mono">PAY_TO_ADDRESS</code>: address that receives payments (optional).
+                            </li>
+                          </ul>
+                        </div>
+                        <div className="space-y-3">
+                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Step 3: Start the server</h4>
+                          <p>
+                            Run the server from the demo directory, or from the package root using the demo script.
+                          </p>
+                          <CodeTabs
+                            blocks={[
+                              {
+                                label: 'Demo Directory',
+                                language: 'bash',
+                                code: `yarn server`,
+                              },
+                              {
+                                label: 'Package Root',
+                                language: 'bash',
+                                code: `yarn demo:server`,
+                              },
+                            ]}
+                          />
+                          <p className="text-sm text-[#C8D7F2]">You should see output similar to:</p>
+                          <CodeBlock
+                            code={`x402 Demo Server running on http://localhost:3000
+Protected endpoint: http://localhost:3000/api/premium-data
+Payment required: $0.05 (4mica credit on Sepolia)`}
+                            language="bash"
+                          />
+                        </div>
+                        <div className="space-y-3">
+                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Step 4: Run the client</h4>
+                          <p>
+                            The client loads environment variables from <code className="font-mono">.env</code> and handles payment
+                            automatically.
+                          </p>
+                          <CodeTabs
+                            blocks={[
+                              {
+                                label: 'Demo Directory',
+                                language: 'bash',
+                                code: `yarn client`,
+                              },
+                              {
+                                label: 'Package Root',
+                                language: 'bash',
+                                code: `yarn demo:client`,
+                              },
+                            ]}
+                          />
+                          <p className="text-sm text-[#C8D7F2]">You can also provide a key inline:</p>
+                          <CodeBlock
+                            code={`PRIVATE_KEY=0xYourPrivateKey yarn client`}
+                            language="bash"
+                          />
+                        </div>
+                        <div className="space-y-3">
+                          <h4 className="text-lg font-semibold text-[#E7F1FF]">What happens</h4>
+                          <ol className="list-decimal list-inside space-y-1">
+                            <li>
+                              The server starts with a single protected endpoint: <code className="font-mono">GET /api/premium-data</code>.
+                            </li>
+                            <li>
+                              The client makes a request, receives <code className="font-mono">402 Payment Required</code>, opens a tab,
+                              signs a guarantee, and retries with <code className="font-mono">X-PAYMENT</code>.
+                            </li>
+                            <li>The server verifies and settles the payment, then returns the protected response.</li>
+                          </ol>
+                        </div>
+                        <div className="space-y-3">
+                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Payment flow</h4>
+                          <CodeBlock
+                            code={`Client → GET /api/premium-data
+       ← 402 Payment Required (with payment requirements)
+
+Client → POST /payment/tab (open payment tab)
+       ← 200 OK (tab details)
+
+Client → Signs payment guarantee (via 4mica SDK)
+
+Client → GET /api/premium-data (with payment proof)
+       ← 200 OK (protected data)`}
+                            language="bash"
+                          />
+                        </div>
+                        <div className="space-y-3">
+                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Test without the client</h4>
+                          <p>Use curl to sanity-check the server responses.</p>
+                          <CodeBlock
+                            code={`curl http://localhost:3000/
+curl -v http://localhost:3000/api/premium-data`}
+                            language="bash"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Notes</h4>
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>Ensure your account has sufficient balance on Sepolia testnet.</li>
+                            <li>The demo uses the default 4mica facilitator configuration.</li>
+                            <li>Tab TTL is set to 1 hour (3600 seconds).</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
                       <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Complete Example (Server)</h3>
                       <CodeTabs
                         blocks={[

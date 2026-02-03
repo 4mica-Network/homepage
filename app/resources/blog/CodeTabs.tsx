@@ -1,6 +1,6 @@
 'use client';
 
-import { useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 
 export type CodeBlock = {
   language?: string;
@@ -131,6 +131,8 @@ export default function CodeTabs({
   hideTabs?: boolean;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const copyTimeoutRef = useRef<number | null>(null);
   const baseId = useId();
   const activeBlock = blocks[activeIndex] ?? blocks[0];
   const languageId = resolveLanguageId(activeBlock?.language);
@@ -149,6 +151,32 @@ export default function CodeTabs({
     [codeLines, languageId],
   );
 
+  const handleCopy = async (code: string, index: number) => {
+    if (!code) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedIndex(index);
+      if (copyTimeoutRef.current) {
+        window.clearTimeout(copyTimeoutRef.current);
+      }
+      copyTimeoutRef.current = window.setTimeout(() => {
+        setCopiedIndex(null);
+      }, 1600);
+    } catch {
+      setCopiedIndex(null);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        window.clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div
       className={`rounded-xl border border-white/10 bg-[#050B1D] text-sm text-[#C8D7F2] ${
@@ -164,31 +192,67 @@ export default function CodeTabs({
         <div
           role="tablist"
           aria-label="Code languages"
-          className={`flex flex-wrap items-center gap-2 border-b border-white/10 bg-[#050B1D] px-3 py-2 ${
+          className={`flex flex-wrap items-center justify-between gap-2 border-b border-white/10 bg-[#050B1D] px-3 py-2 ${
             activeBlock?.caption ? 'mt-3' : ''
           }`}
         >
-          {blocks.map((block, idx) => {
-            const isActive = idx === activeIndex;
-            return (
-              <button
-                key={`${baseId}-tab-${idx}`}
-                id={`${baseId}-tab-${idx}`}
-                role="tab"
-                type="button"
-                aria-selected={isActive}
-                aria-controls={`${baseId}-panel-${idx}`}
-                onClick={() => setActiveIndex(idx)}
-                className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
-                  isActive
-                    ? 'bg-white/15 text-[#F2F4F8] shadow-sm'
-                    : 'text-[#9CB7E8] hover:text-[#E7F1FF]'
-                }`}
-              >
-                {getLabel(block, idx)}
-              </button>
-            );
-          })}
+          <div className="flex flex-wrap items-center gap-2">
+            {blocks.map((block, idx) => {
+              const isActive = idx === activeIndex;
+              return (
+                <button
+                  key={`${baseId}-tab-${idx}`}
+                  id={`${baseId}-tab-${idx}`}
+                  role="tab"
+                  type="button"
+                  aria-selected={isActive}
+                  aria-controls={`${baseId}-panel-${idx}`}
+                  onClick={() => setActiveIndex(idx)}
+                  className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
+                    isActive
+                      ? 'bg-white/15 text-[#F2F4F8] shadow-sm'
+                      : 'text-[#9CB7E8] hover:text-[#E7F1FF]'
+                  }`}
+                >
+                  {getLabel(block, idx)}
+                </button>
+              );
+            })}
+          </div>
+          <button
+            type="button"
+            onClick={() => handleCopy(activeBlock?.code ?? '', activeIndex)}
+            className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold transition ${
+              copiedIndex === activeIndex ? 'text-[#7BCBFF]' : 'text-[#9CB7E8] hover:text-[#E7F1FF]'
+            }`}
+            aria-label="Copy code to clipboard"
+          >
+            <i className={copiedIndex === activeIndex ? 'ri-check-line' : 'ri-file-copy-line'}></i>
+            <span className="hidden sm:inline">
+              {copiedIndex === activeIndex ? 'Copied' : 'Copy'}
+            </span>
+          </button>
+        </div>
+      )}
+      {!showTabs && (
+        <div
+          className={`flex items-center justify-end border-b border-white/10 bg-[#050B1D] px-3 py-2 ${
+            activeBlock?.caption ? 'mt-3' : ''
+          }`}
+        >
+          <button
+            type="button"
+            onClick={() => handleCopy(activeBlock?.code ?? '', activeIndex)}
+            className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold transition ${
+              copiedIndex === activeIndex ? 'text-[#7BCBFF]' : 'text-[#9CB7E8] hover:text-[#E7F1FF]'
+            }`}
+            aria-label="Copy code to clipboard"
+          >
+            <i className={copiedIndex === activeIndex ? 'ri-check-line' : 'ri-file-copy-line'}></i>
+            <span className="hidden sm:inline">
+              {copiedIndex === activeIndex ? 'Copied' : 'Copy'}
+            </span>
+          </button>
         </div>
       )}
 

@@ -164,6 +164,10 @@ function TechnicalDocsContentInner() {
                       Use <code className="font-mono">paymentMiddlewareFromConfig</code> for most deployments. It automatically configures
                       the 4Mica facilitator, registers <code className="font-mono">FourMicaEvmScheme</code>, and injects the tab endpoint.
                     </p>
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Install</h3>
+                      <CodeBlock code={`pnpm install @4mica/x402`} language="bash" />
+                    </div>
                     <div className="space-y-3">
                       <h3 className="text-xl font-semibold text-[#E7F1FF]">Quick Start (Server)</h3>
                       <CodeTabs
@@ -424,6 +428,10 @@ app.use(
                       Use the client wrappers to handle 402 responses, open tabs, sign payment guarantees, and retry requests
                       automatically. Choose fetch or Axios based on your client stack.
                     </p>
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Install</h3>
+                      <CodeBlock code={`pnpm install @4mica/x402`} language="bash" />
+                    </div>
                     <div className="space-y-3">
                       <h3 className="text-xl font-semibold text-[#E7F1FF]">Quick Start (Fetch)</h3>
                       <CodeTabs

@@ -1563,80 +1563,50 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                           {
                             label: 'TypeScript',
                             language: 'ts',
-                            code: `import "dotenv/config";
-import express from "express";
+                            code: `import express from "express";
 import { paymentMiddlewareFromConfig } from "@4mica/x402/server/express";
 
 const app = express();
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
-const PAY_TO_ADDRESS = process.env.PAY_TO_ADDRESS;
-const ADVERTISED_ENDPOINT =
-  process.env.ADVERTISED_ENDPOINT || \`http://localhost:\${PORT}/payment/tab\`;
-
-if (!PAY_TO_ADDRESS) {
-  console.error("Error: PAY_TO_ADDRESS environment variable is required");
-  process.exit(1);
-}
-
 app.use(
   paymentMiddlewareFromConfig(
     {
-      "GET /api/premium-data": {
+      "GET /api/data": {
         accepts: {
           scheme: "4mica-credit",
-          price: "$0.01",
-          network: "eip155:11155111", // Ethereum Sepolia
-          payTo: PAY_TO_ADDRESS,
+          price: "$0.05",
+          network: "eip155:11155111",
+          payTo: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
         },
-        description: "Access to premium data endpoint",
+        description: "API data access",
+      },
+      "POST /api/compute": {
+        accepts: {
+          scheme: "4mica-credit",
+          price: "$0.20",
+          network: "eip155:11155111",
+          payTo: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+        },
+        description: "Computation service",
       },
     },
     {
-      advertisedEndpoint: ADVERTISED_ENDPOINT,
-      ttlSeconds: 3600, // 1 hour
+      advertisedEndpoint: "https://api.example.com/tabs/open",
+      ttlSeconds: 7200,
     }
   )
 );
 
-app.get("/api/premium-data", (req, res) => {
-  res.json({
-    message: "Success! You've accessed the premium data.",
-    data: {
-      timestamp: new Date().toISOString(),
-      secret: "This is protected content behind a paywall",
-      value: Math.random() * 1000,
-    },
-  });
+app.get("/api/data", (req, res) => {
+  res.json({ data: "Premium data content" });
 });
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "x402 Demo Server",
-    endpoints: {
-      free: ["/", "/health"],
-      protected: [
-        {
-          path: "/api/premium-data",
-          price: "$0.01",
-          description: "Premium data endpoint (requires payment)",
-        },
-      ],
-    },
-  });
+app.post("/api/compute", (req, res) => {
+  res.json({ result: "Computation complete" });
 });
 
-app.get("/health", (req, res) => {
-  res.json({ status: "ok" });
-});
-
-app.listen(PORT, () => {
-  console.log(\`x402 Demo Server running on http://localhost:\${PORT}\`);
-  console.log(\`Protected endpoint: http://localhost:\${PORT}/api/premium-data\`);
-  console.log("Payment required: $0.01 (4mica credit on Sepolia)");
-  console.log(\`Payment tab endpoint: \${ADVERTISED_ENDPOINT}\`);
-});`,
+app.listen(3000);`,
                           },
                           {
                             label: 'Python',
@@ -1658,60 +1628,37 @@ app.listen(PORT, () => {
                           {
                             label: 'TypeScript',
                             language: 'ts',
-                            code: `import "dotenv/config";
-import { wrapFetchWithPaymentFromConfig } from "@x402/fetch";
+                            code: `import { wrapFetchWithPaymentFromConfig } from "@x402/fetch";
 import { FourMicaEvmScheme } from "@4mica/x402/client";
 import { privateKeyToAccount } from "viem/accounts";
 
 async function main() {
-  const privateKey = process.env.PRIVATE_KEY;
-  if (!privateKey || !privateKey.startsWith("0x")) {
-    console.error("Error: PRIVATE_KEY environment variable must be set and start with 0x");
-    console.error("Example: PRIVATE_KEY=0x1234... yarn client");
-    process.exit(1);
-  }
-
-  const apiUrl = process.env.API_URL || "http://localhost:3000";
-  const endpoint = \`\${apiUrl}/api/premium-data\`;
-
-  console.log("Initializing x402 client...");
-  console.log(\`Target endpoint: \${endpoint}\`);
-
-  const account = privateKeyToAccount(privateKey as \`0x\${string}\`);
-  console.log(\`Using account: \${account.address}\`);
-
+  const account = privateKeyToAccount("0xYourPrivateKey");
   const scheme = await FourMicaEvmScheme.create(account);
 
   const fetchWithPayment = wrapFetchWithPaymentFromConfig(fetch, {
     schemes: [
       {
-        network: "eip155:11155111", // Ethereum Sepolia
+        network: "eip155:11155111",
         client: scheme,
       },
     ],
   });
 
-  console.log("\\nMaking request to protected endpoint...");
+  const dataResponse = await fetchWithPayment("https://api.example.com/api/data");
+  const data = await dataResponse.json();
+  console.log("Data:", data);
 
-  try {
-    const response = await fetchWithPayment(endpoint);
-    const data = await response.json();
-
-    console.log("Request successful!");
-    console.log("Response:", JSON.stringify(data, null, 2));
-  } catch (error) {
-    console.error("Request failed:", error);
-    if (error instanceof Error) {
-      console.error("Message:", error.message);
-    }
-    process.exit(1);
-  }
+  const computeResponse = await fetchWithPayment("https://api.example.com/api/compute", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ input: "some data" }),
+  });
+  const result = await computeResponse.json();
+  console.log("Result:", result);
 }
 
-main().catch((error) => {
-  console.error("Unhandled error:", error);
-  process.exit(1);
-});`,
+main();`,
                           },
                           {
                             label: 'Python',

@@ -226,7 +226,7 @@ app.listen(3000, () => {
                       <ol className="list-decimal list-inside space-y-1">
                         <li>The client requests your protected route without payment.</li>
                         <li>The server returns HTTP 402 with <code className="font-mono">paymentRequirements</code> and a tab endpoint.</li>
-                        <li>The client opens a tab, signs a payment guarantee, and retries with <code className="font-mono">X-PAYMENT</code>.</li>
+                        <li>The client opens a tab (using the <code className="font-mono">advertisedEndpoint</code>), signs a payment guarantee, and retries with <code className="font-mono">PAYMENT-SIGNATURE</code>.</li>
                         <li>The server verifies and settles the payment, then serves the protected response.</li>
                       </ol>
                     </div>
@@ -593,7 +593,7 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                       <ol className="list-decimal list-inside space-y-1">
                         <li>Call the protected resource and receive HTTP 402 with payment requirements.</li>
                         <li>The wrapper opens a tab and signs the guarantee using your key.</li>
-                        <li>The request is retried automatically with <code className="font-mono">X-PAYMENT</code>.</li>
+                        <li>The request is retried automatically with <code className="font-mono">PAYMENT-SIGNATURE</code>.</li>
                         <li>Handle the successful response or surface any 402 retry errors.</li>
                       </ol>
                     </div>

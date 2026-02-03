@@ -920,23 +920,164 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Operator API Reference</h2>
                   <div className="space-y-6">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      Core operator endpoints are served by <code className="font-mono">4mica-core/core</code> under the
-                      <code className="font-mono">/core</code> prefix. Admin routes require the{' '}
-                      <code className="font-mono">x-api-key</code> header with the matching scope.
+                      Core operator endpoints are served by <code className="font-mono">4mica-core/core</code>. Core routes live under
+                      <code className="font-mono">/core</code>, and auth routes live under <code className="font-mono">/auth</code>. All non-public
+                      endpoints require an access token.
                     </p>
                     <div className="bg-white/10 border border-white/10 rounded-lg p-5 text-sm text-[#C8D7F2] space-y-2">
                       <p>
-                        <span className="font-semibold">Admin scopes:</span>{' '}
-                        <code className="font-mono">admin_api_keys:manage</code>,{' '}
-                        <code className="font-mono">user_suspension:write</code>
+                        <span className="font-semibold">Public endpoints:</span>{' '}
+                        <code className="font-mono">/auth/*</code>, <code className="font-mono">/core/health</code>,{' '}
+                        <code className="font-mono">/core/public-params</code>
                       </p>
                       <p>
-                        <span className="font-semibold">Admin header:</span>{' '}
-                        <code className="font-mono">x-api-key</code>
+                        <span className="font-semibold">Auth header:</span>{' '}
+                        <code className="font-mono">Authorization: Bearer &lt;access_token&gt;</code>
                       </p>
+                      <p>
+                        <span className="font-semibold">Scopes:</span>{' '}
+                        <code className="font-mono">tab:create</code>, <code className="font-mono">tab:read</code>,{' '}
+                        <code className="font-mono">guarantee:issue</code>
+                      </p>
+                      <p>
+                        <span className="font-semibold">Roles:</span>{' '}
+                        <code className="font-mono">admin</code>, <code className="font-mono">facilitator</code>
+                      </p>
+                    </div>
+                    <div className="border border-white/10 rounded-lg p-5 text-sm text-[#C8D7F2] space-y-2">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Access rules</h3>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>
+                          <code className="font-mono">tab:create</code> is required for <code className="font-mono">/core/payment-tabs</code>; recipient must
+                          match the token subject or the <code className="font-mono">facilitator</code> role.
+                        </li>
+                        <li>
+                          <code className="font-mono">guarantee:issue</code> is required for <code className="font-mono">/core/guarantees</code>; recipient must
+                          match the token subject or the <code className="font-mono">facilitator</code> role.
+                        </li>
+                        <li>
+                          <code className="font-mono">tab:read</code> is required for all tab, guarantee, payment, and collateral reads.
+                        </li>
+                        <li>
+                          Recipient-address list routes allow the <code className="font-mono">facilitator</code> role, except
+                          <code className="font-mono">/core/recipients/{'{recipient_address}'}/payments</code> which requires recipient match.
+                        </li>
+                        <li>
+                          Tab-specific routes require tab ownership (user or recipient) or the <code className="font-mono">facilitator</code> role.
+                        </li>
+                        <li>
+                          <code className="font-mono">/core/users/{'{user_address}'}/suspension</code> requires the <code className="font-mono">admin</code> role.
+                        </li>
+                      </ul>
                     </div>
                     <div className="grid grid-cols-1 gap-4">
                       {[
+                        {
+                          method: 'POST',
+                          path: '/auth/nonce',
+                          desc: 'Request a SIWE nonce + template.',
+                          expects: '{ address }',
+                          returns: '{ nonce, siwe: { domain, uri, chain_id, statement, expiration, issued_at } }',
+                          examples: [
+                            {
+                              label: 'Request',
+                              language: 'json',
+                              code: `{
+  "address": "0xUser"
+}`,
+                            },
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "nonce": "9c1c0c7e",
+  "siwe": {
+    "domain": "4mica.io",
+    "uri": "https://4mica.io",
+    "chain_id": 1,
+    "statement": "Sign in to 4Mica",
+    "expiration": "2026-02-03T00:00:00Z",
+    "issued_at": "2026-02-03T00:00:00Z"
+  }
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'POST',
+                          path: '/auth/verify',
+                          desc: 'Verify SIWE signature and issue tokens.',
+                          expects: '{ address, message, signature }',
+                          returns: '{ access_token, refresh_token, expires_in }',
+                          examples: [
+                            {
+                              label: 'Request',
+                              language: 'json',
+                              code: `{
+  "address": "0xUser",
+  "message": "SIWE message string",
+  "signature": "0xSignature"
+}`,
+                            },
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "access_token": "eyJhbGciOi...",
+  "refresh_token": "rfr_...",
+  "expires_in": 3600
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'POST',
+                          path: '/auth/refresh',
+                          desc: 'Refresh access and refresh tokens.',
+                          expects: '{ refresh_token }',
+                          returns: '{ access_token, refresh_token, expires_in }',
+                          examples: [
+                            {
+                              label: 'Request',
+                              language: 'json',
+                              code: `{
+  "refresh_token": "rfr_..."
+}`,
+                            },
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "access_token": "eyJhbGciOi...",
+  "refresh_token": "rfr_...",
+  "expires_in": 3600
+}`,
+                            },
+                          ],
+                        },
+                        {
+                          method: 'POST',
+                          path: '/auth/logout',
+                          desc: 'Revoke a refresh token.',
+                          expects: '{ refresh_token }',
+                          returns: '{ revoked }',
+                          examples: [
+                            {
+                              label: 'Request',
+                              language: 'json',
+                              code: `{
+  "refresh_token": "rfr_..."
+}`,
+                            },
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "revoked": true
+}`,
+                            },
+                          ],
+                        },
                         {
                           method: 'GET',
                           path: '/core/health',
@@ -1013,7 +1154,7 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                           path: '/core/guarantees',
                           desc: 'Issue a BLS guarantee for a signed request.',
                           expects:
-                            '{ claims: { version: "v1", user_address, recipient_address, tab_id, req_id, amount, asset_address, timestamp }, signature, scheme }',
+                            '{ claims: { version: "v1", user_address, recipient_address, tab_id, req_id, amount, asset_address, timestamp }, signature, scheme: "eip712" | "eip191" }',
                           returns: '{ claims, signature } (BLSCert)',
                           examples: [
                             {
@@ -1311,7 +1452,7 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                           path: '/core/users/{user_address}/suspension',
                           desc: 'Suspend or unsuspend a user.',
                           expects:
-                            'Header: x-api-key (scope user_suspension:write). Body: { suspended: boolean }',
+                            'Header: Authorization: Bearer <access_token> (role admin). Body: { suspended: boolean }',
                           returns: '{ user_address, suspended, updated_at }',
                           examples: [
                             {
@@ -1328,78 +1469,6 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
   "user_address": "0xUser",
   "suspended": true,
   "updated_at": 1716500000
-}`,
-                            },
-                          ],
-                        },
-                        {
-                          method: 'GET',
-                          path: '/core/admin/api-keys',
-                          desc: 'List admin API keys.',
-                          expects: 'Header: x-api-key (scope admin_api_keys:manage).',
-                          returns: 'AdminApiKeyInfo[]',
-                          examples: [
-                            {
-                              label: 'Response',
-                              language: 'json',
-                              code: `[
-  {
-    "id": "uuid",
-    "name": "ops",
-    "scopes": ["admin_api_keys:manage"],
-    "created_at": 1716500000,
-    "revoked_at": null
-  }
-]`,
-                            },
-                          ],
-                        },
-                        {
-                          method: 'POST',
-                          path: '/core/admin/api-keys',
-                          desc: 'Create a new admin API key.',
-                          expects:
-                            'Header: x-api-key (scope admin_api_keys:manage). Body: { name, scopes }',
-                          returns: '{ id, name, scopes, created_at, api_key }',
-                          examples: [
-                            {
-                              label: 'Request',
-                              language: 'json',
-                              code: `{
-  "name": "ops",
-  "scopes": ["admin_api_keys:manage"]
-}`,
-                            },
-                            {
-                              label: 'Response',
-                              language: 'json',
-                              code: `{
-  "id": "uuid",
-  "name": "ops",
-  "scopes": ["admin_api_keys:manage"],
-  "created_at": 1716500000,
-  "api_key": "ak_..."
-}`,
-                            },
-                          ],
-                        },
-                        {
-                          method: 'POST',
-                          path: '/core/admin/api-keys/{id}/revoke',
-                          desc: 'Revoke an admin API key.',
-                          expects:
-                            'Header: x-api-key (scope admin_api_keys:manage). Path param: id (uuid).',
-                          returns: '{ id, name, scopes, created_at, revoked_at? }',
-                          examples: [
-                            {
-                              label: 'Response',
-                              language: 'json',
-                              code: `{
-  "id": "uuid",
-  "name": "ops",
-  "scopes": ["admin_api_keys:manage"],
-  "created_at": 1716500000,
-  "revoked_at": 1716501000
 }`,
                             },
                           ],

@@ -11,11 +11,10 @@ const navigationItems = [
   { id: 'installation', title: 'Installation', icon: 'ri-download-cloud-2-line' },
   { id: 'server-integration', title: 'Server Integration', icon: 'ri-server-line' },
   { id: 'client-integration', title: 'Client Integration', icon: 'ri-user-line' },
+  { id: 'examples', title: 'Code Examples', icon: 'ri-file-code-line' },
   { id: 'facilitator-api', title: 'Facilitator API', icon: 'ri-cloud-line' },
   { id: 'operator-api', title: 'Operator API', icon: 'ri-database-2-line' },
   { id: 'payment-flow', title: 'Protocol Flow', icon: 'ri-route-line' },
-  { id: 'examples', title: 'Code Examples', icon: 'ri-file-code-line' },
-  { id: 'support', title: 'Support', icon: 'ri-customer-service-2-line' }
 ];
 
 export default function TechnicalDocsContent() {
@@ -1588,12 +1587,6 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                             Build the parent package first, then install the demo dependencies from the demo directory.
                           </p>
                           <CodeBlock
-                            code={`cd ..
-yarn install
-yarn build`}
-                            language="bash"
-                          />
-                          <CodeBlock
                             code={`cd demo
 yarn install`}
                             language="bash"
@@ -1840,59 +1833,6 @@ main();`,
                 </div>
               )}
 
-              {activeSection === 'support' && (
-                <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Support & Licensing</h2>
-                  <div className="space-y-6 text-[#C8D7F2]">
-                    <p>
-                      The package is MIT licensed (see <code className="font-mono">LICENSE</code>) and aligns with the latest x402 integration
-                      documentation. Use the links below for the latest code, facilitator examples, and public documentation.
-                    </p>
-                    <div className="bg-white/10 border border-white/10 rounded-lg p-4">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF] mb-3">Official Resources</h3>
-                      <ul className="space-y-2 text-sm">
-                        <li>
-                          <span className="font-semibold">Website:</span>{' '}
-                          <a className="text-[#1E4DD8]" href="https://4mica.xyz" target="_blank" rel="noreferrer">
-                            https://4mica.xyz
-                          </a>
-                        </li>
-                        <li>
-                          <span className="font-semibold">Rust SDK README:</span>{' '}
-                          <a className="text-[#1E4DD8]" href="https://github.com/4mica-Network/4mica-core/tree/main/sdk" target="_blank" rel="noreferrer">
-                            github.com/4mica-Network/4mica-core/tree/main/sdk
-                          </a>
-                        </li>
-                        <li>
-                          <span className="font-semibold">Facilitator (x402-4mica):</span>{' '}
-                          <a
-                            className="text-[#1E4DD8]"
-                            href="https://github.com/4mica-Network/x402-4mica"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            github.com/4mica-Network/x402-4mica
-                          </a>
-                        </li>
-                        <li>
-                          <span className="font-semibold">Core Platform:</span>{' '}
-                          <a
-                            className="text-[#1E4DD8]"
-                            href="https://github.com/4mica-Network/4mica-core"
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            https://github.com/4mica-Network/4mica-core
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                    <p className="text-sm text-center">
-                      <span className="block">Made with ❤️ by the 4Mica Network</span>
-                    </p>
-                  </div>
-                </div>
-              )}
             </div>
           </div>
         </div>

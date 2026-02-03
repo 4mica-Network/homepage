@@ -42,12 +42,12 @@ function TechnicalDocsContentInner() {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
-            4Mica Rust SDK Documentation
+            4Mica x402 Integration Documentation
           </h1>
           <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
           <p className="text-xl text-[#C8D7F2] max-w-3xl mx-auto">
-            In-depth documentation for the official Rust SDK powering secure, cryptographically-guaranteed tab-based
-            payments on the 4Mica network.
+            Express middleware and client integration for the x402 Payment Protocol with 4mica credit flow support,
+            including automatic facilitator and scheme registration.
           </p>
         </div>
 
@@ -83,42 +83,41 @@ function TechnicalDocsContentInner() {
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Overview</h2>
                   <div className="space-y-6">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      The 4Mica SDKs ship across Rust (v0.4.0), Python (v0.4.3), and TypeScript (v0.3.0) with shared primitives for
-                      tabs, sequential <code className="font-mono">req_id</code> guarantees, and HTTP 402/X402 flows. They wrap the
-                      Core4Mica contracts, facilitator, and X402 helper into a single toolkit so you can collateralize, issue
-                      guarantees, and settle tabs without forcing users to pre-fund every request.
+                      The <code className="font-mono">@4mica/x402</code> package ships batteries-included Express middleware and
+                      client helpers for the x402 Payment Protocol with 4Mica credit flow support. It adds HTTP 402 payment
+                      requirements to protected routes, advertises tab endpoints, and wires the 4Mica facilitator automatically.
                     </p>
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      This page summarizes the refreshed SDK README plus the latest protocol sequence diagrams. Use it as a quick-start
-                      for integrating Core4Mica directly or bridging HTTP 402 resources through the x402-4mica facilitator.
+                      Use this page to get paid as a resource server, configure deeper server integrations, or pay as an agent
+                      with fetch/axios wrappers that automatically open tabs, sign guarantees, and retry requests.
                     </p>
                     <div>
                       <h3 className="text-xl font-semibold text-[#E7F1FF] mb-4">Key Capabilities</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {[
                           {
-                            title: 'User Client',
-                            desc: 'Deposit collateral, sign guarantees, settle tabs, and manage withdrawals with typed responses.'
+                            title: 'Batteries-Included Middleware',
+                            desc: 'Protect Express routes with HTTP 402 responses and 4Mica credit requirements.'
                           },
                           {
-                            title: 'Recipient Client',
-                            desc: 'Open/reuse tabs, issue payment guarantees, and remunerate against locked collateral.'
+                            title: 'Automatic Facilitator Setup',
+                            desc: 'paymentMiddlewareFromConfig wires the 4Mica facilitator and registers FourMicaEvmScheme for you.'
                           },
                           {
-                            title: 'X402 Flow Helper',
-                            desc: 'Generate base64 X-PAYMENT headers and optionally call /settle for HTTP 402 protected resources.'
+                            title: 'Tab Management',
+                            desc: 'advertisedEndpoint is injected automatically; middleware handles tab open requests end to end.'
                           },
                           {
-                            title: 'Typed Claims & Certificates',
-                            desc: 'PaymentGuaranteeClaimsV1 with req_id + totals upgraded to BLS certificates for on-chain redemption.'
+                            title: 'Client Payment Wrappers',
+                            desc: 'Fetch and Axios wrappers handle 402, open tabs, sign guarantees, and retry requests.'
                           },
                           {
-                            title: 'Safety Rails',
-                            desc: 'Address validation, required/optional config separation, and structured error enums for each flow.'
+                            title: 'Multi-Network Support',
+                            desc: 'Built-in support for Ethereum Sepolia and Polygon Amoy networks.'
                           },
                           {
-                            title: 'Secure Defaults',
-                            desc: 'Non-custodial design with enforced grace periods, domain separation, and 4Mica-only signing schemes.'
+                            title: 'Extensible Paywalls',
+                            desc: 'Drop in custom paywall UI and HTTP hooks for advanced flows.'
                           }
                         ].map((item, index) => (
                           <div key={index} className="bg-white/10 border border-white/10 rounded-lg p-4">
@@ -137,36 +136,20 @@ function TechnicalDocsContentInner() {
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Installation</h2>
                   <div className="space-y-6">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      The SDKs ship as <code className="font-mono">rust-sdk-4mica</code> (v0.4.0), <code className="font-mono">sdk-4mica</code>{' '}
-                      for Python (v0.4.3), and <code className="font-mono">sdk-4mica</code> for TypeScript (v0.3.0). Each targets the
-                      Core4Mica contracts and x402 facilitator APIs with async support baked in.
+                      Install the server middleware package, then add optional client wrappers for automatic payment handling.
                     </p>
                     <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Install the SDK</h3>
-                      <CodeTabs
-                        blocks={[
-                          {
-                            label: 'Rust',
-                            language: 'toml',
-                            code: `[dependencies]
-rust-sdk-4mica = "0.4.0"`,
-                          },
-                          {
-                            label: 'Python',
-                            language: 'bash',
-                            code: `pip install sdk-4mica==0.4.3`,
-                          },
-                          {
-                            label: 'TypeScript',
-                            language: 'bash',
-                            code: `npm install sdk-4mica@0.3.0`,
-                          },
-                        ]}
-                      />
+                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Install the Server Package</h3>
+                      <CodeBlock code={`pnpm install @4mica/x402`} language="bash" />
                       <p className="text-sm text-[#C8D7F2] mt-3">
-                        For Rust, you can also run <code className="font-mono">cargo add rust-sdk-4mica@0.4.0</code>. After updating{' '}
-                        <code className="font-mono">Cargo.toml</code>, run <code className="font-mono">cargo build</code> to pull the crate and
-                        verify your toolchain.
+                        This installs the Express middleware and server helpers with automatic facilitator and scheme registration.
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Optional Client Wrappers</h3>
+                      <CodeBlock code={`pnpm install @x402/fetch @x402/axios`} language="bash" />
+                      <p className="text-sm text-[#C8D7F2] mt-3">
+                        Use <code className="font-mono">@x402/fetch</code> for fetch clients and <code className="font-mono">@x402/axios</code> for Axios-based apps.
                       </p>
                     </div>
                   </div>
@@ -178,113 +161,256 @@ rust-sdk-4mica = "0.4.0"`,
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Server Integration</h2>
                   <div className="space-y-8">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      Recipient flow for getting paid: respond with 402, provision tabs, then verify + settle
-                      guarantees to receive certificates.
+                      Use <code className="font-mono">paymentMiddlewareFromConfig</code> for most deployments. It automatically configures
+                      the 4Mica facilitator, registers <code className="font-mono">FourMicaEvmScheme</code>, and injects the tab endpoint.
                     </p>
-                    <div className="space-y-2 text-sm text-[#C8D7F2]">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Steps</h3>
-                      <ol className="list-decimal list-inside space-y-1">
-                        <li>Return 402 with <code className="font-mono">paymentRequirements</code> and <code className="font-mono">extra.tabEndpoint</code>.</li>
-                        <li>Tab endpoint calls <code className="font-mono">POST /tabs</code> to open or reuse a tab.</li>
-                        <li>When the retry arrives, call <code className="font-mono">/verify</code>.</li>
-                        <li>Call <code className="font-mono">/settle</code> to mint the certificate.</li>
-                        <li>Persist the certificate and serve the protected response.</li>
-                      </ol>
-                    </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Return 402 Payment Required</h3>
-                      <CodeTabs
-                        blocks={[
-                          {
-                            label: 'HTTP',
-                            language: 'http',
-                            code: `HTTP/1.1 402 Payment Required
-Content-Type: application/json
-
-{
-  "paymentRequirements": {
-    "scheme": "4mica-credit",
-    "network": "polygon-amoy",
-    "maxAmountRequired": "100",
-    "resource": "/v1/report",
-    "description": "Generate report",
-    "mimeType": "application/json",
-    "payTo": "0xRecipientAddress",
-    "maxTimeoutSeconds": 300,
-    "asset": "0xAssetAddress",
-    "extra": {
-      "tabEndpoint": "https://your.api.example.com/x402/tab"
-    }
-  }
-}`,
-                          },
-                        ]}
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Create or Reuse Tabs (Recipient SDK)</h3>
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Quick Start (Server)</h3>
                       <CodeTabs
                         blocks={[
                           {
                             label: 'TypeScript',
                             language: 'ts',
-                            code: `import { Client, ConfigBuilder } from "sdk-4mica";
+                            code: `import express from "express";
+import { paymentMiddlewareFromConfig } from "@4mica/x402/server/express";
 
-const cfg = new ConfigBuilder()
-  .rpcUrl(process.env["4MICA_RPC_URL"] ?? "https://api.4mica.xyz/")
-  .walletPrivateKey(process.env.RECIPIENT_KEY!)
-  .build();
+const app = express();
+app.use(express.json());
 
-const client = await Client.new(cfg);
-const tabId = await client.recipient.createTab(
-  "0xUserAddress",
-  "0xRecipientAddress",
-  null,
-  3600
+app.use(
+  paymentMiddlewareFromConfig(
+    {
+      "GET /premium-content": {
+        accepts: {
+          scheme: "4mica-credit",
+          price: "$0.10",
+          network: "eip155:11155111", // Ethereum Sepolia
+          payTo: "0xYourAddress",
+        },
+        description: "Access to premium content",
+      },
+    },
+    {
+      advertisedEndpoint: "https://api.example.com/tabs/open",
+    }
+  )
 );
-await client.aclose();`,
+
+app.get("/premium-content", (req, res) => {
+  res.json({ message: "This is premium content behind a paywall" });
+});
+
+app.listen(3000, () => {
+  console.log("Server running on http://localhost:3000");
+});`,
                           },
                           {
                             label: 'Python',
                             language: 'python',
-                            code: `import asyncio
-from fourmica_sdk import Client, ConfigBuilder
-
-async def main():
-    cfg = ConfigBuilder().wallet_private_key("0x...").build()
-    client = await Client.new(cfg)
-    tab_id = await client.recipient.create_tab(
-        user_address="0xUserAddress",
-        recipient_address="0xRecipientAddress",
-        erc20_token=None,
-        ttl=3600,
-    )
-    await client.aclose()
-
-asyncio.run(main())`,
+                            code: `Will be ready soon!`,
                           },
                           {
                             label: 'Rust',
                             language: 'rust',
-                            code: `use rust_sdk_4mica::{Client, ConfigBuilder};
-
-#[tokio::main]
-async fn main() -> anyhow::Result<()> {
-    let cfg = ConfigBuilder::default()
-        .wallet_private_key(std::env::var("RECIPIENT_KEY")?)
-        .build()?;
-    let client = Client::new(cfg).await?;
-
-    let tab_id = client
-        .recipient
-        .create_tab("0xUserAddress".to_string(), "0xRecipientAddress".to_string(), None, Some(3600))
-        .await?;
-    println!("tab_id={tab_id}");
-    Ok(())
-}`,
+                            code: `Will be ready soon!`,
                           },
                         ]}
                       />
+                    </div>
+                    <div className="space-y-2 text-sm text-[#C8D7F2]">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">What Happens on Each Request</h3>
+                      <ol className="list-decimal list-inside space-y-1">
+                        <li>The client requests your protected route without payment.</li>
+                        <li>The server returns HTTP 402 with <code className="font-mono">paymentRequirements</code> and a tab endpoint.</li>
+                        <li>The client opens a tab, signs a payment guarantee, and retries with <code className="font-mono">X-PAYMENT</code>.</li>
+                        <li>The server verifies and settles the payment, then serves the protected response.</li>
+                      </ol>
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">
+                        paymentMiddlewareFromConfig(routes, tabConfig, ...options)
+                      </h3>
+                      <p className="text-sm text-[#C8D7F2]">
+                        Provide protected routes plus the tab configuration. The middleware handles 402 responses, tab openings, and
+                        verification/settlement wiring.
+                      </p>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `app.use(
+  paymentMiddlewareFromConfig(
+    {
+      "GET /path": {
+        accepts: {
+          scheme: "4mica-credit",
+          price: "$0.10",
+          network: "eip155:11155111", // or "eip155:80002" for Polygon Amoy
+          payTo: "0xRecipientAddress",
+        },
+        description: "What the user is paying for",
+      },
+    },
+    {
+      advertisedEndpoint: "https://api.example.com/tabs/open",
+      ttlSeconds: 3600,
+    }
+  )
+);`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `Will be ready soon!`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `Will be ready soon!`,
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div className="space-y-2 text-sm text-[#C8D7F2]">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Parameters</h3>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>
+                          <code className="font-mono">routes</code> (required): protected route definitions keyed by method + path.
+                        </li>
+                        <li>
+                          <code className="font-mono">tabConfig</code> (required): tab endpoint + optional TTL.
+                        </li>
+                        <li>
+                          <code className="font-mono">facilitatorClients</code> (optional): add other facilitator clients.
+                        </li>
+                        <li>
+                          <code className="font-mono">schemes</code> (optional): register additional schemes/networks.
+                        </li>
+                        <li>
+                          <code className="font-mono">paywallConfig</code> (optional): configuration for the built-in paywall UI.
+                        </li>
+                        <li>
+                          <code className="font-mono">paywall</code> (optional): custom paywall provider.
+                        </li>
+                        <li>
+                          <code className="font-mono">syncFacilitatorOnStart</code> (optional): sync supported kinds at startup (default: true).
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="space-y-2 text-sm text-[#C8D7F2]">
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Supported Networks</h3>
+                      <ul className="list-disc list-inside space-y-1">
+                        <li>
+                          <code className="font-mono">eip155:11155111</code> — Ethereum Sepolia
+                        </li>
+                        <li>
+                          <code className="font-mono">eip155:80002</code> — Polygon Amoy
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Advanced Server Usage</h3>
+                      <p className="text-sm text-[#C8D7F2]">
+                        For custom facilitators or additional schemes, use <code className="font-mono">paymentMiddleware</code> or wire
+                        HTTP hooks with <code className="font-mono">paymentMiddlewareFromHTTPServer</code>.
+                      </p>
+                      <div className="space-y-3">
+                        <h4 className="text-lg font-semibold text-[#E7F1FF]">Custom Resource Server</h4>
+                        <CodeTabs
+                          blocks={[
+                            {
+                              label: 'TypeScript',
+                              language: 'ts',
+                              code: `import { paymentMiddleware } from "@4mica/x402/server/express";
+import {
+  x402ResourceServer,
+  FourMicaFacilitatorClient,
+} from "@4mica/x402/server";
+import { ExactEvmScheme } from "@x402/evm/exact/server";
+import { HTTPFacilitatorClient } from "@x402/core/server";
+
+const fourMicaFacilitator = new FourMicaFacilitatorClient();
+const otherFacilitator = new HTTPFacilitatorClient({
+  url: "https://other-facilitator.example.com",
+});
+
+const resourceServer = new x402ResourceServer([
+  fourMicaFacilitator,
+  otherFacilitator,
+]).register("eip155:8453", new ExactEvmScheme());
+
+app.use(
+  paymentMiddleware(
+    routes,
+    resourceServer,
+    {
+      advertisedEndpoint: "https://api.example.com/tabs/open",
+      ttlSeconds: 3600,
+    },
+    paywallConfig
+  )
+);`,
+                            },
+                            {
+                              label: 'Python',
+                              language: 'python',
+                              code: `Will be ready soon!`,
+                            },
+                            {
+                              label: 'Rust',
+                              language: 'rust',
+                              code: `Will be ready soon!`,
+                            },
+                          ]}
+                        />
+                      </div>
+                      <div className="space-y-3">
+                        <h4 className="text-lg font-semibold text-[#E7F1FF]">HTTP Hooks</h4>
+                        <CodeTabs
+                          blocks={[
+                            {
+                              label: 'TypeScript',
+                              language: 'ts',
+                              code: `import { paymentMiddlewareFromHTTPServer } from "@4mica/x402/server/express";
+import {
+  x402ResourceServer,
+  x402HTTPResourceServer,
+  FourMicaFacilitatorClient,
+} from "@4mica/x402/server";
+
+const fourMicaFacilitator = new FourMicaFacilitatorClient();
+const resourceServer = new x402ResourceServer(fourMicaFacilitator);
+
+const httpServer = new x402HTTPResourceServer(resourceServer, routes)
+  .onProtectedRequest((context) => {
+    console.log("Protected request:", context.path);
+  });
+
+app.use(
+  paymentMiddlewareFromHTTPServer(
+    httpServer,
+    {
+      advertisedEndpoint: "https://api.example.com/tabs/open",
+      ttlSeconds: 3600,
+    },
+    paywallConfig
+  )
+);`,
+                            },
+                            {
+                              label: 'Python',
+                              language: 'python',
+                              code: `Will be ready soon!`,
+                            },
+                            {
+                              label: 'Rust',
+                              language: 'rust',
+                              code: `Will be ready soon!`,
+                            },
+                          ]}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -295,205 +421,173 @@ async fn main() -> anyhow::Result<()> {
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Client Integration</h2>
                   <div className="space-y-8">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      Payer flow for consuming paid resources: fund collateral, parse requirements,
-                      sign <code className="font-mono">X-PAYMENT</code>, retry, then settle on-chain later.
+                      Use the client wrappers to handle 402 responses, open tabs, sign payment guarantees, and retry requests
+                      automatically. Choose fetch or Axios based on your client stack.
                     </p>
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Quick Start (Fetch)</h3>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `import { wrapFetchWithPaymentFromConfig } from "@x402/fetch";
+import { FourMicaEvmScheme } from "@4mica/x402/client";
+import { privateKeyToAccount } from "viem/accounts";
+
+const account = privateKeyToAccount("0xYourPrivateKey");
+const scheme = await FourMicaEvmScheme.create(account);
+
+const fetchWithPayment = wrapFetchWithPaymentFromConfig(fetch, {
+  schemes: [
+    {
+      network: "eip155:11155111", // Ethereum Sepolia
+      client: scheme,
+    },
+  ],
+});
+
+const response = await fetchWithPayment("https://api.example.com/premium-content");
+const data = await response.json();
+console.log(data);`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `Will be ready soon!`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `Will be ready soon!`,
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Quick Start (Axios)</h3>
+                      <p className="text-sm text-[#C8D7F2]">
+                        Use Axios with <code className="font-mono">@x402/axios</code> for drop-in payment handling.
+                      </p>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `import axios from "axios";
+import { wrapAxiosWithPaymentFromConfig } from "@x402/axios";
+import { FourMicaEvmScheme } from "@4mica/x402/client";
+import { privateKeyToAccount } from "viem/accounts";
+
+const account = privateKeyToAccount("0xYourPrivateKey");
+const scheme = await FourMicaEvmScheme.create(account);
+
+const api = wrapAxiosWithPaymentFromConfig(axios.create(), {
+  schemes: [
+    {
+      network: "eip155:11155111", // Ethereum Sepolia
+      client: scheme,
+    },
+  ],
+});
+
+const response = await api.get("https://api.example.com/premium-content");
+console.log(response.data);`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `Will be ready soon!`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `Will be ready soon!`,
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Multi-Network Client Setup</h3>
+                      <p className="text-sm text-[#C8D7F2]">
+                        Register multiple networks to route payments to different schemes.
+                      </p>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `import { wrapFetchWithPaymentFromConfig } from "@x402/fetch";
+import { FourMicaEvmScheme } from "@4mica/x402/client";
+
+const sepoliaScheme = await FourMicaEvmScheme.create(sepoliaAccount);
+const amoyScheme = await FourMicaEvmScheme.create(amoyAccount);
+
+const fetchWithPayment = wrapFetchWithPaymentFromConfig(fetch, {
+  schemes: [
+    {
+      network: "eip155:11155111", // Ethereum Sepolia
+      client: sepoliaScheme,
+    },
+    {
+      network: "eip155:80002", // Polygon Amoy
+      client: amoyScheme,
+    },
+  ],
+});`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `Will be ready soon!`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `Will be ready soon!`,
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Using Builder Pattern</h3>
+                      <p className="text-sm text-[#C8D7F2]">
+                        Compose a reusable client registry for additional control.
+                      </p>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `import { wrapFetchWithPayment, x402Client } from "@x402/fetch";
+import { FourMicaEvmScheme } from "@4mica/x402/client";
+
+const scheme = await FourMicaEvmScheme.create(account);
+const client = new x402Client().register("eip155:11155111", scheme);
+
+const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `Will be ready soon!`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `Will be ready soon!`,
+                          },
+                        ]}
+                      />
+                    </div>
                     <div className="space-y-2 text-sm text-[#C8D7F2]">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Steps</h3>
+                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Flow Summary</h3>
                       <ol className="list-decimal list-inside space-y-1">
-                        <li>Fund collateral (ETH or ERC20).</li>
-                        <li>Parse 402 <code className="font-mono">paymentRequirements</code> and confirm <code className="font-mono">4mica</code> scheme.</li>
-                        <li>Sign <code className="font-mono">X-PAYMENT</code> with the SDK.</li>
-                        <li>Retry the request with the <code className="font-mono">X-PAYMENT</code> header.</li>
-                        <li>Pay the tab on-chain later using <code className="font-mono">req_id</code> from the certificate.</li>
+                        <li>Call the protected resource and receive HTTP 402 with payment requirements.</li>
+                        <li>The wrapper opens a tab and signs the guarantee using your key.</li>
+                        <li>The request is retried automatically with <code className="font-mono">X-PAYMENT</code>.</li>
+                        <li>Handle the successful response or surface any 402 retry errors.</li>
                       </ol>
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Fund Collateral</h3>
-                      <CodeTabs
-                        blocks={[
-                          {
-                            label: 'TypeScript',
-                            language: 'ts',
-                            code: `import { Client, ConfigBuilder } from "sdk-4mica";
-
-const cfg = new ConfigBuilder()
-  .rpcUrl(process.env["4MICA_RPC_URL"] ?? "https://api.4mica.xyz/")
-  .walletPrivateKey(process.env.PAYER_KEY!)
-  .build();
-
-const client = await Client.new(cfg);
-await client.user.deposit(10_000n);
-await client.aclose();`,
-                          },
-                          {
-                            label: 'Python',
-                            language: 'python',
-                            code: `import asyncio
-from fourmica_sdk import Client, ConfigBuilder
-
-async def main():
-    cfg = ConfigBuilder().wallet_private_key("0x...").build()
-    client = await Client.new(cfg)
-    await client.user.deposit(10_000)
-    await client.aclose()
-
-asyncio.run(main())`,
-                          },
-                          {
-                            label: 'Rust',
-                            language: 'rust',
-                            code: `use rust_sdk_4mica::{Client, ConfigBuilder, U256};
-
-#[tokio::main]
-async fn main() -> anyhow::Result<()> {
-    let client = Client::new(
-        ConfigBuilder::default()
-            .wallet_private_key(std::env::var("PAYER_KEY")?)
-            .build()?,
-    )
-    .await?;
-
-    client.user.deposit(U256::from(10_000u64), None).await?;
-    Ok(())
-}`,
-                          },
-                        ]}
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Parse 402 Requirements</h3>
-                      <CodeTabs
-                        blocks={[
-                          {
-                            label: 'TypeScript',
-                            language: 'ts',
-                            code: `import { PaymentRequirements } from "sdk-4mica";
-
-const requirements = PaymentRequirements.fromRaw(reqRaw);
-if (!requirements.scheme.includes("4mica")) {
-  throw new Error("Unsupported scheme; expected 4mica credit.");
-}`,
-                          },
-                          {
-                            label: 'Python',
-                            language: 'python',
-                            code: `from fourmica_sdk import PaymentRequirements
-
-requirements = PaymentRequirements.from_raw(req_raw)
-if "4mica" not in requirements.scheme:
-    raise ValueError("Unsupported scheme; expected 4mica credit.")`,
-                          },
-                          {
-                            label: 'Rust',
-                            language: 'rust',
-                            code: `use rust_sdk_4mica::x402::PaymentRequirements;
-
-let requirements: PaymentRequirements = serde_json::from_value(req_raw)?;
-if !requirements.scheme.contains("4mica") {
-    anyhow::bail!("Unsupported scheme; expected 4mica credit.");
-}`,
-                          },
-                        ]}
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Sign X-PAYMENT</h3>
-                      <CodeTabs
-                        blocks={[
-                          {
-                            label: 'TypeScript',
-                            language: 'ts',
-                            code: `import { Client, ConfigBuilder, PaymentRequirements, X402Flow } from "sdk-4mica";
-
-const cfg = new ConfigBuilder().walletPrivateKey("0x...").build();
-const client = await Client.new(cfg);
-const flow = X402Flow.fromClient(client);
-
-const requirements = PaymentRequirements.fromRaw(reqRaw);
-const payment = await flow.signPayment(requirements, "0xUserAddress");
-const xPaymentHeader = payment.header;
-await client.aclose();`,
-                          },
-                          {
-                            label: 'Python',
-                            language: 'python',
-                            code: `import asyncio
-from fourmica_sdk import Client, ConfigBuilder, PaymentRequirements, X402Flow
-
-async def main():
-    cfg = ConfigBuilder().wallet_private_key("0x...").build()
-    client = await Client.new(cfg)
-    flow = X402Flow.from_client(client)
-    requirements = PaymentRequirements.from_raw(req_raw)
-    payment = await flow.sign_payment(requirements, "0xUserAddress")
-    x_payment_header = payment.header
-    await client.aclose()
-
-asyncio.run(main())`,
-                          },
-                          {
-                            label: 'Rust',
-                            language: 'rust',
-                            code: `use rust_sdk_4mica::{Client, ConfigBuilder, X402Flow};
-use rust_sdk_4mica::x402::PaymentRequirements;
-
-#[tokio::main]
-async fn main() -> anyhow::Result<()> {
-    let client = Client::new(
-        ConfigBuilder::default()
-            .wallet_private_key(std::env::var("PAYER_KEY")?)
-            .build()?,
-    )
-    .await?;
-    let flow = X402Flow::new(client)?;
-    let requirements: PaymentRequirements = serde_json::from_value(req_raw)?;
-    let signed = flow.sign_payment(requirements, "0xUserAddress".to_string()).await?;
-    let x_payment_header = signed.header;
-    Ok(())
-}`,
-                          },
-                        ]}
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Pay the Tab On-Chain</h3>
-                      <CodeTabs
-                        blocks={[
-                          {
-                            label: 'TypeScript',
-                            language: 'ts',
-                            code: `const receipt = await client.user.payTab(
-  tabId,
-  reqId,
-  amountWei,
-  recipientAddress,
-  undefined
-);`,
-                          },
-                          {
-                            label: 'Python',
-                            language: 'python',
-                            code: `await client.user.pay_tab(
-    tab_id=tab_id,
-    req_id=req_id,
-    amount=amount_wei,
-    recipient_address=recipient_address,
-    erc20_token=None,
-)`,
-                          },
-                          {
-                            label: 'Rust',
-                            language: 'rust',
-                            code: `use rust_sdk_4mica::U256;
-
-client
-    .user
-    .pay_tab(tab_id, req_id, U256::from(amount_wei), recipient_address, None)
-    .await?;`,
-                          },
-                        ]}
-                      />
                     </div>
                   </div>
                 </div>
@@ -528,7 +622,10 @@ client
                         <CodeBlock
                           code={`{
   "message": "Welcome to the 4mica credit facilitator...",
-  "supported": [{ "scheme": "4mica-credit", "network": "polygon-amoy", "x402Version": 1 }],
+  "supported": [
+    { "scheme": "4mica-credit", "network": "eip155:80002", "x402Version": 1 },
+    { "scheme": "4mica-credit", "network": "eip155:80002", "x402Version": 2 }
+  ],
   "health": "/health",
   "docs": "See README.md for a full flow walkthrough."
 }`}
@@ -1414,63 +1511,120 @@ client
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Code Examples</h2>
                   <div className="space-y-6">
                     <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">End-to-End Payment Flow</h3>
-                      <CodeBlock
-                        code={`use rust_sdk_4mica::{
-    Client, ConfigBuilder, PaymentGuaranteeRequestClaims, SigningScheme, U256,
-};
+                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Complete Example (Server)</h3>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `import express from "express";
+import { paymentMiddlewareFromConfig } from "@4mica/x402/server/express";
 
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let user_config = ConfigBuilder::default()
-        .wallet_private_key("user_private_key".to_string())
-        .build()?;
-    let user_client = Client::new(user_config).await?;
+const app = express();
+app.use(express.json());
 
-    let recipient_config = ConfigBuilder::default()
-        .wallet_private_key("recipient_private_key".to_string())
-        .build()?;
-    let recipient_client = Client::new(recipient_config).await?;
+app.use(
+  paymentMiddlewareFromConfig(
+    {
+      "GET /api/data": {
+        accepts: {
+          scheme: "4mica-credit",
+          price: "$0.05",
+          network: "eip155:11155111",
+          payTo: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+        },
+        description: "API data access",
+      },
+      "POST /api/compute": {
+        accepts: {
+          scheme: "4mica-credit",
+          price: "$0.20",
+          network: "eip155:11155111",
+          payTo: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+        },
+        description: "Computation service",
+      },
+    },
+    {
+      advertisedEndpoint: "https://api.example.com/tabs/open",
+      ttlSeconds: 7200,
+    }
+  )
+);
 
-    let deposit_amount = U256::from(2_000_000_000_000_000_000u128);
-    let receipt = user_client.user.deposit(deposit_amount).await?;
-    println!("Deposited collateral: {:?}", receipt.transaction_hash);
+app.get("/api/data", (req, res) => {
+  res.json({ data: "Premium data content" });
+});
 
-    let user_address = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8".to_string();
-    let recipient_address = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC".to_string();
-    let tab_id = recipient_client
-        .recipient
-        .create_tab(user_address.clone(), recipient_address.clone(), Some(3600))
-        .await?;
-    println!("Created tab: {}", tab_id);
+app.post("/api/compute", (req, res) => {
+  res.json({ result: "Computation complete" });
+});
 
-    let claims = PaymentGuaranteeRequestClaims::new(
-        user_address.clone(),
-        recipient_address.clone(),
-        tab_id,
-        U256::ZERO,
-        U256::from(1_000_000_000_000_000_000u128),
-        std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)?
-            .as_secs(),
-        None,
-    );
-    let payment_sig = user_client.user.sign_payment(claims.clone(), SigningScheme::Eip712).await?;
-    println!("Payment signed");
+app.listen(3000);`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `Will be ready soon!`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `Will be ready soon!`,
+                          },
+                        ]}
+                      />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Complete Example (Client)</h3>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `import { wrapFetchWithPaymentFromConfig } from "@x402/fetch";
+import { FourMicaEvmScheme } from "@4mica/x402/client";
+import { privateKeyToAccount } from "viem/accounts";
 
-    let bls_cert = recipient_client
-        .recipient
-        .issue_payment_guarantee(claims, payment_sig.signature, payment_sig.scheme)
-        .await?;
-    println!("Guarantee issued");
+async function main() {
+  const account = privateKeyToAccount("0xYourPrivateKey");
+  const scheme = await FourMicaEvmScheme.create(account);
 
-    let receipt = recipient_client.recipient.remunerate(bls_cert).await?;
-    println!("Claimed from user collateral!");
-    println!("Transaction hash: {:?}", receipt.transaction_hash);
+  const fetchWithPayment = wrapFetchWithPaymentFromConfig(fetch, {
+    schemes: [
+      {
+        network: "eip155:11155111",
+        client: scheme,
+      },
+    ],
+  });
 
-    Ok(())
-}`}
-                        language="rust"
+  const dataResponse = await fetchWithPayment("https://api.example.com/api/data");
+  const data = await dataResponse.json();
+  console.log("Data:", data);
+
+  const computeResponse = await fetchWithPayment("https://api.example.com/api/compute", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ input: "some data" }),
+  });
+  const result = await computeResponse.json();
+  console.log("Result:", result);
+}
+
+main();`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `Will be ready soon!`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `Will be ready soon!`,
+                          },
+                        ]}
                       />
                     </div>
                   </div>
@@ -1482,8 +1636,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Support & Licensing</h2>
                   <div className="space-y-6 text-[#C8D7F2]">
                     <p>
-                      The SDK is MIT licensed (see <code className="font-mono">LICENSE</code>) and aligns with the refreshed SDK README and protocol
-                      docs. Use the links below for the latest code, facilitator examples, and public documentation.
+                      The package is MIT licensed (see <code className="font-mono">LICENSE</code>) and aligns with the latest x402 integration
+                      documentation. Use the links below for the latest code, facilitator examples, and public documentation.
                     </p>
                     <div className="bg-white/10 border border-white/10 rounded-lg p-4">
                       <h3 className="text-lg font-semibold text-[#E7F1FF] mb-3">Official Resources</h3>

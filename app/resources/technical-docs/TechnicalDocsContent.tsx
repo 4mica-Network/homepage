@@ -660,14 +660,17 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                         <p className="text-sm text-[#C8D7F2]">
                           <span className="font-semibold">Returns:</span>{' '}
                           <code className="font-mono">
-                            {'{ kinds: [{ scheme, network, x402Version?, extra? }] }'}
+                            {'{ kinds: [{ scheme, network, x402Version?, extra? }], extensions: [], signers: {} }'}
                           </code>
                         </p>
                         <CodeBlock
                           code={`{
   "kinds": [
-    { "scheme": "4mica-credit", "network": "polygon-amoy", "x402Version": 1 }
-  ]
+    { "scheme": "4mica-credit", "network": "eip155:80002", "x402Version": 1 },
+    { "scheme": "4mica-credit", "network": "eip155:80002", "x402Version": 2 }
+  ],
+  "extensions": [],
+  "signers": {}
 }`}
                           language="json"
                         />
@@ -682,10 +685,12 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                         <p className="text-sm text-[#C8D7F2]">
                           <span className="font-semibold">Gets:</span>{' '}
                           <code className="font-mono">
-                            {'{ userAddress, recipientAddress, erc20Token?, ttlSeconds? }'}
+                            {'{ userAddress, recipientAddress, network?, erc20Token?, ttlSeconds? }'}
                           </code>
-                          . Use <code className="font-mono">erc20Token</code> = null or omit for ETH. Alias:{' '}
-                          <code className="font-mono">assetAddress</code> is accepted.
+                          . Networks use CAIP-2 identifiers (e.g. <code className="font-mono">eip155:80002</code>).
+                          Use <code className="font-mono">erc20Token</code> = null or omit for ETH. Aliases:{' '}
+                          <code className="font-mono">assetAddress</code> and <code className="font-mono">networkId</code> are accepted.
+                          If <code className="font-mono">network</code> is omitted, the facilitator defaults to the first configured network.
                         </p>
                         <p className="text-sm text-[#C8D7F2]">
                           <span className="font-semibold">Returns:</span>{' '}
@@ -701,6 +706,7 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                               label: 'Request',
                               language: 'json',
                               code: `{
+  "network": "eip155:80002",
   "userAddress": "0xUser",
   "recipientAddress": "0xRecipient",
   "erc20Token": null,
@@ -733,9 +739,9 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                         <p className="text-sm text-[#C8D7F2]">
                           <span className="font-semibold">Gets:</span>{' '}
                           <code className="font-mono">
-                            {'{ x402Version: 1, paymentHeader: "<base64>", paymentRequirements }'}
+                            {'{ x402Version?: 1|2, paymentPayload: { ... }, paymentRequirements }'}
                           </code>
-                          .
+                          . <code className="font-mono">paymentPayload</code> is the decoded X-PAYMENT header.
                         </p>
                         <p className="text-sm text-[#C8D7F2]">
                           <span className="font-semibold">Returns:</span>{' '}
@@ -751,10 +757,28 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                               language: 'json',
                               code: `{
   "x402Version": 1,
-  "paymentHeader": "<base64 X-PAYMENT>",
+  "paymentPayload": {
+    "x402Version": 1,
+    "scheme": "4mica-credit",
+    "network": "eip155:80002",
+    "payload": {
+      "claims": {
+        "user_address": "0xUser",
+        "recipient_address": "0xRecipient",
+        "tab_id": "0x42",
+        "req_id": "0x0",
+        "amount": "0x2386f26fc10000",
+        "asset_address": "0xAsset",
+        "timestamp": 1716500000,
+        "version": 1
+      },
+      "signature": "0x...",
+      "scheme": "eip712"
+    }
+  },
   "paymentRequirements": {
     "scheme": "4mica-credit",
-    "network": "polygon-amoy",
+    "network": "eip155:80002",
     "maxAmountRequired": "10000000000000000",
     "payTo": "0xRecipient",
     "asset": "0xAsset",
@@ -784,7 +808,7 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                         <p className="text-sm text-[#C8D7F2]">
                           <span className="font-semibold">Gets:</span>{' '}
                           <code className="font-mono">
-                            {'{ x402Version: 1, paymentHeader: "<base64>", paymentRequirements }'}
+                            {'{ x402Version?: 1|2, paymentPayload: { ... }, paymentRequirements }'}
                           </code>
                           .
                         </p>
@@ -804,10 +828,28 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                               language: 'json',
                               code: `{
   "x402Version": 1,
-  "paymentHeader": "<base64 X-PAYMENT>",
+  "paymentPayload": {
+    "x402Version": 1,
+    "scheme": "4mica-credit",
+    "network": "eip155:80002",
+    "payload": {
+      "claims": {
+        "user_address": "0xUser",
+        "recipient_address": "0xRecipient",
+        "tab_id": "0x42",
+        "req_id": "0x0",
+        "amount": "0x2386f26fc10000",
+        "asset_address": "0xAsset",
+        "timestamp": 1716500000,
+        "version": 1
+      },
+      "signature": "0x...",
+      "scheme": "eip712"
+    }
+  },
   "paymentRequirements": {
     "scheme": "4mica-credit",
-    "network": "polygon-amoy",
+    "network": "eip155:80002",
     "maxAmountRequired": "10000000000000000",
     "payTo": "0xRecipient",
     "asset": "0xAsset",
@@ -822,7 +864,7 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
   "success": true,
   "error": null,
   "txHash": null,
-  "networkId": "polygon-amoy",
+  "networkId": "eip155:80002",
   "certificate": {
     "claims": "0x...",
     "signature": "0x..."
@@ -840,11 +882,15 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                         <p>
                           <span className="font-semibold">paymentRequirements</span> must include{' '}
                           <code className="font-mono">scheme</code>, <code className="font-mono">network</code>,{' '}
-                          <code className="font-mono">maxAmountRequired</code>, <code className="font-mono">payTo</code>,{' '}
-                          <code className="font-mono">asset</code>, plus optional{' '}
+                          <code className="font-mono">maxAmountRequired</code> (x402 v1) or <code className="font-mono">amount</code> (x402 v2),{' '}
+                          <code className="font-mono">payTo</code>, <code className="font-mono">asset</code>, plus optional{' '}
                           <code className="font-mono">resource</code>, <code className="font-mono">description</code>,{' '}
                           <code className="font-mono">mimeType</code>, <code className="font-mono">outputSchema</code>,{' '}
                           <code className="font-mono">maxTimeoutSeconds</code>, and <code className="font-mono">extra</code>.
+                        </p>
+                        <p>
+                          <span className="font-semibold">paymentPayload</span> is the decoded X-PAYMENT header and supports
+                          <code className="font-mono">x402Version</code> 1 or 2.
                         </p>
                         <p>
                           <span className="font-semibold">certificate</span> is returned as{' '}
@@ -853,8 +899,8 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                         </p>
                         <p>
                           <span className="font-semibold">Versioning:</span> the facilitator only accepts{' '}
-                          <code className="font-mono">x402Version = 1</code>; mismatches return validation errors in the
-                          response body.
+                          <code className="font-mono">x402Version = 1</code> or <code className="font-mono">2</code>. If the top-level
+                          field is omitted, the server resolves the version from <code className="font-mono">paymentPayload</code>.
                         </p>
                       </div>
                     </div>
@@ -1517,50 +1563,80 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                           {
                             label: 'TypeScript',
                             language: 'ts',
-                            code: `import express from "express";
+                            code: `import "dotenv/config";
+import express from "express";
 import { paymentMiddlewareFromConfig } from "@4mica/x402/server/express";
 
 const app = express();
 app.use(express.json());
 
+const PORT = process.env.PORT || 3000;
+const PAY_TO_ADDRESS = process.env.PAY_TO_ADDRESS;
+const ADVERTISED_ENDPOINT =
+  process.env.ADVERTISED_ENDPOINT || \`http://localhost:\${PORT}/payment/tab\`;
+
+if (!PAY_TO_ADDRESS) {
+  console.error("Error: PAY_TO_ADDRESS environment variable is required");
+  process.exit(1);
+}
+
 app.use(
   paymentMiddlewareFromConfig(
     {
-      "GET /api/data": {
+      "GET /api/premium-data": {
         accepts: {
           scheme: "4mica-credit",
-          price: "$0.05",
-          network: "eip155:11155111",
-          payTo: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+          price: "$0.01",
+          network: "eip155:11155111", // Ethereum Sepolia
+          payTo: PAY_TO_ADDRESS,
         },
-        description: "API data access",
-      },
-      "POST /api/compute": {
-        accepts: {
-          scheme: "4mica-credit",
-          price: "$0.20",
-          network: "eip155:11155111",
-          payTo: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
-        },
-        description: "Computation service",
+        description: "Access to premium data endpoint",
       },
     },
     {
-      advertisedEndpoint: "https://api.example.com/tabs/open",
-      ttlSeconds: 7200,
+      advertisedEndpoint: ADVERTISED_ENDPOINT,
+      ttlSeconds: 3600, // 1 hour
     }
   )
 );
 
-app.get("/api/data", (req, res) => {
-  res.json({ data: "Premium data content" });
+app.get("/api/premium-data", (req, res) => {
+  res.json({
+    message: "Success! You've accessed the premium data.",
+    data: {
+      timestamp: new Date().toISOString(),
+      secret: "This is protected content behind a paywall",
+      value: Math.random() * 1000,
+    },
+  });
 });
 
-app.post("/api/compute", (req, res) => {
-  res.json({ result: "Computation complete" });
+app.get("/", (req, res) => {
+  res.json({
+    message: "x402 Demo Server",
+    endpoints: {
+      free: ["/", "/health"],
+      protected: [
+        {
+          path: "/api/premium-data",
+          price: "$0.01",
+          description: "Premium data endpoint (requires payment)",
+        },
+      ],
+    },
+  });
 });
 
-app.listen(3000);`,
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
+});
+
+app.listen(PORT, () => {
+  console.log(\`x402 Demo Server running on http://localhost:\${PORT}\`);
+  console.log(\`Protected endpoint: http://localhost:\${PORT}/api/premium-data\`);
+  console.log("Payment required: $0.01 (4mica credit on Sepolia)");
+  console.log(\`Payment tab endpoint: \${ADVERTISED_ENDPOINT}\`);
+});`,
                           },
                           {
                             label: 'Python',
@@ -1582,37 +1658,60 @@ app.listen(3000);`,
                           {
                             label: 'TypeScript',
                             language: 'ts',
-                            code: `import { wrapFetchWithPaymentFromConfig } from "@x402/fetch";
+                            code: `import "dotenv/config";
+import { wrapFetchWithPaymentFromConfig } from "@x402/fetch";
 import { FourMicaEvmScheme } from "@4mica/x402/client";
 import { privateKeyToAccount } from "viem/accounts";
 
 async function main() {
-  const account = privateKeyToAccount("0xYourPrivateKey");
+  const privateKey = process.env.PRIVATE_KEY;
+  if (!privateKey || !privateKey.startsWith("0x")) {
+    console.error("Error: PRIVATE_KEY environment variable must be set and start with 0x");
+    console.error("Example: PRIVATE_KEY=0x1234... yarn client");
+    process.exit(1);
+  }
+
+  const apiUrl = process.env.API_URL || "http://localhost:3000";
+  const endpoint = \`\${apiUrl}/api/premium-data\`;
+
+  console.log("Initializing x402 client...");
+  console.log(\`Target endpoint: \${endpoint}\`);
+
+  const account = privateKeyToAccount(privateKey as \`0x\${string}\`);
+  console.log(\`Using account: \${account.address}\`);
+
   const scheme = await FourMicaEvmScheme.create(account);
 
   const fetchWithPayment = wrapFetchWithPaymentFromConfig(fetch, {
     schemes: [
       {
-        network: "eip155:11155111",
+        network: "eip155:11155111", // Ethereum Sepolia
         client: scheme,
       },
     ],
   });
 
-  const dataResponse = await fetchWithPayment("https://api.example.com/api/data");
-  const data = await dataResponse.json();
-  console.log("Data:", data);
+  console.log("\\nMaking request to protected endpoint...");
 
-  const computeResponse = await fetchWithPayment("https://api.example.com/api/compute", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ input: "some data" }),
-  });
-  const result = await computeResponse.json();
-  console.log("Result:", result);
+  try {
+    const response = await fetchWithPayment(endpoint);
+    const data = await response.json();
+
+    console.log("Request successful!");
+    console.log("Response:", JSON.stringify(data, null, 2));
+  } catch (error) {
+    console.error("Request failed:", error);
+    if (error instanceof Error) {
+      console.error("Message:", error.message);
+    }
+    process.exit(1);
+  }
 }
 
-main();`,
+main().catch((error) => {
+  console.error("Unhandled error:", error);
+  process.exit(1);
+});`,
                           },
                           {
                             label: 'Python',

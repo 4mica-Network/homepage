@@ -190,13 +190,13 @@ pip install "4mica-x402[requests]"`,
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Server Integration</h2>
                   <div className="space-y-8">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      Use <code className="font-mono">paymentMiddlewareFromConfig</code> for most deployments. It automatically configures
-                      the 4Mica facilitator, registers <code className="font-mono">FourMicaEvmScheme</code>, and injects the tab endpoint.
+                      Use <code className="font-mono">paymentMiddlewareFromConfig</code> (or the 4mica helper for your framework) for most deployments. It
+                      configures the 4Mica facilitator, registers <code className="font-mono">FourMicaEvmScheme</code>, and injects the tab endpoint
+                      into <code className="font-mono">paymentRequirements.extra.tabEndpoint</code>.
                     </p>
                     <p className="text-sm text-[#C8D7F2]">
-                      Already using Coinbase x402? The 4mica delta is small: use scheme <code className="font-mono">4mica-credit</code>,
-                      switch to the 4mica middleware/clients, and expose a tab endpoint (<code className="font-mono">advertisedEndpoint</code>)
-                      so payers can open tabs.
+                      Already using Coinbase x402? The delta is: use scheme <code className="font-mono">4mica-credit</code>, register
+                      <code className="font-mono">FourMicaEvmScheme</code>, and expose a tab endpoint (the advertised tab URL) so payers can open tabs.
                     </p>
                     <div className="space-y-2">
                       <h3 className="text-lg font-semibold text-[#E7F1FF]">Install</h3>
@@ -589,12 +589,12 @@ async def x402_mw(request: Request, call_next):
                   <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Client Integration</h2>
                   <div className="space-y-8">
                     <p className="text-[#C8D7F2] leading-relaxed">
-                      Use the client wrappers to handle 402 responses, open tabs, sign payment guarantees, and retry requests
-                      automatically. Choose fetch or Axios based on your client stack.
+                      Use the x402 HTTP client wrappers for your stack to handle 402 responses, open tabs, sign payment guarantees,
+                      and retry requests automatically.
                     </p>
                     <p className="text-sm text-[#C8D7F2]">
-                      If you're already using Coinbase x402 clients, keep the same wrappers (fetch/axios or Python httpx/requests)
-                      and register <code className="font-mono">FourMicaEvmScheme</code> instead of the exact scheme.
+                      If you're already using Coinbase x402 clients, keep the same wrapper and register
+                      <code className="font-mono">FourMicaEvmScheme</code> instead of the exact scheme.
                     </p>
                     <div className="space-y-2">
                       <h3 className="text-lg font-semibold text-[#E7F1FF]">Install</h3>

@@ -139,14 +139,44 @@ function TechnicalDocsContentInner() {
                     </p>
                     <div>
                       <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Install the Server Package</h3>
-                      <CodeBlock code={`pnpm install @4mica/x402`} language="bash" />
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'bash',
+                            code: `pnpm install @4mica/x402`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'bash',
+                            code: `pip install "4mica-x402[fastapi]"
+# or
+pip install "4mica-x402[flask]"`,
+                          },
+                        ]}
+                      />
                       <p className="text-sm text-[#C8D7F2] mt-3">
                         This installs the Express middleware and server helpers with automatic facilitator and scheme registration.
                       </p>
                     </div>
                     <div>
                       <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Optional Client Wrappers</h3>
-                      <CodeBlock code={`pnpm install @x402/fetch @x402/axios`} language="bash" />
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'bash',
+                            code: `pnpm install @x402/fetch @x402/axios`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'bash',
+                            code: `pip install "4mica-x402[httpx]"
+# or
+pip install "4mica-x402[requests]"`,
+                          },
+                        ]}
+                      />
                       <p className="text-sm text-[#C8D7F2] mt-3">
                         Use <code className="font-mono">@x402/fetch</code> for fetch clients and <code className="font-mono">@x402/axios</code> for Axios-based apps.
                       </p>
@@ -163,9 +193,29 @@ function TechnicalDocsContentInner() {
                       Use <code className="font-mono">paymentMiddlewareFromConfig</code> for most deployments. It automatically configures
                       the 4Mica facilitator, registers <code className="font-mono">FourMicaEvmScheme</code>, and injects the tab endpoint.
                     </p>
+                    <p className="text-sm text-[#C8D7F2]">
+                      Already using Coinbase x402? The 4mica delta is small: use scheme <code className="font-mono">4mica-credit</code>,
+                      switch to the 4mica middleware/clients, and expose a tab endpoint (<code className="font-mono">advertisedEndpoint</code>)
+                      so payers can open tabs.
+                    </p>
                     <div className="space-y-2">
                       <h3 className="text-lg font-semibold text-[#E7F1FF]">Install</h3>
-                      <CodeBlock code={`pnpm install @4mica/x402`} language="bash" />
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'bash',
+                            code: `pnpm install @4mica/x402`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'bash',
+                            code: `pip install "4mica-x402[fastapi]"
+# or
+pip install "4mica-x402[flask]"`,
+                          },
+                        ]}
+                      />
                     </div>
                     <div className="space-y-3">
                       <h3 className="text-xl font-semibold text-[#E7F1FF]">Quick Start (Server)</h3>
@@ -210,7 +260,35 @@ app.listen(3000, () => {
                           {
                             label: 'Python',
                             language: 'python',
-                            code: `Will be ready soon!`,
+                            code: `from fastapi import FastAPI
+from fourmica_x402.http import fastapi_payment_middleware_from_config
+
+app = FastAPI()
+
+routes = {
+    "GET /premium-content": {
+        "accepts": {
+            "scheme": "4mica-credit",
+            "price": "$0.10",
+            "network": "eip155:11155111",  # Ethereum Sepolia
+            "payTo": "0xYourAddress",
+        },
+        "description": "Access to premium content",
+    },
+}
+
+middleware = fastapi_payment_middleware_from_config(
+    routes,
+    tab_endpoint="https://api.example.com/tabs/open",
+)
+
+@app.middleware("http")
+async def x402_mw(request, call_next):
+    return await middleware(request, call_next)
+
+@app.get("/premium-content")
+async def premium_content():
+    return {"message": "This is premium content behind a paywall"}`,
                           },
                           {
                             label: 'Rust',
@@ -265,7 +343,32 @@ app.listen(3000, () => {
                           {
                             label: 'Python',
                             language: 'python',
-                            code: `Will be ready soon!`,
+                            code: `from fastapi import FastAPI
+from fourmica_x402.http import fastapi_payment_middleware_from_config
+
+app = FastAPI()
+
+routes = {
+    "GET /path": {
+        "accepts": {
+            "scheme": "4mica-credit",
+            "price": "$0.10",
+            "network": "eip155:11155111",  # or "eip155:80002" for Polygon Amoy
+            "payTo": "0xRecipientAddress",
+        },
+        "description": "What the user is paying for",
+    },
+}
+
+middleware = fastapi_payment_middleware_from_config(
+    routes,
+    tab_endpoint="https://api.example.com/tabs/open",
+    ttl_seconds=3600,
+)
+
+@app.middleware("http")
+async def x402_mw(request, call_next):
+    return await middleware(request, call_next)`,
                           },
                           {
                             label: 'Rust',
@@ -358,7 +461,55 @@ app.use(
                             {
                               label: 'Python',
                               language: 'python',
-                              code: `Will be ready soon!`,
+                              code: `from fastapi import FastAPI
+from x402.http import HTTPFacilitatorClient
+from x402.http.middleware import fastapi as fastapi_mw
+from x402.server import x402ResourceServer
+from fourmica_x402 import FourMicaEvmScheme, FourMicaFacilitatorClient
+
+app = FastAPI()
+
+routes = {
+    "GET /path": {
+        "accepts": {
+            "scheme": "4mica-credit",
+            "price": "$0.10",
+            "network": "eip155:11155111",
+            "payTo": "0xRecipientAddress",
+        },
+        "description": "What the user is paying for",
+    },
+}
+
+fourmica_facilitator = FourMicaFacilitatorClient()
+other_facilitator = HTTPFacilitatorClient({"url": "https://other-facilitator.example.com"})
+
+resource_server = x402ResourceServer([fourmica_facilitator, other_facilitator])
+resource_server.register(
+    "eip155:11155111",
+    FourMicaEvmScheme("https://api.example.com/tabs/open"),
+)
+
+middleware = fastapi_mw.payment_middleware(
+    routes,
+    resource_server,
+    paywall_config=None,
+    paywall_provider=None,
+    sync_facilitator_on_start=True,
+)
+
+@app.middleware("http")
+async def x402_mw(request, call_next):
+    return await middleware(request, call_next)
+
+@app.post("/tabs/open")
+async def open_tab(body: dict):
+    resp = await fourmica_facilitator.open_tab(
+        body["userAddress"],
+        body["paymentRequirements"],
+        ttl_seconds=3600,
+    )
+    return resp.__dict__`,
                             },
                             {
                               label: 'Rust',
@@ -404,7 +555,21 @@ app.use(
                             {
                               label: 'Python',
                               language: 'python',
-                              code: `Will be ready soon!`,
+                              code: `from fastapi import FastAPI, Request
+from fourmica_x402.http import fastapi_payment_middleware_from_config
+
+app = FastAPI()
+
+middleware = fastapi_payment_middleware_from_config(
+    routes,
+    tab_endpoint="https://api.example.com/tabs/open",
+)
+
+@app.middleware("http")
+async def x402_mw(request: Request, call_next):
+    if request.url.path.startswith("/premium"):
+        print("Protected request:", request.url.path)
+    return await middleware(request, call_next)`,
                             },
                             {
                               label: 'Rust',
@@ -427,9 +592,28 @@ app.use(
                       Use the client wrappers to handle 402 responses, open tabs, sign payment guarantees, and retry requests
                       automatically. Choose fetch or Axios based on your client stack.
                     </p>
+                    <p className="text-sm text-[#C8D7F2]">
+                      If you're already using Coinbase x402 clients, keep the same wrappers (fetch/axios or Python httpx/requests)
+                      and register <code className="font-mono">FourMicaEvmScheme</code> instead of the exact scheme.
+                    </p>
                     <div className="space-y-2">
                       <h3 className="text-lg font-semibold text-[#E7F1FF]">Install</h3>
-                      <CodeBlock code={`pnpm install @4mica/x402`} language="bash" />
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'bash',
+                            code: `pnpm install @4mica/x402`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'bash',
+                            code: `pip install "4mica-x402[httpx]"
+# or
+pip install "4mica-x402[requests]"`,
+                          },
+                        ]}
+                      />
                     </div>
                     <div className="space-y-3">
                       <h3 className="text-xl font-semibold text-[#E7F1FF]">Quick Start (Fetch)</h3>
@@ -461,7 +645,16 @@ console.log(data);`,
                           {
                             label: 'Python',
                             language: 'python',
-                            code: `Will be ready soon!`,
+                            code: `from x402 import x402ClientSync
+from x402.http.clients import x402_requests
+from fourmica_x402.client_scheme import FourMicaEvmScheme
+
+client = x402ClientSync()
+client.register("eip155:11155111", FourMicaEvmScheme("0xYourPrivateKey"))
+
+session = x402_requests(client)
+response = session.get("https://api.example.com/premium-content")
+print(response.status_code, response.text)`,
                           },
                           {
                             label: 'Rust',
@@ -504,7 +697,16 @@ console.log(response.data);`,
                           {
                             label: 'Python',
                             language: 'python',
-                            code: `Will be ready soon!`,
+                            code: `from x402 import x402ClientSync
+from x402.http.clients import x402_requests
+from fourmica_x402.client_scheme import FourMicaEvmScheme
+
+client = x402ClientSync()
+client.register("eip155:11155111", FourMicaEvmScheme("0xYourPrivateKey"))
+
+api = x402_requests(client)
+response = api.get("https://api.example.com/premium-content")
+print(response.json())`,
                           },
                           {
                             label: 'Rust',
@@ -546,7 +748,15 @@ const fetchWithPayment = wrapFetchWithPaymentFromConfig(fetch, {
                           {
                             label: 'Python',
                             language: 'python',
-                            code: `Will be ready soon!`,
+                            code: `from x402 import x402ClientSync
+from x402.http.clients import x402_requests
+from fourmica_x402.client_scheme import FourMicaEvmScheme
+
+client = x402ClientSync()
+client.register("eip155:11155111", FourMicaEvmScheme("0xSepoliaPrivateKey"))
+client.register("eip155:80002", FourMicaEvmScheme("0xAmoyPrivateKey"))
+
+session = x402_requests(client)`,
                           },
                           {
                             label: 'Rust',
@@ -577,7 +787,15 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`,
                           {
                             label: 'Python',
                             language: 'python',
-                            code: `Will be ready soon!`,
+                            code: `from x402 import x402ClientSync
+from x402.http.clients import x402_requests
+from fourmica_x402.client_scheme import FourMicaEvmScheme
+
+scheme = FourMicaEvmScheme("0xYourPrivateKey")
+client = x402ClientSync()
+client.register("eip155:11155111", scheme)
+
+session = x402_requests(client)`,
                           },
                           {
                             label: 'Rust',
@@ -1836,7 +2054,49 @@ app.listen(3000);`,
                           {
                             label: 'Python',
                             language: 'python',
-                            code: `Will be ready soon!`,
+                            code: `from fastapi import FastAPI
+from fourmica_x402.http import fastapi_payment_middleware_from_config
+
+app = FastAPI()
+
+routes = {
+    "GET /api/data": {
+        "accepts": {
+            "scheme": "4mica-credit",
+            "price": "$0.05",
+            "network": "eip155:11155111",
+            "payTo": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+        },
+        "description": "API data access",
+    },
+    "POST /api/compute": {
+        "accepts": {
+            "scheme": "4mica-credit",
+            "price": "$0.20",
+            "network": "eip155:11155111",
+            "payTo": "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+        },
+        "description": "Computation service",
+    },
+}
+
+middleware = fastapi_payment_middleware_from_config(
+    routes,
+    tab_endpoint="https://api.example.com/tabs/open",
+    ttl_seconds=7200,
+)
+
+@app.middleware("http")
+async def x402_middleware(request, call_next):
+    return await middleware(request, call_next)
+
+@app.get("/api/data")
+async def api_data():
+    return {"data": "Premium data content"}
+
+@app.post("/api/compute")
+async def api_compute():
+    return {"result": "Computation complete"}`,
                           },
                           {
                             label: 'Rust',
@@ -1888,7 +2148,23 @@ main();`,
                           {
                             label: 'Python',
                             language: 'python',
-                            code: `Will be ready soon!`,
+                            code: `from x402 import x402ClientSync
+from x402.http.clients import x402_requests
+from fourmica_x402.client_scheme import FourMicaEvmScheme
+
+client = x402ClientSync()
+client.register("eip155:11155111", FourMicaEvmScheme("0xYourPrivateKey"))
+
+session = x402_requests(client)
+
+data_response = session.get("https://api.example.com/api/data")
+print("Data:", data_response.json())
+
+compute_response = session.post(
+    "https://api.example.com/api/compute",
+    json={"input": "some data"},
+)
+print("Result:", compute_response.json())`,
                           },
                           {
                             label: 'Rust',

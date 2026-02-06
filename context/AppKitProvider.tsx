@@ -13,7 +13,7 @@ const resolveAppUrl = () => {
     return window.location.origin;
   }
   const envUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL;
-  if (!envUrl) return 'http://localhost:3000';
+  if (!envUrl) return 'https://4mica.xyz';
   return envUrl.startsWith('http') ? envUrl : `https://${envUrl}`;
 };
 

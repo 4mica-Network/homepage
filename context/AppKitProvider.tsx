@@ -8,13 +8,22 @@ import { networks, projectId, wagmiAdapter } from '@/config/appkit';
 
 const queryClient = new QueryClient();
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+const resolveAppUrl = () => {
+  if (typeof window !== 'undefined') {
+    return window.location.origin;
+  }
+  const envUrl = process.env.NEXT_PUBLIC_APP_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL;
+  if (!envUrl) return 'http://localhost:3000';
+  return envUrl.startsWith('http') ? envUrl : `https://${envUrl}`;
+};
+
+const appUrl = resolveAppUrl();
 
 const metadata = {
   name: '4Mica',
   description: '4Mica - Sub-second transactions across any blockchain',
   url: appUrl,
-  icons: [`${appUrl}/icon.png`],
+  icons: [`${appUrl}/assets/logo_transparent.png`],
 };
 
 createAppKit({

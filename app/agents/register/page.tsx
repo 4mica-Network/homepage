@@ -83,10 +83,31 @@ type EthereumProvider = {
 
 const formatAddress = (value: string) => `${value.slice(0, 6)}...${value.slice(-4)}`;
 
+const sanitizeErrorMessage = (message: string) => {
+  const lower = message.toLowerCase();
+  if (
+    lower.includes('rpc') ||
+    lower.includes('contract call') ||
+    lower.includes('request was aborted') ||
+    lower.includes('viem')
+  ) {
+    return 'RPC error. Please try again.';
+  }
+  if (message.length > 160) {
+    return 'Something went wrong. Please try again.';
+  }
+  return message;
+};
+
 const parseError = (err: unknown) => {
-  if (err instanceof Error) return err.message;
-  if (typeof err === 'string') return err;
-  return 'Something went wrong.';
+  if (typeof err === 'string') return sanitizeErrorMessage(err);
+  if (err instanceof Error) return sanitizeErrorMessage(err.message);
+  if (err && typeof err === 'object') {
+    const maybe = err as { shortMessage?: string; message?: string };
+    if (maybe.shortMessage) return sanitizeErrorMessage(maybe.shortMessage);
+    if (maybe.message) return sanitizeErrorMessage(maybe.message);
+  }
+  return 'Something went wrong. Please try again.';
 };
 
 export default function AgentRegistrationPage() {

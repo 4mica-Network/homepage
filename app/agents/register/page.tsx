@@ -22,6 +22,7 @@ import {
   createWalletClient,
   custom,
   getContract,
+  parseAbiItem,
   parseUnits,
   type Address,
 } from 'viem';
@@ -47,6 +48,31 @@ const core4MicaAbi = [
   },
 ] as const;
 
+const core4MicaReadAbi = [
+  {
+    type: 'function',
+    name: 'getUserAllAssets',
+    stateMutability: 'view',
+    inputs: [{ name: 'userAddr', type: 'address' }],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple[]',
+        components: [
+          { name: 'asset', type: 'address' },
+          { name: 'collateral', type: 'uint256' },
+          { name: 'withdrawalRequestTimestamp', type: 'uint256' },
+          { name: 'withdrawalRequestAmount', type: 'uint256' },
+        ],
+      },
+    ],
+  },
+] as const;
+
+const collateralDepositedEvent = parseAbiItem(
+  'event CollateralDeposited(address indexed user, address indexed asset, uint256 amount)'
+);
+
 type TxStatus = 'idle' | 'approving' | 'depositing' | 'success' | 'error';
 
 type EthereumProvider = {
@@ -65,13 +91,14 @@ const parseError = (err: unknown) => {
 
 export default function AgentRegistrationPage() {
   const [selectedChainKey, setSelectedChainKey] = useState<RegistrationChainKey>('sepolia');
-  const [selectedAssetKey, setSelectedAssetKey] = useState<RegistrationAssetKey>('native');
+  const [selectedAssetKey, setSelectedAssetKey] = useState<RegistrationAssetKey>('usdc');
   const [amount, setAmount] = useState('');
   const [balance, setBalance] = useState<bigint | null>(null);
   const [allowance, setAllowance] = useState<bigint | null>(null);
   const [txStatus, setTxStatus] = useState<TxStatus>('idle');
   const [txHash, setTxHash] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isRegistered, setIsRegistered] = useState(false);
 
   const eip155Account = useAppKitAccount({ namespace: 'eip155' });
   const { open } = useAppKit();
@@ -129,6 +156,69 @@ export default function AgentRegistrationPage() {
     setTxHash(null);
     setError(null);
   }, [selectedChainKey, selectedAssetKey, amount]);
+
+  useEffect(() => {
+    let canceled = false;
+
+    const checkRegistration = async () => {
+      if (!activeProvider || !account || isWrongNetwork || !coreContractAddress) {
+        if (!canceled) setIsRegistered(false);
+        return;
+      }
+
+      try {
+        const transport = custom(activeProvider);
+        const publicClient = createPublicClient({
+          chain: chain.viemChain,
+          transport,
+        });
+
+        const assets = (await publicClient.readContract({
+          address: coreContractAddress,
+          abi: core4MicaReadAbi,
+          functionName: 'getUserAllAssets',
+          args: [account],
+        })) as Array<{
+          asset: Address;
+          collateral: bigint;
+          withdrawalRequestTimestamp: bigint;
+          withdrawalRequestAmount: bigint;
+        }>;
+
+        const hasLiveCollateral = assets.some(
+          (item) =>
+            item.collateral > 0n ||
+            item.withdrawalRequestAmount > 0n ||
+            item.withdrawalRequestTimestamp > 0n
+        );
+
+        if (hasLiveCollateral) {
+          if (!canceled) setIsRegistered(true);
+          return;
+        }
+
+        const logs = await publicClient.getLogs({
+          address: coreContractAddress,
+          event: collateralDepositedEvent,
+          args: { user: account },
+          fromBlock: 0n,
+          toBlock: 'latest',
+        });
+
+        if (!canceled) {
+          setIsRegistered(logs.length > 0);
+        }
+      } catch {
+        if (!canceled) setIsRegistered(false);
+      }
+    };
+
+    checkRegistration();
+
+    return () => {
+      canceled = true;
+    };
+  }, [account, activeProvider, chain.viemChain, coreContractAddress, isWrongNetwork]);
 
   useEffect(() => {
     const refreshBalances = async () => {
@@ -280,6 +370,7 @@ export default function AgentRegistrationPage() {
       setTxHash(hash);
       await publicClient.waitForTransactionReceipt({ hash });
       setTxStatus('success');
+      setIsRegistered(true);
       const updatedBalance =
         asset.type === 'native'
           ? await publicClient.getBalance({ address: account })
@@ -311,12 +402,12 @@ export default function AgentRegistrationPage() {
                 </div>
                 <span
                   className={`text-xs px-3 py-1 rounded-full ${
-                    txStatus === 'success'
+                    txStatus === 'success' || isRegistered
                       ? 'bg-emerald-500/20 text-emerald-200'
                       : 'bg-white/10 text-ink-muted'
                   }`}
                 >
-                  {txStatus === 'success' ? 'Registered' : 'Not registered'}
+                  {txStatus === 'success' || isRegistered ? 'Registered' : 'Not registered'}
                 </span>
               </div>
 
@@ -419,16 +510,6 @@ export default function AgentRegistrationPage() {
                         Disconnect
                       </button>
                     </div>
-
-                    {isWrongNetwork && (
-                      <button
-                        type="button"
-                        onClick={handleSwitchNetwork}
-                        className="w-full rounded-lg border border-amber-400/40 bg-amber-400/10 text-amber-100 font-semibold py-3 text-sm"
-                      >
-                        Switch to {chain.shortLabel}
-                      </button>
-                    )}
 
                     {missingContract && (
                       <div className="rounded-lg border border-amber-400/30 bg-amber-400/10 p-3 text-xs text-amber-100">

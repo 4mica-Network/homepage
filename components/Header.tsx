@@ -143,7 +143,7 @@ export default function Header() {
               </button>
             </div>
             <Link
-              href="/agents/register"
+              href="/register"
               className="btn btn-outline btn-sm whitespace-nowrap"
             >
               Register to 4Mica
@@ -204,7 +204,7 @@ export default function Header() {
                 </Link>
               ))}
               <Link
-                href="/agents/register"
+                href="/register"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="btn btn-outline btn-md mt-4 w-full"
               >

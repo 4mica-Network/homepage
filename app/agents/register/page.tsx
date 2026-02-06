@@ -585,7 +585,7 @@ export default function AgentRegistrationPage() {
 
               {txStatus === 'success' && (
                 <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-100">
-                  Registration complete. Your collateral is now live in the Core4Mica contract.
+                  Registration complete. Check the docs to see how to use 4Mica and get instant credit.
                 </div>
               )}
             </div>

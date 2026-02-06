@@ -38,9 +38,9 @@ export default function FaqSection() {
     <section id="faq" className="py-20 section-gloss">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto">
-          <p className="text-sm uppercase tracking-[0.3em] text-[#7BCBFF]">FAQ</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mt-4">Common questions</h2>
-          <p className="text-lg text-[#C8D7F2] leading-relaxed mt-6">
+          <p className="section-kicker">FAQ</p>
+          <h2 className="section-title">Common questions</h2>
+          <p className="section-lead">
             Defaults are pulled from Core4Mica contract parameters.
           </p>
         </div>
@@ -48,10 +48,10 @@ export default function FaqSection() {
         <div className="mt-12 max-w-4xl mx-auto space-y-4">
           {faqs.map((faq) => (
             <details key={faq.question} className="glass-panel rounded-2xl p-6">
-              <summary className="cursor-pointer text-base font-semibold text-[#E7F1FF]">
+              <summary className="cursor-pointer text-base font-semibold text-ink-strong">
                 {faq.question}
               </summary>
-              <p className="mt-3 text-sm text-[#C8D7F2] leading-relaxed">{faq.answer}</p>
+              <p className="mt-3 text-sm text-ink-body leading-relaxed">{faq.answer}</p>
             </details>
           ))}
         </div>

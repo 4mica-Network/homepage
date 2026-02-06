@@ -81,7 +81,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-40 text-white transition-all duration-300 ease-out ${
+        className={`sticky top-0 z-40 text-ink transition-all duration-300 ease-out ${
           isScrolled
             ? 'translate-y-2 glass-panel-strong'
             : 'translate-y-0 bg-transparent'
@@ -100,46 +100,54 @@ export default function Header() {
             <span className="text-2xl font-bold font-pacifico">4Mica</span>
           </Link>
           
-          <div className="hidden md:flex items-center space-x-8">
-            <div className="relative group">
-              <button
-                type="button"
-                className="text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap inline-flex items-center gap-2"
-              >
-                Company
-                <i className="ri-arrow-down-s-line text-lg"></i>
-              </button>
-              <div className="absolute left-0 top-full pt-2 opacity-0 translate-y-2 pointer-events-none transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:pointer-events-auto">
-                <div className="w-52 rounded-xl glass-panel-strong border border-white/10 shadow-lg">
-                  {companyLinks.map((item, index) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`block px-4 py-3 text-sm text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors ${
-                        index > 0 ? 'border-t border-white/10' : ''
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+          <div className="hidden md:flex items-center gap-8">
+            <div className="flex items-center space-x-8">
+              <div className="relative group">
+                <button
+                  type="button"
+                  className="text-ink hover:text-brand-strong transition-colors cursor-pointer whitespace-nowrap inline-flex items-center gap-2"
+                >
+                  Company
+                  <i className="ri-arrow-down-s-line text-lg"></i>
+                </button>
+                <div className="absolute left-0 top-full pt-2 opacity-0 translate-y-2 pointer-events-none transition-all duration-200 group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto group-focus-within:opacity-100 group-focus-within:translate-y-0 group-focus-within:pointer-events-auto">
+                  <div className="w-52 rounded-xl glass-panel-strong border border-white/10 shadow-lg">
+                    {companyLinks.map((item, index) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`block px-4 py-3 text-sm text-ink hover:text-brand-strong transition-colors ${
+                          index > 0 ? 'border-t border-white/10' : ''
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-            {primaryLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap"
+              {primaryLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-ink hover:text-brand-strong transition-colors cursor-pointer whitespace-nowrap"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <button 
+                onClick={openContactModal}
+                className="text-ink hover:text-brand-strong transition-colors cursor-pointer whitespace-nowrap"
               >
-                {link.label}
-              </Link>
-            ))}
-            <button 
-              onClick={openContactModal}
-              className="text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap"
+                Contact Us
+              </button>
+            </div>
+            <Link
+              href="/agents/register"
+              className="btn btn-outline btn-sm whitespace-nowrap"
             >
-              Contact Us
-            </button>
+              Register to 4Mica
+            </Link>
           </div>
 
           <div className="md:hidden">
@@ -148,7 +156,7 @@ export default function Header() {
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"
               onClick={() => setIsMobileMenuOpen((open) => !open)}
-              className="text-white"
+              className="text-ink"
             >
               <span className="sr-only">Toggle menu</span>
               <div className="w-6 h-6 flex items-center justify-center">
@@ -170,35 +178,42 @@ export default function Header() {
             id="mobile-menu"
             className="absolute top-20 left-4 right-4 glass-panel-strong rounded-2xl p-6"
           >
-            <div className="text-xs uppercase tracking-[0.3em] text-[#7BCBFF]">Company</div>
+            <div className="section-kicker">Company</div>
             <div className="mt-3 space-y-2">
               {companyLinks.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-sm text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors"
+                  className="block text-sm text-ink hover:text-brand-strong transition-colors"
                 >
                   {item.label}
                 </Link>
               ))}
             </div>
-            <div className="mt-6 text-xs uppercase tracking-[0.3em] text-[#7BCBFF]">Explore</div>
+            <div className="mt-6 section-kicker">Explore</div>
             <div className="mt-3 space-y-2">
               {primaryLinks.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-sm text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors"
+                  className="block text-sm text-ink hover:text-brand-strong transition-colors"
                 >
                   {item.label}
                 </Link>
               ))}
+              <Link
+                href="/agents/register"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="btn btn-outline btn-md mt-4 w-full"
+              >
+                Register to 4Mica
+              </Link>
               <button
                 type="button"
                 onClick={openContactModal}
-                className="block text-left text-sm text-[#F0F4FF] hover:text-[#3CAEF5] transition-colors"
+                className="block text-left text-sm text-ink hover:text-brand-strong transition-colors"
               >
                 Contact Us
               </button>
@@ -207,14 +222,14 @@ export default function Header() {
               <Link
                 href="/resources/technical-docs"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="bg-gradient-to-r from-[#4682B4] to-[#48C9B0] hover:from-[#5493C5] hover:to-[#59D4BB] text-[#F2F4F8] px-5 py-3 rounded-full text-sm font-semibold transition-all duration-300 text-center"
+                className="btn btn-primary btn-md text-center"
               >
                 Start Building
               </Link>
               <Link
                 href="https://discord.gg/bb8Pn5qX"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="border border-[#48C9B0] text-[#48C9B0] hover:bg-[#48C9B0]/10 hover:border-[#A3FFD6] hover:text-[#A3FFD6] px-5 py-3 rounded-full text-sm font-semibold transition-all duration-300 text-center"
+                className="btn btn-soft btn-md text-center"
               >
                 Join Community
               </Link>
@@ -241,12 +256,12 @@ export default function Header() {
             className="form-surface-dark rounded-lg max-w-md w-full p-6"
           >
             <div className="flex justify-between items-center mb-6">
-              <h3 id="contact-title" className="text-xl font-bold text-[#E7F1FF]">
+              <h3 id="contact-title" className="text-xl font-bold text-ink-strong">
                 Contact Us
               </h3>
               <button 
                 onClick={() => setIsContactOpen(false)}
-                className="text-[#9CB7E8] hover:text-[#E7F1FF] cursor-pointer"
+                className="text-ink-muted hover:text-ink-strong cursor-pointer"
               >
                 <div className="w-6 h-6 flex items-center justify-center">
                   <i className="ri-close-line text-xl"></i>
@@ -256,25 +271,25 @@ export default function Header() {
             
             {contactStatus === 'submitted' ? (
               <div className="text-center">
-                <div className="w-12 h-12 rounded-full bg-[#1E4DD8]/10 text-[#1E4DD8] flex items-center justify-center mx-auto">
+                <div className="w-12 h-12 rounded-full bg-brand-deep/10 text-brand-deep flex items-center justify-center mx-auto">
                   <i className="ri-check-line text-2xl"></i>
                 </div>
-                <p className="mt-4 text-base font-semibold text-[#E7F1FF]">Thanks for reaching out.</p>
-                <p className="mt-2 text-sm text-[#9CB7E8]">
+                <p className="mt-4 text-base font-semibold text-ink-strong">Thanks for reaching out.</p>
+                <p className="mt-2 text-sm text-ink-muted">
                   We will reply soon. You can also email akash@4mica.xyz.
                 </p>
                 <div className="mt-6 grid gap-3">
                   <button
                     type="button"
                     onClick={() => setContactStatus('idle')}
-                    className="w-full border border-white/20 text-[#E7F1FF] py-2 px-4 rounded-md hover:border-white/40 transition-colors cursor-pointer"
+                    className="btn btn-soft btn-md w-full"
                   >
                     Send another message
                   </button>
                   <button
                     type="button"
                     onClick={() => setIsContactOpen(false)}
-                    className="w-full bg-[#1E4DD8] text-white py-2 px-4 rounded-md hover:bg-[#3CAEF5] transition-colors cursor-pointer"
+                    className="btn btn-primary btn-md w-full"
                   >
                     Close
                   </button>
@@ -290,7 +305,7 @@ export default function Header() {
                 }}
               >
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-[#E7F1FF] mb-1">
+                  <label htmlFor="name" className="block text-sm font-medium text-ink-strong mb-1">
                     Name
                   </label>
                   <input
@@ -300,12 +315,12 @@ export default function Header() {
                     name="name"
                     autoComplete="name"
                     required
-                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#3CAEF5] text-sm form-field-dark"
+                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-strong/60 text-sm form-field-dark"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-[#E7F1FF] mb-1">
+                  <label htmlFor="email" className="block text-sm font-medium text-ink-strong mb-1">
                     Email
                   </label>
                   <input
@@ -314,12 +329,12 @@ export default function Header() {
                     name="email"
                     autoComplete="email"
                     required
-                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#3CAEF5] text-sm form-field-dark"
+                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-strong/60 text-sm form-field-dark"
                   />
                 </div>
                 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-[#E7F1FF] mb-1">
+                  <label htmlFor="message" className="block text-sm font-medium text-ink-strong mb-1">
                     Message
                   </label>
                   <textarea
@@ -328,14 +343,14 @@ export default function Header() {
                     rows={4}
                     maxLength={500}
                     required
-                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#3CAEF5] text-sm resize-none form-field-dark"
+                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-strong/60 text-sm resize-none form-field-dark"
                     placeholder="Your message (max 500 characters)"
                   ></textarea>
                 </div>
                 
                 <button
                   type="submit"
-                  className="w-full bg-[#1E4DD8] text-white py-2 px-4 rounded-md hover:bg-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap"
+                  className="btn btn-primary btn-md w-full whitespace-nowrap"
                 >
                   Send Message
                 </button>

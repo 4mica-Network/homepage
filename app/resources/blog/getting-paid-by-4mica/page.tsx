@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function How4MicaWorksPage() {
   const inlineCodeClass =
-    'rounded bg-white/10 px-1.5 py-0.5 font-mono text-sm text-[#E3B56A]';
+    'rounded bg-white/10 px-1.5 py-0.5 font-mono text-sm text-amber-300';
   const renderInlineCode = (text: string) => {
     const parts = text.split('`');
     if (parts.length === 1) {
@@ -555,14 +555,14 @@ let receipt = client
   ];
 
   return (
-    <div className="min-h-screen pt-20 pb-24 text-[#C8D7F2]">
+    <div className="min-h-screen pt-20 pb-24 text-ink-body">
       <div className="container mx-auto px-6 max-w-4xl">
         <header className="mb-12 text-center">
-          <p className="text-sm uppercase tracking-wide text-[#3CAEF5]">Deep Dive</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-4">
+          <p className="section-kicker">Deep Dive</p>
+          <h1 className="section-title mb-4">
             Getting paid using 4Mica
           </h1>
-          <p className="text-sm text-[#9CB7E8]">
+          <p className="text-sm text-ink-muted">
             Published January 28, 2026 · Updated January 29, 2026 · 15 min read · By Mairon
           </p>
         </header>
@@ -570,15 +570,15 @@ let receipt = client
         <article className="glass-panel rounded-2xl p-8 space-y-10">
           {sections.map((section) => (
             <section key={section.heading} className="space-y-4">
-              <h2 className="text-2xl font-bold text-[#E7F1FF]">{section.heading}</h2>
+              <h2 className="text-2xl font-bold text-ink-strong">{section.heading}</h2>
               {section.paragraphs && section.paragraphs.map((paragraph, idx) => (
-                <p key={idx} className="leading-relaxed text-[#C8D7F2]">
+                <p key={idx} className="leading-relaxed text-ink-body">
                   {renderInlineCode(paragraph)}
                 </p>
               ))}
 
               {section.steps && (
-                <ol className="list-decimal list-inside space-y-2 text-[#C8D7F2]">
+                <ol className="list-decimal list-inside space-y-2 text-ink-body">
                   {section.steps.map((step) => (
                     <li key={step}>{renderInlineCode(step)}</li>
                   ))}
@@ -586,7 +586,7 @@ let receipt = client
               )}
 
               {section.bullets && (
-                <ul className="list-disc list-inside space-y-2 text-[#C8D7F2]">
+                <ul className="list-disc list-inside space-y-2 text-ink-body">
                   {section.bullets.map((bullet, idx) => (
                     <li key={`${section.heading}-bullet-${idx}`}>
                       {renderInlineCodeOrNode(bullet)}
@@ -596,16 +596,16 @@ let receipt = client
               )}
 
               {section.paragraphsAfter && section.paragraphsAfter.map((paragraph, idx) => (
-                <p key={`after-${idx}`} className="leading-relaxed text-[#C8D7F2]">
+                <p key={`after-${idx}`} className="leading-relaxed text-ink-body">
                   {renderInlineCode(paragraph)}
                 </p>
               ))}
               {section.codeBlocks && <CodeTabs blocks={section.codeBlocks} />}
               {section.sequence && (
-                <div className="rounded-xl border border-white/10 bg-[#050B1D] p-5 text-sm text-[#C8D7F2] space-y-2">
+                <div className="rounded-xl border border-white/10 bg-surface-solid p-5 text-sm text-ink-body space-y-2">
                   {section.sequence.map((line) => (
                     <div key={line} className="flex items-start gap-3">
-                      <span className="mt-[3px] h-2 w-2 rounded-full bg-[#48C9B0] flex-shrink-0"></span>
+                      <span className="mt-[3px] h-2 w-2 rounded-full bg-brand-teal flex-shrink-0"></span>
                       <span className="font-mono">{line}</span>
                     </div>
                   ))}
@@ -615,10 +615,10 @@ let receipt = client
           ))}
         </article>
 
-        <footer className="mt-12 flex items-center justify-between text-sm text-[#9CB7E8] flex-col md:flex-row gap-4">
+        <footer className="mt-12 flex items-center justify-between text-sm text-ink-muted flex-col md:flex-row gap-4">
           <Link
             href="/resources/blog"
-            className="text-[#7BCBFF] hover:text-[#A3FFD6] transition-colors cursor-pointer whitespace-nowrap"
+            className="link-accent cursor-pointer whitespace-nowrap"
           >
             ← Back to Blog
           </Link>

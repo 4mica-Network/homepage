@@ -20,11 +20,11 @@ export default function UseCasesSection() {
     <section id="use-cases" className="py-20 section-gloss">
       <div className="container mx-auto px-6">
         <div className="text-center max-w-3xl mx-auto">
-          <p className="text-sm uppercase tracking-[0.3em] text-[#7BCBFF]">Use cases</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mt-4">
+          <p className="section-kicker">Use cases</p>
+          <h2 className="section-title">
             Built for developer-first products
           </h2>
-          <p className="text-lg text-[#C8D7F2] leading-relaxed mt-6">
+          <p className="section-lead">
             Drop tabs into any flow where usage is real time and settlement can wait
           </p>
         </div>
@@ -32,8 +32,8 @@ export default function UseCasesSection() {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {useCases.map((useCase) => (
             <div key={useCase.title} className="glass-panel rounded-2xl p-6">
-              <h3 className="text-xl font-semibold text-[#E7F1FF]">{useCase.title}</h3>
-              <p className="mt-3 text-sm text-[#C8D7F2] leading-relaxed">{useCase.description}</p>
+              <h3 className="text-xl font-semibold text-ink-strong">{useCase.title}</h3>
+              <p className="mt-3 text-sm text-ink-body leading-relaxed">{useCase.description}</p>
             </div>
           ))}
         </div>

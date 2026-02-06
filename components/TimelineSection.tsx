@@ -49,11 +49,11 @@ export default function TimelineSection({ showHeader = true }: TimelineSectionPr
       <div className="container mx-auto px-6">
         {showHeader && (
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
+            <h2 className="section-title mb-6">
               Product Roadmap
             </h2>
-            <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
-            <p className="text-lg text-[#C8D7F2] max-w-2xl mx-auto">
+            <div className="accent-bar mx-auto mb-8"></div>
+            <p className="section-lead max-w-2xl mx-auto">
               Our journey to revolutionize web3 commerce
             </p>
           </div>
@@ -61,7 +61,7 @@ export default function TimelineSection({ showHeader = true }: TimelineSectionPr
 
         <div className="max-w-4xl mx-auto">
           <div className="relative">
-            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-[#3CAEF5]/60 hidden md:block"></div>
+            <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-brand-strong/60 hidden md:block"></div>
             
             {milestones.map((milestone, index) => (
               <div 
@@ -70,10 +70,10 @@ export default function TimelineSection({ showHeader = true }: TimelineSectionPr
               >
                 <div className="md:w-1/2 md:px-8 mb-4 md:mb-0">
                   <div className={`glass-panel rounded-lg p-6 ${index % 2 === 0 ? 'md:text-right' : 'md:text-left'} text-center`}>
-                    <h3 className="text-2xl font-bold text-[#E7F1FF] mb-2">
+                    <h3 className="text-2xl font-bold text-ink-strong mb-2">
                       {milestone.title}
                     </h3>
-                    <p className="text-[#C8D7F2] leading-relaxed">
+                    <p className="text-ink-body leading-relaxed">
                       {milestone.description}
                     </p>
                   </div>
@@ -81,7 +81,7 @@ export default function TimelineSection({ showHeader = true }: TimelineSectionPr
                 
                 <div
                   className={`absolute left-1/2 transform -translate-x-1/2 rounded-full w-12 h-12 flex items-center justify-center font-bold text-sm border-4 border-white/20 shadow-lg hidden md:flex ${
-                    milestone.done ? 'bg-green-500' : 'bg-[#5C7CFA] text-white'
+                    milestone.done ? 'bg-emerald-500 text-white' : 'bg-brand-violet text-white'
                   }`}
                 >
                   {index + 1}
@@ -89,7 +89,7 @@ export default function TimelineSection({ showHeader = true }: TimelineSectionPr
                 
                 <div className="md:w-1/2 md:px-8">
                   <div className={`${index % 2 === 0 ? 'md:text-left' : 'md:text-right'} text-center`}>
-                    <span className="inline-block bg-[#1E4DD8] text-[#F0F4FF] px-4 py-2 rounded-full font-semibold">
+                    <span className="inline-block bg-brand-deep text-ink px-4 py-2 rounded-full font-semibold">
                       {milestone.quarter}
                     </span>
                   </div>
@@ -97,7 +97,7 @@ export default function TimelineSection({ showHeader = true }: TimelineSectionPr
                 
                 <div
                   className={`md:hidden rounded-full w-8 h-8 flex items-center justify-center font-bold text-sm mt-4 ${
-                    milestone.done ? 'bg-green-500' : 'bg-[#5C7CFA] text-white'
+                    milestone.done ? 'bg-emerald-500 text-white' : 'bg-brand-violet text-white'
                   }`}
                 >
                   {index + 1}

@@ -19,7 +19,7 @@ const navigationItems = [
 
 export default function TechnicalDocsContent() {
   return (
-    <Suspense fallback={<div className="min-h-screen pt-20 text-[#C8D7F2]" aria-busy>Loading technical docs…</div>}>
+    <Suspense fallback={<div className="min-h-screen pt-20 text-ink-body" aria-busy>Loading technical docs…</div>}>
       <TechnicalDocsContentInner />
     </Suspense>
   );
@@ -37,14 +37,14 @@ function TechnicalDocsContentInner() {
   }, [searchParams]);
 
   return (
-    <div className="min-h-screen pt-20 text-[#C8D7F2]">
+    <div className="min-h-screen pt-20 text-ink-body">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
+          <h1 className="section-title mb-6">
             4Mica x402 Integration Documentation
           </h1>
-          <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
-          <p className="text-xl text-[#C8D7F2] max-w-3xl mx-auto">
+          <div className="accent-bar mx-auto mb-8"></div>
+          <p className="section-lead max-w-3xl mx-auto text-xl">
             Express middleware and client integration for the x402 Payment Protocol with 4mica credit flow support,
             including automatic facilitator and scheme registration.
           </p>
@@ -53,7 +53,7 @@ function TechnicalDocsContentInner() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-1">
             <div className="glass-panel rounded-lg p-6 sticky top-6">
-              <h3 className="text-lg font-semibold text-[#E7F1FF] mb-4">Contents</h3>
+              <h3 className="text-lg font-semibold text-ink-strong mb-4">Contents</h3>
               <nav className="space-y-2">
                 {navigationItems.map((item) => (
                   <button
@@ -61,8 +61,8 @@ function TechnicalDocsContentInner() {
                     onClick={() => setActiveSection(item.id)}
                     className={`w-full text-left p-3 rounded-lg transition-colors cursor-pointer whitespace-nowrap flex items-center ${
                       activeSection === item.id
-                        ? 'bg-[#1E4DD8] text-white'
-                        : 'text-[#C8D7F2] hover:bg-white/10 border border-white/10'
+                        ? 'bg-brand-deep text-ink'
+                        : 'text-ink-body hover:bg-white/10 border border-white/10'
                     }`}
                   >
                     <div className="w-5 h-5 flex items-center justify-center mr-3">
@@ -79,19 +79,19 @@ function TechnicalDocsContentInner() {
             <div className="glass-panel rounded-lg p-8">
               {activeSection === 'overview' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Overview</h2>
+                  <h2 className="text-3xl font-bold text-ink-strong mb-6">Overview</h2>
                   <div className="space-y-6">
-                    <p className="text-[#C8D7F2] leading-relaxed">
+                    <p className="text-ink-body leading-relaxed">
                       The <code className="font-mono">@4mica/x402</code> package ships batteries-included Express middleware and
                       client helpers for the x402 Payment Protocol with 4Mica credit flow support. It adds HTTP 402 payment
                       requirements to protected routes, advertises tab endpoints, and wires the 4Mica facilitator automatically.
                     </p>
-                    <p className="text-[#C8D7F2] leading-relaxed">
+                    <p className="text-ink-body leading-relaxed">
                       Use this page to get paid as a resource server, configure deeper server integrations, or pay as an agent
                       with fetch/axios wrappers that automatically open tabs, sign guarantees, and retry requests.
                     </p>
                     <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-4">Key Capabilities</h3>
+                      <h3 className="text-xl font-semibold text-ink-strong mb-4">Key Capabilities</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {[
                           {
@@ -120,8 +120,8 @@ function TechnicalDocsContentInner() {
                           }
                         ].map((item, index) => (
                           <div key={index} className="bg-white/10 border border-white/10 rounded-lg p-4">
-                            <h4 className="font-semibold text-[#C8D7F2] mb-2">{item.title}</h4>
-                            <p className="text-sm text-[#C8D7F2]">{item.desc}</p>
+                            <h4 className="font-semibold text-ink-body mb-2">{item.title}</h4>
+                            <p className="text-sm text-ink-body">{item.desc}</p>
                           </div>
                         ))}
                       </div>
@@ -132,13 +132,13 @@ function TechnicalDocsContentInner() {
 
               {activeSection === 'installation' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Installation</h2>
+                  <h2 className="text-3xl font-bold text-ink-strong mb-6">Installation</h2>
                   <div className="space-y-6">
-                    <p className="text-[#C8D7F2] leading-relaxed">
+                    <p className="text-ink-body leading-relaxed">
                       Install the server middleware package, then add optional client wrappers for automatic payment handling.
                     </p>
                     <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Install the Server Package</h3>
+                      <h3 className="text-xl font-semibold text-ink-strong mb-3">Install the Server Package</h3>
                       <CodeTabs
                         blocks={[
                           {
@@ -155,12 +155,12 @@ pip install "4mica-x402[flask]"`,
                           },
                         ]}
                       />
-                      <p className="text-sm text-[#C8D7F2] mt-3">
+                      <p className="text-sm text-ink-body mt-3">
                         This installs the Express middleware and server helpers with automatic facilitator and scheme registration.
                       </p>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Optional Client Wrappers</h3>
+                      <h3 className="text-xl font-semibold text-ink-strong mb-3">Optional Client Wrappers</h3>
                       <CodeTabs
                         blocks={[
                           {
@@ -177,7 +177,7 @@ pip install "4mica-x402[requests]"`,
                           },
                         ]}
                       />
-                      <p className="text-sm text-[#C8D7F2] mt-3">
+                      <p className="text-sm text-ink-body mt-3">
                         Use <code className="font-mono">@x402/fetch</code> for fetch clients and <code className="font-mono">@x402/axios</code> for Axios-based apps.
                       </p>
                     </div>
@@ -187,19 +187,19 @@ pip install "4mica-x402[requests]"`,
 
               {activeSection === 'server-integration' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Server Integration</h2>
+                  <h2 className="text-3xl font-bold text-ink-strong mb-6">Server Integration</h2>
                   <div className="space-y-8">
-                    <p className="text-[#C8D7F2] leading-relaxed">
+                    <p className="text-ink-body leading-relaxed">
                       Use <code className="font-mono">paymentMiddlewareFromConfig</code> (or the 4mica helper for your framework) for most deployments. It
                       configures the 4Mica facilitator, registers <code className="font-mono">FourMicaEvmScheme</code>, and injects the tab endpoint
                       into <code className="font-mono">paymentRequirements.extra.tabEndpoint</code>.
                     </p>
-                    <p className="text-sm text-[#C8D7F2]">
+                    <p className="text-sm text-ink-body">
                       Already using Coinbase x402? The delta is: use scheme <code className="font-mono">4mica-credit</code>, register
                       <code className="font-mono">FourMicaEvmScheme</code>, and expose a tab endpoint (the advertised tab URL) so payers can open tabs.
                     </p>
                     <div className="space-y-2">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Install</h3>
+                      <h3 className="text-lg font-semibold text-ink-strong">Install</h3>
                       <CodeTabs
                         blocks={[
                           {
@@ -218,7 +218,7 @@ pip install "4mica-x402[flask]"`,
                       />
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Quick Start (Server)</h3>
+                      <h3 className="text-xl font-semibold text-ink-strong">Quick Start (Server)</h3>
                       <CodeTabs
                         blocks={[
                           {
@@ -298,8 +298,8 @@ async def premium_content():
                         ]}
                       />
                     </div>
-                    <div className="space-y-2 text-sm text-[#C8D7F2]">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">What Happens on Each Request</h3>
+                    <div className="space-y-2 text-sm text-ink-body">
+                      <h3 className="text-lg font-semibold text-ink-strong">What Happens on Each Request</h3>
                       <ol className="list-decimal list-inside space-y-1">
                         <li>The client requests your protected route without payment.</li>
                         <li>The server returns HTTP 402 with <code className="font-mono">paymentRequirements</code> and a tab endpoint.</li>
@@ -308,10 +308,10 @@ async def premium_content():
                       </ol>
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">
+                      <h3 className="text-xl font-semibold text-ink-strong">
                         paymentMiddlewareFromConfig(routes, tabConfig, ...options)
                       </h3>
-                      <p className="text-sm text-[#C8D7F2]">
+                      <p className="text-sm text-ink-body">
                         Provide protected routes plus the tab configuration. The middleware handles 402 responses, tab openings, and
                         verification/settlement wiring.
                       </p>
@@ -378,8 +378,8 @@ async def x402_mw(request, call_next):
                         ]}
                       />
                     </div>
-                    <div className="space-y-2 text-sm text-[#C8D7F2]">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Parameters</h3>
+                    <div className="space-y-2 text-sm text-ink-body">
+                      <h3 className="text-lg font-semibold text-ink-strong">Parameters</h3>
                       <ul className="list-disc list-inside space-y-1">
                         <li>
                           <code className="font-mono">routes</code> (required): protected route definitions keyed by method + path.
@@ -404,8 +404,8 @@ async def x402_mw(request, call_next):
                         </li>
                       </ul>
                     </div>
-                    <div className="space-y-2 text-sm text-[#C8D7F2]">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Supported Networks</h3>
+                    <div className="space-y-2 text-sm text-ink-body">
+                      <h3 className="text-lg font-semibold text-ink-strong">Supported Networks</h3>
                       <ul className="list-disc list-inside space-y-1">
                         <li>
                           <code className="font-mono">eip155:11155111</code> — Ethereum Sepolia
@@ -416,13 +416,13 @@ async def x402_mw(request, call_next):
                       </ul>
                     </div>
                     <div className="space-y-4">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Advanced Server Usage</h3>
-                      <p className="text-sm text-[#C8D7F2]">
+                      <h3 className="text-xl font-semibold text-ink-strong">Advanced Server Usage</h3>
+                      <p className="text-sm text-ink-body">
                         For custom facilitators or additional schemes, use <code className="font-mono">paymentMiddleware</code> or wire
                         HTTP hooks with <code className="font-mono">paymentMiddlewareFromHTTPServer</code>.
                       </p>
                       <div className="space-y-3">
-                        <h4 className="text-lg font-semibold text-[#E7F1FF]">Custom Resource Server</h4>
+                        <h4 className="text-lg font-semibold text-ink-strong">Custom Resource Server</h4>
                         <CodeTabs
                           blocks={[
                             {
@@ -520,7 +520,7 @@ async def open_tab(body: dict):
                         />
                       </div>
                       <div className="space-y-3">
-                        <h4 className="text-lg font-semibold text-[#E7F1FF]">HTTP Hooks</h4>
+                        <h4 className="text-lg font-semibold text-ink-strong">HTTP Hooks</h4>
                         <CodeTabs
                           blocks={[
                             {
@@ -586,18 +586,18 @@ async def x402_mw(request: Request, call_next):
 
               {activeSection === 'client-integration' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Client Integration</h2>
+                  <h2 className="text-3xl font-bold text-ink-strong mb-6">Client Integration</h2>
                   <div className="space-y-8">
-                    <p className="text-[#C8D7F2] leading-relaxed">
+                    <p className="text-ink-body leading-relaxed">
                       Use the x402 HTTP client wrappers for your stack to handle 402 responses, open tabs, sign payment guarantees,
                       and retry requests automatically.
                     </p>
-                    <p className="text-sm text-[#C8D7F2]">
+                    <p className="text-sm text-ink-body">
                       If you're already using Coinbase x402 clients, keep the same wrapper and register
                       <code className="font-mono">FourMicaEvmScheme</code> instead of the exact scheme.
                     </p>
                     <div className="space-y-2">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Install</h3>
+                      <h3 className="text-lg font-semibold text-ink-strong">Install</h3>
                       <CodeTabs
                         blocks={[
                           {
@@ -616,7 +616,7 @@ pip install "4mica-x402[requests]"`,
                       />
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Quick Start (Fetch)</h3>
+                      <h3 className="text-xl font-semibold text-ink-strong">Quick Start (Convenience Wrapper)</h3>
                       <CodeTabs
                         blocks={[
                           {
@@ -665,9 +665,9 @@ print(response.status_code, response.text)`,
                       />
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Quick Start (Axios)</h3>
-                      <p className="text-sm text-[#C8D7F2]">
-                        Use Axios with <code className="font-mono">@x402/axios</code> for drop-in payment handling.
+                      <h3 className="text-xl font-semibold text-ink-strong">Quick Start (Client Instance Wrapper)</h3>
+                      <p className="text-sm text-ink-body">
+                        Use a wrapper around your HTTP client instance for drop-in payment handling.
                       </p>
                       <CodeTabs
                         blocks={[
@@ -717,8 +717,8 @@ print(response.json())`,
                       />
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Multi-Network Client Setup</h3>
-                      <p className="text-sm text-[#C8D7F2]">
+                      <h3 className="text-xl font-semibold text-ink-strong">Multi-Network Client Setup</h3>
+                      <p className="text-sm text-ink-body">
                         Register multiple networks to route payments to different schemes.
                       </p>
                       <CodeTabs
@@ -767,8 +767,8 @@ session = x402_requests(client)`,
                       />
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-[#E7F1FF]">Using Builder Pattern</h3>
-                      <p className="text-sm text-[#C8D7F2]">
+                      <h3 className="text-xl font-semibold text-ink-strong">Using Builder Pattern</h3>
+                      <p className="text-sm text-ink-body">
                         Compose a reusable client registry for additional control.
                       </p>
                       <CodeTabs
@@ -805,8 +805,8 @@ session = x402_requests(client)`,
                         ]}
                       />
                     </div>
-                    <div className="space-y-2 text-sm text-[#C8D7F2]">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Flow Summary</h3>
+                    <div className="space-y-2 text-sm text-ink-body">
+                      <h3 className="text-lg font-semibold text-ink-strong">Flow Summary</h3>
                       <ol className="list-decimal list-inside space-y-1">
                         <li>Call the protected resource and receive HTTP 402 with payment requirements.</li>
                         <li>The wrapper opens a tab and signs the guarantee using your key.</li>
@@ -820,9 +820,9 @@ session = x402_requests(client)`,
 
               {activeSection === 'facilitator-api' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Facilitator API Reference</h2>
+                  <h2 className="text-3xl font-bold text-ink-strong mb-6">Facilitator API Reference</h2>
                   <div className="space-y-6">
-                    <p className="text-[#C8D7F2] leading-relaxed">
+                    <p className="text-ink-body leading-relaxed">
                       Resource servers call the facilitator directly; end users and SDK clients only hit your
                       <code className="font-mono">tabEndpoint</code> and protected resources. The hosted base URL is typically
                       <code className="font-mono">https://x402.4mica.xyz/</code>, but any compatible deployment exposes the same
@@ -830,15 +830,15 @@ session = x402_requests(client)`,
                     </p>
                     <div className="grid grid-cols-1 gap-4">
                       <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
-                        <h3 className="text-lg font-semibold text-[#E7F1FF]">GET /</h3>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <h3 className="text-lg font-semibold text-ink-strong">GET /</h3>
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">What it does:</span> Returns service metadata and a quick
                           pointer to supported schemes/networks.
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Gets:</span> No body.
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Returns:</span>{' '}
                           <code className="font-mono">
                             {'{ message, supported: SupportedKind[], health: "/health", docs }'}
@@ -859,14 +859,14 @@ session = x402_requests(client)`,
                       </div>
 
                       <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
-                        <h3 className="text-lg font-semibold text-[#E7F1FF]">GET /health</h3>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <h3 className="text-lg font-semibold text-ink-strong">GET /health</h3>
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">What it does:</span> Liveness probe for load balancers.
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Gets:</span> No body.
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Returns:</span>{' '}
                           <code className="font-mono">{'{ status: "ok" }'}</code>
                         </p>
@@ -874,15 +874,15 @@ session = x402_requests(client)`,
                       </div>
 
                       <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
-                        <h3 className="text-lg font-semibold text-[#E7F1FF]">GET /supported</h3>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <h3 className="text-lg font-semibold text-ink-strong">GET /supported</h3>
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">What it does:</span> Lists all supported (scheme, network) pairs
                           for credit and any delegated exact/debit flows.
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Gets:</span> No body.
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Returns:</span>{' '}
                           <code className="font-mono">
                             {'{ kinds: [{ scheme, network, x402Version?, extra? }], extensions: [], signers: {} }'}
@@ -902,12 +902,12 @@ session = x402_requests(client)`,
                       </div>
 
                       <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
-                        <h3 className="text-lg font-semibold text-[#E7F1FF]">POST /tabs</h3>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <h3 className="text-lg font-semibold text-ink-strong">POST /tabs</h3>
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">What it does:</span> Opens or reuses a payment tab for a
                           (user, recipient, asset) triple. Used by your tab endpoint.
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Gets:</span>{' '}
                           <code className="font-mono">
                             {'{ userAddress, recipientAddress, network?, erc20Token?, ttlSeconds? }'}
@@ -917,7 +917,7 @@ session = x402_requests(client)`,
                           <code className="font-mono">assetAddress</code> and <code className="font-mono">networkId</code> are accepted.
                           If <code className="font-mono">network</code> is omitted, the facilitator defaults to the first configured network.
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Returns:</span>{' '}
                           <code className="font-mono">
                             {'{ tabId, userAddress, recipientAddress, assetAddress, startTimestamp, ttlSeconds, nextReqId }'}
@@ -956,19 +956,19 @@ session = x402_requests(client)`,
                       </div>
 
                       <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
-                        <h3 className="text-lg font-semibold text-[#E7F1FF]">POST /verify</h3>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <h3 className="text-lg font-semibold text-ink-strong">POST /verify</h3>
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">What it does:</span> Validates the structure of the X-PAYMENT
                           header against the original payment requirements. No on-chain work is done here.
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Gets:</span>{' '}
                           <code className="font-mono">
                             {'{ x402Version?: 1|2, paymentPayload: { ... }, paymentRequirements }'}
                           </code>
                           . <code className="font-mono">paymentPayload</code> is the decoded X-PAYMENT header.
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Returns:</span>{' '}
                           <code className="font-mono">
                             {'{ isValid: true|false, invalidReason?, certificate? }'}
@@ -1025,19 +1025,19 @@ session = x402_requests(client)`,
                       </div>
 
                       <div className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
-                        <h3 className="text-lg font-semibold text-[#E7F1FF]">POST /settle</h3>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <h3 className="text-lg font-semibold text-ink-strong">POST /settle</h3>
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">What it does:</span> Re-validates the X-PAYMENT header and
                           issues a BLS certificate for 4mica-credit (or proxies exact/debit settlements).
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Gets:</span>{' '}
                           <code className="font-mono">
                             {'{ x402Version?: 1|2, paymentPayload: { ... }, paymentRequirements }'}
                           </code>
                           .
                         </p>
-                        <p className="text-sm text-[#C8D7F2]">
+                        <p className="text-sm text-ink-body">
                           <span className="font-semibold">Returns:</span>{' '}
                           <code className="font-mono">
                             {'{ success, error?, txHash?, networkId?, certificate? }'}
@@ -1102,8 +1102,8 @@ session = x402_requests(client)`,
                     </div>
 
                     <div className="border border-white/10 rounded-lg p-6 space-y-3">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Shared payloads</h3>
-                      <div className="text-sm text-[#C8D7F2] space-y-2">
+                      <h3 className="text-lg font-semibold text-ink-strong">Shared payloads</h3>
+                      <div className="text-sm text-ink-body space-y-2">
                         <p>
                           <span className="font-semibold">paymentRequirements</span> must include{' '}
                           <code className="font-mono">scheme</code>, <code className="font-mono">network</code>,{' '}
@@ -1135,14 +1135,14 @@ session = x402_requests(client)`,
 
               {activeSection === 'operator-api' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Operator API Reference</h2>
+                  <h2 className="text-3xl font-bold text-ink-strong mb-6">Operator API Reference</h2>
                   <div className="space-y-6">
-                    <p className="text-[#C8D7F2] leading-relaxed">
+                    <p className="text-ink-body leading-relaxed">
                       Core operator endpoints are served by <code className="font-mono">4mica-core/core</code>. Core routes live under
                       <code className="font-mono">/core</code>, and auth routes live under <code className="font-mono">/auth</code>. All non-public
                       endpoints require an access token.
                     </p>
-                    <div className="bg-white/10 border border-white/10 rounded-lg p-5 text-sm text-[#C8D7F2] space-y-2">
+                    <div className="bg-white/10 border border-white/10 rounded-lg p-5 text-sm text-ink-body space-y-2">
                       <p>
                         <span className="font-semibold">Public endpoints:</span>{' '}
                         <code className="font-mono">/auth/*</code>, <code className="font-mono">/core/health</code>,{' '}
@@ -1162,8 +1162,8 @@ session = x402_requests(client)`,
                         <code className="font-mono">admin</code>, <code className="font-mono">facilitator</code>
                       </p>
                     </div>
-                    <div className="border border-white/10 rounded-lg p-5 text-sm text-[#C8D7F2] space-y-2">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Access rules</h3>
+                    <div className="border border-white/10 rounded-lg p-5 text-sm text-ink-body space-y-2">
+                      <h3 className="text-lg font-semibold text-ink-strong">Access rules</h3>
                       <ul className="list-disc list-inside space-y-1">
                         <li>
                           <code className="font-mono">tab:create</code> is required for <code className="font-mono">/core/payment-tabs</code>; recipient must
@@ -1693,24 +1693,24 @@ session = x402_requests(client)`,
                         },
                       ].map((endpoint) => (
                         <div key={`${endpoint.method}-${endpoint.path}`} className="border border-white/10 rounded-lg p-5 space-y-2 bg-white/5">
-                          <h3 className="text-lg font-semibold text-[#E7F1FF]">
+                          <h3 className="text-lg font-semibold text-ink-strong">
                             {endpoint.method} {endpoint.path}
                           </h3>
-                          <p className="text-sm text-[#C8D7F2]">
+                          <p className="text-sm text-ink-body">
                             <span className="font-semibold">What it does:</span> {endpoint.desc}
                           </p>
-                          <p className="text-sm text-[#C8D7F2]">
+                          <p className="text-sm text-ink-body">
                             <span className="font-semibold">Gets:</span> {endpoint.expects}
                           </p>
-                          <p className="text-sm text-[#C8D7F2]">
+                          <p className="text-sm text-ink-body">
                             <span className="font-semibold">Returns:</span> {endpoint.returns}
                           </p>
                           {endpoint.examples && <CodeTabs blocks={endpoint.examples} />}
                         </div>
                       ))}
                     </div>
-                    <div className="border border-white/10 rounded-lg p-5 text-sm text-[#C8D7F2] space-y-2">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">Response shape notes</h3>
+                    <div className="border border-white/10 rounded-lg p-5 text-sm text-ink-body space-y-2">
+                      <h3 className="text-lg font-semibold text-ink-strong">Response shape notes</h3>
                       <ul className="list-disc list-inside space-y-1">
                         <li><code className="font-mono">TabInfo</code>: tab_id, user_address, recipient_address, asset_address, start_timestamp, ttl_seconds, status, settlement_status, created_at, updated_at.</li>
                         <li><code className="font-mono">GuaranteeInfo</code>: tab_id, req_id, from_address, to_address, asset_address, amount, start_timestamp, certificate?.</li>
@@ -1726,52 +1726,52 @@ session = x402_requests(client)`,
 
               {activeSection === 'payment-flow' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Protocol Flow</h2>
+                  <h2 className="text-3xl font-bold text-ink-strong mb-6">Protocol Flow</h2>
                   <div className="space-y-6">
-                    <p className="text-[#C8D7F2] leading-relaxed">
+                    <p className="text-ink-body leading-relaxed">
                       This flow summarizes the internal protocol sequence for credit guarantees, from collateral to settlement and
                       remuneration. It mirrors the internal sequence diagrams in <code className="font-mono">Sequence Diagrams</code>.
                     </p>
                     <div className="bg-white/10 border border-white/10 rounded-lg p-6">
-                      <ol className="list-decimal list-inside space-y-3 text-[#C8D7F2]">
+                      <ol className="list-decimal list-inside space-y-3 text-ink-body">
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Deposit collateral.</span> Payers deposit ETH or ERC-20 into the
+                          <span className="font-semibold text-ink-body">Deposit collateral.</span> Payers deposit ETH or ERC-20 into the
                           Core4Mica vault; the core listener persists collateral events so wallets are eligible.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Discovery.</span> The resource returns a 402 template with accepted
+                          <span className="font-semibold text-ink-body">Discovery.</span> The resource returns a 402 template with accepted
                           <code className="font-mono"> (scheme, network)</code> pairs and a <code className="font-mono">tabEndpoint</code>.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Tab provisioning.</span> The resource calls the facilitator
+                          <span className="font-semibold text-ink-body">Tab provisioning.</span> The resource calls the facilitator
                           <code className="font-mono"> /tabs</code> (typically via <code className="font-mono">tabEndpoint</code>) to open or reuse a tab.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Header composition.</span> The payer (or SDK helper) signs
+                          <span className="font-semibold text-ink-body">Header composition.</span> The payer (or SDK helper) signs
                           <code className="font-mono"> PaymentGuaranteeRequestClaimsV1</code> and wraps it into a base64
                           <code className="font-mono"> X-PAYMENT</code> header.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Verification.</span> The resource calls
+                          <span className="font-semibold text-ink-body">Verification.</span> The resource calls
                           <code className="font-mono"> /verify</code> for structural validation (no core call).
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Settlement.</span> The resource calls
+                          <span className="font-semibold text-ink-body">Settlement.</span> The resource calls
                           <code className="font-mono"> /settle</code>, the facilitator requests a BLS certificate from core, verifies it, and returns it.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Tab closure.</span> Happy path: the payer settles on-chain using the
+                          <span className="font-semibold text-ink-body">Tab closure.</span> Happy path: the payer settles on-chain using the
                           <code className="font-mono"> req_id</code> in the certificate. Default path: after grace period, the recipient
                           remunerates on-chain with the certificate.
                         </li>
                         <li>
-                          <span className="font-semibold text-[#C8D7F2]">Withdrawals &amp; sync.</span> Withdrawal requests pause guarantees while
+                          <span className="font-semibold text-ink-body">Withdrawals &amp; sync.</span> Withdrawal requests pause guarantees while
                           events settle; background operators stream events to keep core state aligned.
                         </li>
                       </ol>
                     </div>
                     <div className="border border-white/10 rounded-lg p-6 space-y-3">
-                      <h3 className="text-lg font-semibold text-[#E7F1FF]">High-level sequence</h3>
+                      <h3 className="text-lg font-semibold text-ink-strong">High-level sequence</h3>
                       <MermaidDiagram
                         code={`sequenceDiagram
     autonumber
@@ -1822,9 +1822,9 @@ session = x402_requests(client)`,
                       />
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="border border-[#E5E5E5] rounded-lg p-4">
-                        <h4 className="font-semibold text-[#C8D7F2] mb-3">Actors</h4>
-                        <ul className="space-y-2 text-sm text-[#C8D7F2]">
+                      <div className="border border-white/10 rounded-lg p-4">
+                        <h4 className="font-semibold text-ink-body mb-3">Actors</h4>
+                        <ul className="space-y-2 text-sm text-ink-body">
                           <li>Payer SDK: deposits collateral, signs guarantees, pays tabs.</li>
                           <li>Recipient resource: issues 402 templates, calls verify/settle.</li>
                           <li>Facilitator (<code className="font-mono">x402-4mica</code>): /tabs, /verify, /settle orchestration.</li>
@@ -1832,9 +1832,9 @@ session = x402_requests(client)`,
                           <li>Core4Mica contract: custodies collateral and pays/remunerates.</li>
                         </ul>
                       </div>
-                      <div className="border border-[#E5E5E5] rounded-lg p-4">
-                        <h4 className="font-semibold text-[#C8D7F2] mb-3">Guards &amp; guarantees</h4>
-                        <ul className="space-y-2 text-sm text-[#C8D7F2]">
+                      <div className="border border-white/10 rounded-lg p-4">
+                        <h4 className="font-semibold text-ink-body mb-3">Guards &amp; guarantees</h4>
+                        <ul className="space-y-2 text-sm text-ink-body">
                           <li>/verify is structural only; no core calls.</li>
                           <li>/settle upgrades claims with monotonic <code className="font-mono">req_id</code> and running totals.</li>
                           <li>Certificates are verified against operator public parameters and domain.</li>
@@ -1848,12 +1848,12 @@ session = x402_requests(client)`,
 
               {activeSection === 'examples' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-[#E7F1FF] mb-6">Code Examples</h2>
+                  <h2 className="text-3xl font-bold text-ink-strong mb-6">Code Examples</h2>
                   <div className="space-y-6">
-                    <div className="text-sm text-[#C8D7F2]">
+                    <div className="text-sm text-ink-body">
                       Grab the full demo repo and run it locally:{' '}
                       <a
-                        className="text-[#1E4DD8]"
+                        className="text-brand-deep"
                         href="https://github.com/4mica-Network/x402-4mica/blob/feat/x402-ts-utils/packages/typescript/x402/demo"
                         target="_blank"
                         rel="noreferrer"
@@ -1862,14 +1862,14 @@ session = x402_requests(client)`,
                       </a>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Demo Walkthrough</h3>
-                      <div className="space-y-5 text-sm text-[#C8D7F2]">
+                      <h3 className="text-xl font-semibold text-ink-strong mb-3">Demo Walkthrough</h3>
+                      <div className="space-y-5 text-sm text-ink-body">
                         <p>
                           This demo shows how to use <code className="font-mono">@4mica/x402</code> to protect an API endpoint with
                           4mica payments. Follow the steps below to build the package, start the server, and run the client.
                         </p>
                         <div className="space-y-3">
-                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Step 1: Install dependencies</h4>
+                          <h4 className="text-lg font-semibold text-ink-strong">Step 1: Install dependencies</h4>
                           <p>
                             Build the parent package first, then install the demo dependencies from the demo directory.
                           </p>
@@ -1880,7 +1880,7 @@ yarn install`}
                           />
                         </div>
                         <div className="space-y-3">
-                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Step 2: Configure environment variables</h4>
+                          <h4 className="text-lg font-semibold text-ink-strong">Step 2: Configure environment variables</h4>
                           <p>
                             Copy the example env file and update it with your key and optional pay-to address.
                           </p>
@@ -1899,7 +1899,7 @@ yarn install`}
                           </ul>
                         </div>
                         <div className="space-y-3">
-                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Step 3: Start the server</h4>
+                          <h4 className="text-lg font-semibold text-ink-strong">Step 3: Start the server</h4>
                           <p>
                             Run the server from the demo directory, or from the package root using the demo script.
                           </p>
@@ -1917,7 +1917,7 @@ yarn install`}
                               },
                             ]}
                           />
-                          <p className="text-sm text-[#C8D7F2]">You should see output similar to:</p>
+                          <p className="text-sm text-ink-body">You should see output similar to:</p>
                           <CodeBlock
                             code={`x402 Demo Server running on http://localhost:3000
 Protected endpoint: http://localhost:3000/api/premium-data
@@ -1926,7 +1926,7 @@ Payment required: $0.05 (4mica credit on Sepolia)`}
                           />
                         </div>
                         <div className="space-y-3">
-                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Step 4: Run the client</h4>
+                          <h4 className="text-lg font-semibold text-ink-strong">Step 4: Run the client</h4>
                           <p>
                             The client loads environment variables from <code className="font-mono">.env</code> and handles payment
                             automatically.
@@ -1945,14 +1945,14 @@ Payment required: $0.05 (4mica credit on Sepolia)`}
                               },
                             ]}
                           />
-                          <p className="text-sm text-[#C8D7F2]">You can also provide a key inline:</p>
+                          <p className="text-sm text-ink-body">You can also provide a key inline:</p>
                           <CodeBlock
                             code={`PRIVATE_KEY=0xYourPrivateKey yarn client`}
                             language="bash"
                           />
                         </div>
                         <div className="space-y-3">
-                          <h4 className="text-lg font-semibold text-[#E7F1FF]">What happens</h4>
+                          <h4 className="text-lg font-semibold text-ink-strong">What happens</h4>
                           <ol className="list-decimal list-inside space-y-1">
                             <li>
                               The server starts with a single protected endpoint: <code className="font-mono">GET /api/premium-data</code>.
@@ -1965,7 +1965,7 @@ Payment required: $0.05 (4mica credit on Sepolia)`}
                           </ol>
                         </div>
                         <div className="space-y-3">
-                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Payment flow</h4>
+                          <h4 className="text-lg font-semibold text-ink-strong">Payment flow</h4>
                           <CodeBlock
                             code={`Client → GET /api/premium-data
        ← 402 Payment Required (with payment requirements)
@@ -1981,7 +1981,7 @@ Client → GET /api/premium-data (with payment proof)
                           />
                         </div>
                         <div className="space-y-3">
-                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Test without the client</h4>
+                          <h4 className="text-lg font-semibold text-ink-strong">Test without the client</h4>
                           <p>Use curl to sanity-check the server responses.</p>
                           <CodeBlock
                             code={`curl http://localhost:3000/
@@ -1990,7 +1990,7 @@ curl -v http://localhost:3000/api/premium-data`}
                           />
                         </div>
                         <div className="space-y-2">
-                          <h4 className="text-lg font-semibold text-[#E7F1FF]">Notes</h4>
+                          <h4 className="text-lg font-semibold text-ink-strong">Notes</h4>
                           <ul className="list-disc list-inside space-y-1">
                             <li>Ensure your account has sufficient balance on Sepolia testnet.</li>
                             <li>The demo uses the default 4mica facilitator configuration.</li>
@@ -2000,7 +2000,7 @@ curl -v http://localhost:3000/api/premium-data`}
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Complete Example (Server)</h3>
+                      <h3 className="text-xl font-semibold text-ink-strong mb-3">Complete Example (Server)</h3>
                       <CodeTabs
                         blocks={[
                           {
@@ -2107,7 +2107,7 @@ async def api_compute():
                       />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-[#E7F1FF] mb-3">Complete Example (Client)</h3>
+                      <h3 className="text-xl font-semibold text-ink-strong mb-3">Complete Example (Client)</h3>
                       <CodeTabs
                         blocks={[
                           {

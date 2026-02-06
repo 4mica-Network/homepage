@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Pacifico } from "next/font/google";
+import { Geist, Geist_Mono, Pacifico, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import GlobalNetworkBackground from "../components/GlobalNetworkBackground";
+import AppKitProvider from "../context/AppKitProvider";
 
 const pacifico = Pacifico({
   weight: '400',
@@ -20,6 +21,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-display",
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "4Mica",
   description: "4Mica - Sub-second transactions across any blockchain",
@@ -34,12 +42,14 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning={true}>
       <body
         suppressHydrationWarning={true}
-        className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${pacifico.variable} ${spaceGrotesk.variable} antialiased`}
       >
         <GlobalNetworkBackground />
-        <div className="relative z-10 min-h-screen">
-          {children}
-        </div>
+        <AppKitProvider>
+          <div className="relative z-10 min-h-screen">
+            {children}
+          </div>
+        </AppKitProvider>
       </body>
     </html>
   );

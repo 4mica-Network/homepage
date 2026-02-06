@@ -49,7 +49,20 @@ module.exports = {
           '3': 'hsl(var(--chart-3))',
           '4': 'hsl(var(--chart-4))',
           '5': 'hsl(var(--chart-5))'
-        }
+        },
+        ink: 'rgb(var(--ink) / <alpha-value>)',
+        'ink-strong': 'rgb(var(--ink-strong) / <alpha-value>)',
+        'ink-body': 'rgb(var(--ink-body) / <alpha-value>)',
+        'ink-muted': 'rgb(var(--ink-muted) / <alpha-value>)',
+        'ink-subtle': 'rgb(var(--ink-subtle) / <alpha-value>)',
+        brand: 'rgb(var(--brand) / <alpha-value>)',
+        'brand-strong': 'rgb(var(--brand-strong) / <alpha-value>)',
+        'brand-teal': 'rgb(var(--brand-teal) / <alpha-value>)',
+        'brand-deep': 'rgb(var(--brand-deep) / <alpha-value>)',
+        'brand-soft': 'rgb(var(--brand-soft) / <alpha-value>)',
+        'brand-violet': 'rgb(var(--brand-violet) / <alpha-value>)',
+        'surface-solid': 'rgb(var(--surface-solid) / <alpha-value>)',
+        'surface-deep': 'rgb(var(--surface-deep) / <alpha-value>)'
       }
     }
   },

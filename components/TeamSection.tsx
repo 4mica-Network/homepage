@@ -31,11 +31,11 @@ export default function TeamSection() {
     <section id="team" className="py-20 section-gloss">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
+          <h2 className="section-title mb-6">
             Meet Our Team
           </h2>
-          <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
-          <p className="text-lg text-[#C8D7F2] max-w-2xl mx-auto">
+          <div className="accent-bar mx-auto mb-8"></div>
+          <p className="section-lead max-w-2xl mx-auto">
             Leading experts in Cryptography, blockchain, and payment infrastructure
           </p>
         </div>
@@ -46,7 +46,7 @@ export default function TeamSection() {
               key={index}
               className="glass-panel rounded-xl overflow-hidden transition-shadow duration-300 group"
             >
-                <div className="relative overflow-hidden aspect-[4/5] bg-[#0A2540]/35">
+                <div className="relative overflow-hidden aspect-[4/5] bg-surface-solid/35">
                   <Image
                     src={member.image}
                     alt={member.name}
@@ -55,17 +55,17 @@ export default function TeamSection() {
                     style={{ objectPosition: member.imagePosition ?? '50% 20%' }}
                     quality={100}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A2540]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface-deep/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
               
               <div className="p-6">
-                <h3 className="text-xl font-bold text-[#E7F1FF] mb-2">
+                <h3 className="text-xl font-bold text-ink-strong mb-2">
                   {member.name}
                 </h3>
-                <p className="text-[#7BCBFF] font-semibold mb-3">
+                <p className="text-brand font-semibold mb-3">
                   {member.role}
                 </p>
-                <p className="text-[#C8D7F2] text-sm leading-relaxed">
+                <p className="text-ink-body text-sm leading-relaxed">
                   {member.bio}
                 </p>
               </div>

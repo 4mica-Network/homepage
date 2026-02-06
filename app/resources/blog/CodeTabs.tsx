@@ -179,12 +179,12 @@ export default function CodeTabs({
 
   return (
     <div
-      className={`rounded-xl border border-white/10 bg-[#050B1D] text-sm text-[#C8D7F2] ${
+      className={`rounded-xl border border-white/10 bg-surface-solid text-sm text-ink-body ${
         className ?? ''
       }`}
     >
       {activeBlock?.caption && (
-        <div className="px-4 pt-4 text-xs uppercase tracking-wide text-[#7BCBFF]">
+        <div className="px-4 pt-4 text-xs uppercase tracking-wide text-brand">
           {activeBlock.caption}
         </div>
       )}
@@ -192,7 +192,7 @@ export default function CodeTabs({
         <div
           role="tablist"
           aria-label="Code languages"
-          className={`flex flex-wrap items-center justify-between gap-2 border-b border-white/10 bg-[#050B1D] px-3 py-2 ${
+          className={`flex flex-wrap items-center justify-between gap-2 border-b border-white/10 bg-surface-solid px-3 py-2 ${
             activeBlock?.caption ? 'mt-3' : ''
           }`}
         >
@@ -210,8 +210,8 @@ export default function CodeTabs({
                   onClick={() => setActiveIndex(idx)}
                   className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
                     isActive
-                      ? 'bg-white/15 text-[#F2F4F8] shadow-sm'
-                      : 'text-[#9CB7E8] hover:text-[#E7F1FF]'
+                      ? 'bg-white/15 text-ink-strong shadow-sm'
+                      : 'text-ink-muted hover:text-ink-strong'
                   }`}
                 >
                   {getLabel(block, idx)}
@@ -223,7 +223,7 @@ export default function CodeTabs({
             type="button"
             onClick={() => handleCopy(activeBlock?.code ?? '', activeIndex)}
             className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold transition ${
-              copiedIndex === activeIndex ? 'text-[#7BCBFF]' : 'text-[#9CB7E8] hover:text-[#E7F1FF]'
+              copiedIndex === activeIndex ? 'text-brand' : 'text-ink-muted hover:text-ink-strong'
             }`}
             aria-label="Copy code to clipboard"
           >
@@ -236,7 +236,7 @@ export default function CodeTabs({
       )}
       {!showTabs && (
         <div
-          className={`flex items-center justify-end border-b border-white/10 bg-[#050B1D] px-3 py-2 ${
+          className={`flex items-center justify-end border-b border-white/10 bg-surface-solid px-3 py-2 ${
             activeBlock?.caption ? 'mt-3' : ''
           }`}
         >
@@ -244,7 +244,7 @@ export default function CodeTabs({
             type="button"
             onClick={() => handleCopy(activeBlock?.code ?? '', activeIndex)}
             className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold transition ${
-              copiedIndex === activeIndex ? 'text-[#7BCBFF]' : 'text-[#9CB7E8] hover:text-[#E7F1FF]'
+              copiedIndex === activeIndex ? 'text-brand' : 'text-ink-muted hover:text-ink-strong'
             }`}
             aria-label="Copy code to clipboard"
           >
@@ -267,14 +267,14 @@ export default function CodeTabs({
             hidden={!isActive}
             className={!isActive ? 'hidden' : undefined}
           >
-            <div className={`bg-[#050B1D] ${contentPadding}`}>
-              <div className="space-y-1 font-mono text-xs sm:text-sm leading-relaxed text-[#E7F1FF]">
+            <div className={`bg-surface-solid ${contentPadding}`}>
+              <div className="space-y-1 font-mono text-xs sm:text-sm leading-relaxed text-ink-strong">
                 {codeLines.map((line, lineIndex) => (
                   <div
                     key={`${block.label ?? block.language ?? 'code'}-${lineIndex}`}
                     className="grid grid-cols-[2.2rem_1fr] gap-3"
                   >
-                    <span className="select-none text-right text-[10px] text-[#6A7AA3] sm:text-xs">
+                    <span className="select-none text-right text-[10px] text-ink-subtle sm:text-xs">
                       {lineIndex + 1}
                     </span>
                     <span

@@ -6,23 +6,35 @@
     "dev": "cross-env NODE_ENV=development next dev -H 0.0.0.0 -p 3000",
     "build": "next build",
     "lint": "next lint",
+    "fmt": "next lint --fix",
     "start": "next start"
   },
   "dependencies": {
     "@radix-ui/react-scroll-area": "^1.2.10",
     "@radix-ui/react-slot": "^1.2.4",
     "@react-google-maps/api": "^2.19.3",
+    "@reown/appkit": "^1.8.17",
+    "@reown/appkit-adapter-wagmi": "^1.8.17",
+    "@tanstack/react-query": "^5.86.0",
+    "@walletconnect/ethereum-provider": "2.23.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.25",
     "lucide-react": "^0.556.0",
-    "next": "16.0.7",
+    "next": "^16.1.6",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "react-syntax-highlighter": "^16.1.0",
     "recharts": "^3.5.1",
     "tailwind-merge": "^3.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "viem": "^2.45.1",
+    "wagmi": "^2.19.5"
+  },
+  "overrides": {
+    "valtio": {
+      "use-sync-external-store": "1.6.0"
+    }
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.17",

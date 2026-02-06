@@ -100,21 +100,21 @@ export default function MermaidDiagram({ code, className }: MermaidDiagramProps)
 
   return (
     <div
-      className={`mermaid-diagram rounded-xl border border-white/10 bg-[#050B1D] p-4 ${
+      className={`mermaid-diagram rounded-xl border border-white/10 bg-surface-solid p-4 ${
         className ?? ''
       }`}
     >
       {error ? (
         <div className="space-y-2">
-          <p className="text-sm text-[#FCA5A5]">{error}</p>
-          <pre className="whitespace-pre-wrap break-words rounded-lg border border-white/10 bg-black/20 p-3 text-xs text-[#C8D7F2]">
+          <p className="text-sm text-rose-300">{error}</p>
+          <pre className="whitespace-pre-wrap break-words rounded-lg border border-white/10 bg-black/20 p-3 text-xs text-ink-body">
             {diagram}
           </pre>
         </div>
       ) : svg ? (
         <div dangerouslySetInnerHTML={{ __html: svg }} />
       ) : (
-        <div className="text-sm text-[#9CB7E8]">Rendering diagram…</div>
+        <div className="text-sm text-ink-muted">Rendering diagram…</div>
       )}
     </div>
   );

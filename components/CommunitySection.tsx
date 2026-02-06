@@ -31,24 +31,24 @@ export default function CommunitySection() {
       <div className="container mx-auto px-6">
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center max-w-6xl mx-auto">
           <div>
-            <p className="text-sm uppercase tracking-[0.3em] text-[#7BCBFF]">Community</p>
-            <h2 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mt-4">
+            <p className="section-kicker">Community</p>
+            <h2 className="section-title">
               Build the payment tab standard
             </h2>
-            <p className="mt-6 text-lg text-[#C8D7F2] leading-relaxed">
+            <p className="section-lead">
               We are building in public with developers who ship infra. Join the discussion, open issues, and help shape the
               protocol.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Link
                 href={communityUrl}
-                className="bg-gradient-to-r from-[#4682B4] to-[#48C9B0] hover:from-[#5493C5] hover:to-[#59D4BB] text-[#F2F4F8] px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300 text-center"
+                className="btn btn-primary btn-md text-center"
               >
                 Join Community
               </Link>
               <Link
                 href="/resources/technical-docs"
-                className="border border-white/15 text-[#C8D7F2] hover:text-white hover:border-white/40 px-6 py-3 rounded-full text-sm font-semibold transition-colors text-center"
+                className="btn btn-soft btn-md text-center"
               >
                 Start Building
               </Link>
@@ -59,7 +59,7 @@ export default function CommunitySection() {
               <Link
                 key={hook.label}
                 href={hook.href}
-                className="glass-panel rounded-2xl px-5 py-4 text-sm font-semibold text-[#E7F1FF] hover:text-white transition-colors"
+                className="glass-panel rounded-2xl px-5 py-4 text-sm font-semibold text-ink-strong hover:text-ink transition-colors"
               >
                 {hook.label}
               </Link>

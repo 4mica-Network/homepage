@@ -289,12 +289,12 @@ export default function CodeSamplesSection() {
       <div className="container mx-auto px-6">
         <div className="mx-auto max-w-5xl">
           <div className="glass-panel rounded-2xl p-5 sm:p-6">
-            <div className="flex items-center justify-between text-[10px] sm:text-xs uppercase tracking-[0.24em] text-[#9CB7E8]">
+            <div className="flex items-center justify-between text-[10px] sm:text-xs uppercase tracking-[0.24em] text-ink-muted">
               <span>Quick Start</span>
               <span>Payer + Recipient Flow</span>
             </div>
-            <div className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-[#050B1D]">
-              <div className="flex flex-wrap items-center gap-2 border-b border-white/10 bg-[#050B1D] px-3 py-2">
+            <div className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-surface-solid">
+              <div className="flex flex-wrap items-center gap-2 border-b border-white/10 bg-surface-solid px-3 py-2">
                 {languageTabs.map((tab) => {
                   const isActive = activeLanguage === tab.id;
                   return (
@@ -304,8 +304,8 @@ export default function CodeSamplesSection() {
                       onClick={() => setActiveLanguage(tab.id)}
                       className={`rounded-full px-3 py-1 text-xs font-semibold transition ${
                         isActive
-                          ? 'bg-white/15 text-[#F2F4F8] shadow-sm'
-                          : 'text-[#9CB7E8] hover:text-[#E7F1FF]'
+                          ? 'bg-white/15 text-ink-strong shadow-sm'
+                          : 'text-ink-muted hover:text-ink-strong'
                       }`}
                     >
                       {tab.label}
@@ -314,7 +314,7 @@ export default function CodeSamplesSection() {
                 })}
               </div>
               <div className="grid md:grid-cols-[170px_1fr]">
-                <div className="border-b border-white/10 bg-[#050B1D] p-3 md:border-b-0 md:border-r">
+                <div className="border-b border-white/10 bg-surface-solid p-3 md:border-b-0 md:border-r">
                   <div className="flex gap-2 md:flex-col">
                     {keyActions.map((action) => {
                       const isActive = activeAction === action.id;
@@ -325,8 +325,8 @@ export default function CodeSamplesSection() {
                           onClick={() => setActiveAction(action.id)}
                           className={`rounded-lg px-3 py-2 text-left text-xs font-semibold transition ${
                             isActive
-                              ? 'bg-white/15 text-[#F2F4F8]'
-                              : 'text-[#9CB7E8] hover:text-[#E7F1FF]'
+                              ? 'bg-white/15 text-ink-strong'
+                              : 'text-ink-muted hover:text-ink-strong'
                           }`}
                         >
                           {action.label}
@@ -335,11 +335,11 @@ export default function CodeSamplesSection() {
                     })}
                   </div>
                 </div>
-                <div className="bg-[#050B1D] p-4 sm:p-5">
-                  <div className="space-y-1 font-mono text-xs sm:text-sm leading-relaxed text-[#E7F1FF]">
+                <div className="bg-surface-solid p-4 sm:p-5">
+                  <div className="space-y-1 font-mono text-xs sm:text-sm leading-relaxed text-ink-strong">
                     {codeLines.map((line, index) => (
                       <div key={`${activeLanguage}-${activeAction}-${index}`} className="grid grid-cols-[2.2rem_1fr] gap-3">
-                        <span className="select-none text-right text-[10px] text-[#6A7AA3] sm:text-xs">
+                        <span className="select-none text-right text-[10px] text-ink-subtle sm:text-xs">
                           {index + 1}
                         </span>
                         <span
@@ -352,9 +352,9 @@ export default function CodeSamplesSection() {
                 </div>
               </div>
             </div>
-            <div className="mt-4 flex items-center justify-between text-xs text-[#9CB7E8]">
+            <div className="mt-4 flex items-center justify-between text-xs text-ink-muted">
               <span>Payer and recipient flow examples</span>
-              <span className="text-[#48C9B0]">SDK + API ready</span>
+              <span className="text-brand-teal">SDK + API ready</span>
             </div>
           </div>
         </div>

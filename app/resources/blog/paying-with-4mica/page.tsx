@@ -355,28 +355,28 @@ let certificate = settled.settlement;`,
   ];
 
   return (
-    <div className="min-h-screen pt-20 pb-24 text-[#C8D7F2]">
+    <div className="min-h-screen pt-20 pb-24 text-ink-body">
       <div className="container mx-auto px-6 max-w-4xl">
         <header className="mb-12 text-center">
-          <p className="text-sm uppercase tracking-wide text-[#3CAEF5]">Payer Guide</p>
-          <h1 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-4">
+          <p className="section-kicker">Payer Guide</p>
+          <h1 className="section-title mb-4">
             Paying with 4Mica: Credit, Tabs, and Settlement
           </h1>
-          <p className="text-sm text-[#9CB7E8]">Published January 29, 2026 · 10 min read · By Mairon</p>
+          <p className="text-sm text-ink-muted">Published January 29, 2026 · 10 min read · By Mairon</p>
         </header>
 
         <article className="glass-panel rounded-2xl p-8 space-y-10">
           {sections.map((section) => (
             <section key={section.heading} className="space-y-4">
-              <h2 className="text-2xl font-bold text-[#E7F1FF]">{section.heading}</h2>
+              <h2 className="text-2xl font-bold text-ink-strong">{section.heading}</h2>
               {section.paragraphs && section.paragraphs.map((paragraph, idx) => (
-                <p key={idx} className="leading-relaxed text-[#C8D7F2]">
+                <p key={idx} className="leading-relaxed text-ink-body">
                   {paragraph}
                 </p>
               ))}
 
               {section.steps && (
-                <ol className="list-decimal list-inside space-y-2 text-[#C8D7F2]">
+                <ol className="list-decimal list-inside space-y-2 text-ink-body">
                   {section.steps.map((step) => (
                     <li key={step}>{step}</li>
                   ))}
@@ -384,7 +384,7 @@ let certificate = settled.settlement;`,
               )}
 
               {section.bullets && (
-                <ul className="list-disc list-inside space-y-2 text-[#C8D7F2]">
+                <ul className="list-disc list-inside space-y-2 text-ink-body">
                   {section.bullets.map((bullet) => (
                     <li key={bullet}>{bullet}</li>
                   ))}
@@ -396,10 +396,10 @@ let certificate = settled.settlement;`,
           ))}
         </article>
 
-        <footer className="mt-12 flex items-center justify-between text-sm text-[#9CB7E8] flex-col md:flex-row gap-4">
+        <footer className="mt-12 flex items-center justify-between text-sm text-ink-muted flex-col md:flex-row gap-4">
           <Link
             href="/resources/blog"
-            className="text-[#7BCBFF] hover:text-[#A3FFD6] transition-colors cursor-pointer whitespace-nowrap"
+            className="link-accent cursor-pointer whitespace-nowrap"
           >
             ← Back to Blog
           </Link>

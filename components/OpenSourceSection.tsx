@@ -10,19 +10,19 @@ export default function OpenSourceSection() {
           <div>
             <h2
               id="open-source-title"
-              className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#F2F4F8]"
+              className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-ink-strong"
             >
-              <span className="text-[#F2F4F8]">Open-</span>
-              <span className="text-[#C8D7F2]">source</span>
+              <span className="text-ink-strong">Open-</span>
+              <span className="text-ink-body">source</span>
             </h2>
-            <p className="mt-6 text-lg text-[#AFC1DD] leading-relaxed max-w-[48ch]">
+            <p className="mt-6 text-lg text-ink-body/80 leading-relaxed max-w-[48ch]">
               We build in public. Browse the code, follow progress, and help shape 4mica on GitHub.
             </p>
             <a
               href={repoHref}
               target="_blank"
               rel="noreferrer noopener"
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#F2F4F8] px-6 py-3 text-sm font-semibold text-[#0B0F16] shadow-[0_14px_34px_rgba(0,0,0,0.28)] transition-all hover:-translate-y-0.5 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7BCBFF]/70"
+              className="btn btn-invert btn-md mt-8"
             >
               <Star className="h-4 w-4" />
               Star us on GitHub

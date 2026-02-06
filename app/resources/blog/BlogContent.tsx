@@ -48,15 +48,15 @@ export default function BlogContent() {
     : blogPosts.filter(post => post.category === selectedCategory);
 
   return (
-    <div className="min-h-screen pt-20 text-[#C8D7F2]">
+    <div className="min-h-screen pt-20 text-ink-body">
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-[#E7F1FF] mb-6">
+          <h1 className="section-title mb-6">
             4Mica Blog
           </h1>
-          <div className="w-24 h-1 bg-[#1E4DD8] mx-auto mb-8"></div>
-          <p className="text-xl text-[#C8D7F2] max-w-3xl mx-auto">
+          <div className="accent-bar mx-auto mb-8"></div>
+          <p className="section-lead max-w-3xl mx-auto text-xl">
             Insights, updates, and thought leadership on AVS payments, blockchain infrastructure, and the future of decentralized finance.
           </p>
         </div>
@@ -73,8 +73,8 @@ export default function BlogContent() {
                     onClick={() => setSelectedCategory(category)}
                     className={`px-4 py-2 rounded-full transition-colors cursor-pointer whitespace-nowrap ${
                       selectedCategory === category
-                        ? 'bg-[#1E4DD8] text-white'
-                        : 'bg-white/10 text-[#C8D7F2] hover:bg-white/15 hover:text-[#E7F1FF]'
+                        ? 'bg-brand-deep text-ink'
+                        : 'bg-white/10 text-ink-body hover:bg-white/15 hover:text-ink-strong'
                     }`}
                   >
                     {category}
@@ -89,36 +89,36 @@ export default function BlogContent() {
                 <article key={post.id} className="glass-panel rounded-lg overflow-hidden transition-all hover:translate-y-[-2px]">
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="bg-[#1E4DD8] text-white px-3 py-1 rounded-full text-sm font-medium">
+                      <span className="bg-brand-deep text-ink px-3 py-1 rounded-full text-sm font-medium">
                         {post.category}
                       </span>
-                      <span className="text-sm text-[#9CB7E8]">{post.readTime}</span>
+                      <span className="text-sm text-ink-muted">{post.readTime}</span>
                     </div>
                     
-                    <h2 className="text-xl font-bold text-[#E7F1FF] mb-3 line-clamp-2">
+                    <h2 className="text-xl font-bold text-ink-strong mb-3 line-clamp-2">
                       {post.title}
                     </h2>
                     
-                    <p className="text-[#C8D7F2] mb-4 line-clamp-3">
+                    <p className="text-ink-body mb-4 line-clamp-3">
                       {post.excerpt}
                     </p>
                     
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        <div className="w-8 h-8 bg-[#3CAEF5] rounded-full flex items-center justify-center mr-3">
+                        <div className="w-8 h-8 bg-brand-strong rounded-full flex items-center justify-center mr-3">
                           <span className="text-white text-sm font-semibold">
                             {post.author.split(' ').map(n => n[0]).join('')}
                           </span>
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-[#E7F1FF]">{post.author}</p>
-                          <p className="text-xs text-[#9CB7E8]">{post.date}</p>
+                          <p className="text-sm font-medium text-ink-strong">{post.author}</p>
+                          <p className="text-xs text-ink-muted">{post.date}</p>
                         </div>
                       </div>
                       
                       <Link 
                         href={post.href}
-                        className="text-[#7BCBFF] hover:text-[#A3FFD6] transition-colors cursor-pointer whitespace-nowrap"
+                        className="link-accent cursor-pointer whitespace-nowrap"
                       >
                         Read More →
                       </Link>
@@ -130,7 +130,7 @@ export default function BlogContent() {
 
             {/* Load More Button */}
             <div className="text-center mt-12">
-              <button className="bg-[#1E4DD8] text-white px-8 py-3 rounded-lg hover:bg-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap">
+              <button className="btn btn-primary btn-md whitespace-nowrap">
                 Load More Articles
               </button>
             </div>
@@ -141,8 +141,8 @@ export default function BlogContent() {
             <div className="space-y-8">
               {/* Newsletter Signup */}
               <div className="glass-panel rounded-lg p-6">
-                <h3 className="text-xl font-bold text-[#E7F1FF] mb-4">Stay Updated</h3>
-                <p className="text-[#C8D7F2] mb-4">
+                <h3 className="text-xl font-bold text-ink-strong mb-4">Stay Updated</h3>
+                <p className="text-ink-body mb-4">
                   Get the latest insights on AVS payments and blockchain infrastructure.
                 </p>
                 
@@ -164,11 +164,11 @@ export default function BlogContent() {
                       onChange={(e) => setSubscribedEmail(e.target.value)}
                       placeholder="Enter your email"
                       required
-                      className="w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3CAEF5] mb-3 text-sm form-field-dark"
+                      className="w-full px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-strong/60 mb-3 text-sm form-field-dark"
                     />
                     <button
                       type="submit"
-                      className="w-full bg-[#1E4DD8] text-white py-2 rounded-lg hover:bg-[#3CAEF5] transition-colors cursor-pointer whitespace-nowrap"
+                      className="btn btn-primary btn-md w-full whitespace-nowrap"
                     >
                       Subscribe
                     </button>
@@ -178,7 +178,7 @@ export default function BlogContent() {
 
               {/* Recent Posts */}
               <div className="glass-panel rounded-lg p-6">
-                <h3 className="text-xl font-bold text-[#E7F1FF] mb-4">Recent Posts</h3>
+                <h3 className="text-xl font-bold text-ink-strong mb-4">Recent Posts</h3>
                 <div className="space-y-4">
                   {blogPosts.slice(0, 3).map((post) => (
                     <Link 
@@ -188,10 +188,10 @@ export default function BlogContent() {
                     >
                       <div className="flex space-x-3 hover:bg-white/5 p-2 rounded transition-colors">
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-semibold text-[#E7F1FF] line-clamp-2 mb-1">
+                          <h4 className="text-sm font-semibold text-ink-strong line-clamp-2 mb-1">
                             {post.title}
                           </h4>
-                          <p className="text-xs text-[#9CB7E8]">{post.date}</p>
+                          <p className="text-xs text-ink-muted">{post.date}</p>
                         </div>
                       </div>
                     </Link>
@@ -201,12 +201,12 @@ export default function BlogContent() {
 
               {/* Popular Tags */}
               <div className="glass-panel rounded-lg p-6">
-                <h3 className="text-xl font-bold text-[#E7F1FF] mb-4">Popular Tags</h3>
+                <h3 className="text-xl font-bold text-ink-strong mb-4">Popular Tags</h3>
                 <div className="flex flex-wrap gap-2">
                   {['AVS', 'Payments', 'Blockchain', 'DeFi', 'EigenLayer', 'Security', 'Integration', 'Architecture'].map((tag) => (
                     <span 
                       key={tag}
-                      className="bg-white/10 text-[#C8D7F2] px-3 py-1 rounded-full text-sm hover:bg-[#1E4DD8] hover:text-white transition-colors cursor-pointer"
+                      className="bg-white/10 text-ink-body px-3 py-1 rounded-full text-sm hover:bg-brand-deep hover:text-ink transition-colors cursor-pointer"
                     >
                       {tag}
                     </span>

@@ -9,9 +9,9 @@ export default function RoadmapPage() {
       <main className="pt-24 pb-20">
         <section className="container mx-auto px-6">
           <div className="max-w-3xl">
-            <p className="text-sm uppercase tracking-[0.3em] text-[#7BCBFF]">Company</p>
-            <h1 className="text-4xl md:text-6xl font-bold text-[#E7F1FF] mt-4">Roadmap</h1>
-            <p className="text-lg text-[#C8D7F2] leading-relaxed mt-6">
+            <p className="section-kicker">Company</p>
+            <h1 className="section-title-lg">Roadmap</h1>
+            <p className="section-lead">
               A transparent view into how we deliver credit-backed payment rails for web3 commerce.
             </p>
           </div>

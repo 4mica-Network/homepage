@@ -66,7 +66,7 @@ export default function Footer() {
                   <i className="ri-github-line text-xl"></i>
                 </div>
               </Link>
-              <Link href="https://discord.gg/bb8Pn5qX" className="link-muted cursor-pointer">
+              <Link href="https://discord.gg/6r3VGq6crq" className="link-muted cursor-pointer">
                 <div className="w-6 h-6 flex items-center justify-center">
                   <i className="ri-discord-line text-xl"></i>
                 </div>

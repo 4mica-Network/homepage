@@ -227,7 +227,7 @@ export default function Header() {
                 Start Building
               </Link>
               <Link
-                href="https://discord.gg/bb8Pn5qX"
+                href="https://discord.gg/6r3VGq6crq"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="btn btn-soft btn-md text-center"
               >

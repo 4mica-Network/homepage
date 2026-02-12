@@ -21,7 +21,7 @@ export default function FinalCtaSection() {
               Start Building
             </Link>
             <Link
-              href="https://discord.gg/bb8Pn5qX"
+              href="https://discord.gg/6r3VGq6crq"
               className="btn btn-outline btn-lg text-center"
             >
               Join Community

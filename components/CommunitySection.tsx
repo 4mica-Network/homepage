@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 
-const discordUrl = 'https://discord.gg/bb8Pn5qX';
+const discordUrl = 'https://discord.gg/6r3VGq6crq';
 const githubUrl = 'https://github.com/4mica-Network/4mica-core/';
-const communityUrl = 'https://discord.gg/bb8Pn5qX';
+const communityUrl = 'https://discord.gg/6r3VGq6crq';
 
 export default function CommunitySection() {
   const hooks = [

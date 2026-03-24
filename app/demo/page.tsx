@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -87,6 +87,37 @@ const EDGES: [number, number][] = [
 
 const FA = 0;
 const FB = 1;
+
+// ── Edge groups (pre-computed once — 6 groups instead of 80+ animated elements) ─
+const EDGE_GROUPS: { key: string; edges: [number,number][]; stroke: string; sw: number }[] = (() => {
+  const isAB   = ([a,b]: [number,number]) => (a===FA&&b===FB)||(a===FB&&b===FA);
+  const inv4   = ([a,b]: [number,number]) => a===25||b===25;
+  const is4B   = (e: [number,number]) => inv4(e)&&(e[0]===FB||e[1]===FB);
+  const isAEth = ([a,b]: [number,number]) => (a===FA&&b===17)||(a===17&&b===FA);
+  const isEthB = ([a,b]: [number,number]) => (a===17&&b===FB)||(a===FB&&b===17);
+  return [
+    { key:'ab',   edges: EDGES.filter(isAB),                               stroke:'rgba(120,200,255,0.55)', sw:0.3  },
+    { key:'4b',   edges: EDGES.filter(e=>is4B(e)),                         stroke:'rgba(123,203,255,0.5)',  sw:0.3  },
+    { key:'4',    edges: EDGES.filter(e=>inv4(e)&&!is4B(e)),               stroke:'rgba(123,203,255,0.1)',  sw:0.18 },
+    { key:'aeth', edges: EDGES.filter(isAEth),                             stroke:'rgba(245,158,11,0.7)',   sw:0.3  },
+    { key:'ethb', edges: EDGES.filter(isEthB),                             stroke:'rgba(245,158,11,0.7)',   sw:0.3  },
+    { key:'bg',   edges: EDGES.filter(e=>!isAB(e)&&!inv4(e)&&!isAEth(e)&&!isEthB(e)), stroke:'rgba(120,180,220,0.12)', sw:0.14 },
+  ];
+})();
+
+function edgeGroupOpacity(key: string, step: number): number {
+  if (step === 0) return 1;
+  if (step === 6) return 0;
+  if (step === 7) return (key === 'aeth' || key === 'ethb') ? 1 : 0;
+  switch (key) {
+    case 'ab':   return (step === 1 || step === 3 || step === 4) ? 1 : 0.04;
+    case '4b':   return (step === 2 || step === 5) ? 1 : 0.3;
+    case '4':    return 0.3;
+    case 'aeth':
+    case 'ethb': return 0.04;
+    default:     return 0.04;
+  }
+}
 
 // ── Steps ─────────────────────────────────────────────────────────────────────
 
@@ -353,33 +384,30 @@ function resolveIcon(node: NetNode) {
 
 // ── Node component ────────────────────────────────────────────────────────────
 
-function NodeShape({ node, step }: { node: NetNode; step: number }) {
+const NodeShape = memo(function NodeShape({
+  node, dim, showLabels, isStep6,
+}: {
+  node: NetNode; dim: boolean; showLabels: boolean; isStep6: boolean;
+}) {
   const { x, y, type, name, id, size } = node;
   const isA = id === FA, isB = id === FB, isFocus = isA || isB;
   const is4mica = id === 25;
-  const inactive = ''
-  const isActiveChain = type === 'chain' && !inactive && id === 15; // ETH Node only
-  const dim = inactive
-    || (step === 6 ? !is4mica
-      : step === 7 ? (!isFocus && !isActiveChain)
-      : step >= 1 && !isFocus && !is4mica);
   const color = NODE_COLOR[type];
 
   // ── 4mica special rendering ──
   if (is4mica) {
     return (
-      <motion.g animate={{ opacity: dim ? 0.05 : 1 }} transition={{ duration: 0.85 }}>
-        <motion.circle cx={x} cy={y} r={size * 2.2} fill={step === 6 ? 'rgba(72,201,176,0.09)' : 'rgba(123,203,255,0.05)'}
-          animate={{ r: [size * 2, size * (step === 6 ? 3.2 : 2.6), size * 2] }}
-          transition={{ duration: step === 6 ? 1.8 : 3.5, repeat: Infinity, ease: 'easeInOut' }} />
-        <motion.circle cx={x} cy={y} r={size * 1.6} fill={step === 6 ? 'rgba(72,201,176,0.13)' : 'rgba(123,203,255,0.08)'}
-          animate={{ r: [size * 1.4, size * (step === 6 ? 2.2 : 1.8), size * 1.4] }}
-          transition={{ duration: step === 6 ? 1.4 : 2.8, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }} />
-        {step === 6 && (
-          <motion.circle cx={x} cy={y} r={size * 1.1} fill="none"
+      <g style={{ opacity: dim ? 0.05 : 1, transition: 'opacity 0.85s ease' }}>
+        <motion.circle cx={x} cy={y} r={size * 2.2} fill={isStep6 ? 'rgba(72,201,176,0.09)' : 'rgba(123,203,255,0.05)'}
+          animate={{ r: [size * 2, size * (isStep6 ? 3.2 : 2.6), size * 2] }}
+          transition={{ duration: isStep6 ? 1.8 : 3.5, repeat: Infinity, ease: 'easeInOut' }} />
+        <motion.circle cx={x} cy={y} r={size * 1.6} fill={isStep6 ? 'rgba(72,201,176,0.13)' : 'rgba(123,203,255,0.08)'}
+          animate={{ r: [size * 1.4, size * (isStep6 ? 2.2 : 1.8), size * 1.4] }}
+          transition={{ duration: isStep6 ? 1.4 : 2.8, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }} />
+        {isStep6 && (
+          <circle cx={x} cy={y} r={size * 1.1} fill="none"
             stroke="rgba(72,201,176,0.35)" strokeWidth="0.25" strokeDasharray="1.5 1"
-            animate={{ rotate: 360 }} style={{ transformOrigin: `${x}px ${y}px` }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'linear' }} />
+            style={{ transformOrigin: `${x}px ${y}px`, animation: 'nlSpin 3s linear infinite' }} />
         )}
         <circle cx={x} cy={y} r={size} fill="rgba(5,11,29,0.92)"
           stroke="rgba(123,203,255,0.45)" strokeWidth="0.3" />
@@ -392,7 +420,7 @@ function NodeShape({ node, step }: { node: NetNode; step: number }) {
           style={{ fontFamily: 'var(--font-display)', pointerEvents: 'none', letterSpacing: '-0.02em' }}>
           4mica
         </text>
-      </motion.g>
+      </g>
     );
   }
 
@@ -400,22 +428,17 @@ function NodeShape({ node, step }: { node: NetNode; step: number }) {
   const iconScale = size * 0.52;
 
   return (
-    <motion.g animate={{ opacity: dim ? 0.05 : 1 }} transition={{ duration: 0.85 }}>
-      {/* Glow */}
+    <g style={{ opacity: dim ? 0.05 : 1, transition: 'opacity 0.85s ease' }}>
       <circle cx={x} cy={y} r={size * 2.2} fill={NODE_GLOW[type]} />
-      {/* Circle body */}
       <circle cx={x} cy={y} r={size} fill={color} stroke="rgba(255,255,255,0.1)" strokeWidth="0.15" />
-      {/* Icon */}
       <g transform={`translate(${x},${y}) scale(${iconScale})`}>
         {resolveIcon(node)}
       </g>
-      {/* Label */}
       <text x={x} y={lblY} textAnchor="middle" fontSize="1.45" fill="rgba(200,215,242,0.65)"
         style={{ fontFamily: 'var(--font-geist-mono)', pointerEvents: 'none' }}>
         {name}
       </text>
-      {/* Focus ring + label */}
-      {isFocus && step >= 1 && (
+      {isFocus && showLabels && (
         <>
           <text x={x} y={y - size - 2.2} textAnchor="middle" fontSize="2.2" fontWeight="600" fill={color}
             style={{ fontFamily: 'var(--font-display)', pointerEvents: 'none' }}>
@@ -427,9 +450,9 @@ function NodeShape({ node, step }: { node: NetNode; step: number }) {
             transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }} />
         </>
       )}
-    </motion.g>
+    </g>
   );
-}
+});
 
 // ── Netting Ledger (SVG overlay on 4mica, step 6) ─────────────────────────────
 
@@ -463,24 +486,22 @@ function NettingLedger() {
       <line x1={X} y1={Y + 5.7} x2={X + W} y2={Y + 5.7} stroke="rgba(72,201,176,0.12)" strokeWidth="0.1" />
       {/* Rows */}
       {entries.map((e, i) => (
-        <motion.g key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          transition={{ delay: 0.45 + i * 0.48, duration: 0.28 }}>
+        <g key={i} style={{ opacity: 0, animation: `nlFade 0.28s ${0.45 + i * 0.48}s ease forwards` }}>
           {i % 2 === 0 && <rect x={X + 0.2} y={Y + 6.1 + i * 3.0} width={W - 0.4} height="2.8" fill="rgba(255,255,255,0.018)" />}
           <text x={X + 1}    y={Y + 7.7 + i * 3.0} fontSize="1.05" fill="rgba(170,190,225,0.75)" style={{ fontFamily: 'var(--font-geist-mono)' }}>{e.pair}</text>
           <text x={X + 20.5} y={Y + 7.7 + i * 3.0} fontSize="1.05" fill={e.c}                   style={{ fontFamily: 'var(--font-geist-mono)' }}>{e.amt}</text>
           <text x={X + 26.5} y={Y + 7.7 + i * 3.0} fontSize="1.05" fill={e.c}                   style={{ fontFamily: 'var(--font-geist-mono)' }}>{e.status}</text>
-        </motion.g>
+        </g>
       ))}
       {/* Separator */}
-      <motion.line x1={X + 1} y1={Y + 18.0} x2={X + W - 1} y2={Y + 18.0}
+      <line x1={X + 1} y1={Y + 18.0} x2={X + W - 1} y2={Y + 18.0}
         stroke="rgba(72,201,176,0.38)" strokeWidth="0.16"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.5 }} />
+        style={{ opacity: 0, animation: 'nlFade 0.3s 2.5s ease forwards' }} />
       {/* Net result */}
-      <motion.text x={X + 1} y={Y + 19.85} fontSize="1.25" fontWeight="700"
-        fill="rgba(72,201,176,0.95)" style={{ fontFamily: 'var(--font-geist-mono)' }}
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.85, duration: 0.4 }}>
+      <text x={X + 1} y={Y + 19.85} fontSize="1.25" fontWeight="700"
+        fill="rgba(72,201,176,0.95)" style={{ fontFamily: 'var(--font-geist-mono)', opacity: 0, animation: 'nlFade 0.4s 2.85s ease forwards' }}>
         NET  25 USDC  ·  2 / 4 ON-CHAIN  ·  −50% GAS  ✓
-      </motion.text>
+      </text>
     </motion.g>
   );
 }
@@ -575,59 +596,27 @@ export default function DemoPage() {
 
       {/* ── Network SVG — full screen on step 0, right of panel otherwise ── */}
       <div className="fixed top-0 bottom-0 right-0 overflow-hidden" style={{ left: step === 0 ? '0px' : '352px', transition: 'left 0.7s ease' }}>
-        <motion.svg
+        <svg
           viewBox="0 0 100 100"
           preserveAspectRatio="xMidYMid meet"
           className="w-full h-full"
-          style={{ transformOrigin: `${mx}% ${my}%` }}
-          animate={{ scale: step === 0 ? 1 : step === 6 ? 1.5 : step === 7 ? 1 : 2.2 }}
-          transition={{ duration: 1.15, ease: [0.4, 0, 0.2, 1] }}
+          style={{
+            transformOrigin: `${mx}% ${my}%`,
+            transform: `scale(${step === 0 ? 1 : step === 6 ? 1.5 : step === 7 ? 1 : 2.2})`,
+            transition: 'transform 1.15s cubic-bezier(0.4,0,0.2,1)',
+            willChange: 'transform',
+          }}
         >
-          <defs>
-            <filter id="gfx-a" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="0.9" result="b"/>
-              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <filter id="gfx-r" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="0.9" result="b"/>
-              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-          </defs>
 
-          {/* Edges */}
-          {EDGES.map(([a, b], i) => {
-            const isAB          = (a === FA && b === FB) || (a === FB && b === FA);
-            const involves4mica = a === 25 || b === 25;
-            const is4micaB      = involves4mica && (a === FB || b === FB);
-            const isAEth        = (a === FA && b === 17) || (a === 17 && b === FA);
-            const isEthB        = (a === 17 && b === FB) || (a === FB && b === 17);
-            // A-B: steps 1,3,4 | B-4mica: steps 2,5 | A→ETH→B: step 7 only
-            const focusAB       = isAB     && (step === 1 || step === 3 || step === 4);
-            const focus4micaB   = is4micaB && (step === 2 || step === 5);
-            const focusAEth     = isAEth   && step === 7;
-            const focusEthB     = isEthB   && step === 7;
-            const focusEdge     = focusAB || focus4micaB || focusAEth || focusEthB;
-            // Step 6: hide ALL edges; step 7: show only A→ETH→B
-            const hideEdge = step === 6
-              || (step === 7 && !focusAEth && !focusEthB);
-            const dimEdge  = !hideEdge && step >= 1 && !focusEdge && !involves4mica;
-            const fadeEdge = !hideEdge && step >= 1 && involves4mica && !focusEdge;
-            const isChainFocus = focusAEth || focusEthB;
-            return (
-              <motion.line key={i}
-                x1={NODES[a].x} y1={NODES[a].y} x2={NODES[b].x} y2={NODES[b].y}
-                stroke={
-                  focusAB      ? 'rgba(120,200,255,0.55)' :
-                  focus4micaB  ? 'rgba(123,203,255,0.5)'  :
-                  isChainFocus ? 'rgba(245,158,11,0.7)'   :
-                  involves4mica ? 'rgba(123,203,255,0.1)' :
-                  'rgba(120,180,220,0.12)'
-                }
-                strokeWidth={focusEdge ? 0.3 : involves4mica ? 0.18 : 0.14}
-                animate={{ opacity: hideEdge ? 0 : dimEdge ? 0.04 : fadeEdge ? 0.3 : 1 }}
-                transition={{ duration: 0.85 }} />
-            );
-          })}
+          {/* Edges — 6 groups with CSS opacity transition instead of 80+ elements */}
+          {EDGE_GROUPS.map(({ key, edges, stroke, sw }) => (
+            <g key={key} stroke={stroke} strokeWidth={sw}
+              style={{ opacity: edgeGroupOpacity(key, step), transition: 'opacity 0.5s ease' }}>
+              {edges.map(([a, b], i) => (
+                <line key={i} x1={NODES[a].x} y1={NODES[a].y} x2={NODES[b].x} y2={NODES[b].y} />
+              ))}
+            </g>
+          ))}
 
           {/* Pulses — step 0 */}
           {step === 0 && EDGES.map(([a, b], i) => {
@@ -646,13 +635,14 @@ export default function DemoPage() {
 
           {/* Step 1: A→B GET request */}
           {step === 1 && (<>
-            <circle r="1.0" fill="#3baeef" filter="url(#gfx-a)">
-              <animateMotion dur="1.8s" repeatCount="indefinite"
-                path={`M ${nodeA.x} ${nodeA.y} L ${nodeB.x} ${nodeB.y}`} />
+            <circle r="2.2" fill="rgba(59,174,239,0.12)">
+              <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeA.x} ${nodeA.y} L ${nodeB.x} ${nodeB.y}`} />
+            </circle>
+            <circle r="1.0" fill="#3baeef">
+              <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeA.x} ${nodeA.y} L ${nodeB.x} ${nodeB.y}`} />
             </circle>
             <circle r="0.5" fill="rgba(59,174,239,0.4)">
-              <animateMotion dur="1.8s" begin="-0.18s" repeatCount="indefinite"
-                path={`M ${nodeA.x} ${nodeA.y} L ${nodeB.x} ${nodeB.y}`} />
+              <animateMotion dur="1.8s" begin="-0.18s" repeatCount="indefinite" path={`M ${nodeA.x} ${nodeA.y} L ${nodeB.x} ${nodeB.y}`} />
             </circle>
           </>)}
 
@@ -660,42 +650,44 @@ export default function DemoPage() {
           {step === 2 && (() => {
             const n4 = NODES[25];
             return (<>
-              <circle r="1.0" fill="#48c9b0" filter="url(#gfx-a)">
-                <animateMotion dur="1.8s" repeatCount="indefinite"
-                  path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
+              <circle r="2.2" fill="rgba(72,201,176,0.1)">
+                <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
+              </circle>
+              <circle r="1.0" fill="#48c9b0">
+                <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
               </circle>
               <circle r="0.5" fill="rgba(72,201,176,0.4)">
-                <animateMotion dur="1.8s" begin="-0.18s" repeatCount="indefinite"
-                  path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
+                <animateMotion dur="1.8s" begin="-0.18s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
               </circle>
-              <circle r="0.8" fill="rgba(123,203,255,0.6)" filter="url(#gfx-a)">
-                <animateMotion dur="1.8s" begin="-0.9s" repeatCount="indefinite"
-                  path={`M ${n4.x} ${n4.y} L ${nodeB.x} ${nodeB.y}`} />
+              <circle r="0.8" fill="rgba(123,203,255,0.6)">
+                <animateMotion dur="1.8s" begin="-0.9s" repeatCount="indefinite" path={`M ${n4.x} ${n4.y} L ${nodeB.x} ${nodeB.y}`} />
               </circle>
             </>);
           })()}
 
           {/* Step 3: B→A 402 */}
           {step === 3 && (<>
-            <circle r="1.0" fill="#f87171" filter="url(#gfx-r)">
-              <animateMotion dur="1.8s" repeatCount="indefinite"
-                path={`M ${nodeB.x} ${nodeB.y} L ${nodeA.x} ${nodeA.y}`} />
+            <circle r="2.2" fill="rgba(248,113,113,0.1)">
+              <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${nodeA.x} ${nodeA.y}`} />
+            </circle>
+            <circle r="1.0" fill="#f87171">
+              <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${nodeA.x} ${nodeA.y}`} />
             </circle>
             <circle r="0.5" fill="rgba(248,113,113,0.4)">
-              <animateMotion dur="1.8s" begin="-0.18s" repeatCount="indefinite"
-                path={`M ${nodeB.x} ${nodeB.y} L ${nodeA.x} ${nodeA.y}`} />
+              <animateMotion dur="1.8s" begin="-0.18s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${nodeA.x} ${nodeA.y}`} />
             </circle>
           </>)}
 
           {/* Step 4: A→B with X-PAYMENT */}
           {step === 4 && (<>
-            <circle r="1.0" fill="#3baeef" filter="url(#gfx-a)">
-              <animateMotion dur="1.8s" repeatCount="indefinite"
-                path={`M ${nodeA.x} ${nodeA.y} L ${nodeB.x} ${nodeB.y}`} />
+            <circle r="2.2" fill="rgba(59,174,239,0.12)">
+              <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeA.x} ${nodeA.y} L ${nodeB.x} ${nodeB.y}`} />
+            </circle>
+            <circle r="1.0" fill="#3baeef">
+              <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeA.x} ${nodeA.y} L ${nodeB.x} ${nodeB.y}`} />
             </circle>
             <circle r="0.5" fill="rgba(59,174,239,0.4)">
-              <animateMotion dur="1.8s" begin="-0.18s" repeatCount="indefinite"
-                path={`M ${nodeA.x} ${nodeA.y} L ${nodeB.x} ${nodeB.y}`} />
+              <animateMotion dur="1.8s" begin="-0.18s" repeatCount="indefinite" path={`M ${nodeA.x} ${nodeA.y} L ${nodeB.x} ${nodeB.y}`} />
             </circle>
           </>)}
 
@@ -703,55 +695,65 @@ export default function DemoPage() {
           {step === 5 && (() => {
             const n4 = NODES[25];
             return (<>
-              <circle r="1.0" fill="#48c9b0" filter="url(#gfx-a)">
-                <animateMotion dur="1.8s" repeatCount="indefinite"
-                  path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
+              <circle r="2.2" fill="rgba(72,201,176,0.1)">
+                <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
+              </circle>
+              <circle r="1.0" fill="#48c9b0">
+                <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
               </circle>
               <circle r="0.5" fill="rgba(72,201,176,0.4)">
-                <animateMotion dur="1.8s" begin="-0.18s" repeatCount="indefinite"
-                  path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
+                <animateMotion dur="1.8s" begin="-0.18s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
               </circle>
-              <circle r="0.8" fill="rgba(123,203,255,0.65)" filter="url(#gfx-a)">
-                <animateMotion dur="1.8s" begin="-0.9s" repeatCount="indefinite"
-                  path={`M ${n4.x} ${n4.y} L ${nodeB.x} ${nodeB.y}`} />
+              <circle r="0.8" fill="rgba(123,203,255,0.65)">
+                <animateMotion dur="1.8s" begin="-0.9s" repeatCount="indefinite" path={`M ${n4.x} ${n4.y} L ${nodeB.x} ${nodeB.y}`} />
               </circle>
             </>);
           })()}
 
           {/* Step 7: A submits payTabErc20 — A → ETH Node → B */}
           {step === 7 && (() => {
-            const ethNode = NODES[17]; // ETH Node (array index 17)
+            const ethNode = NODES[17];
             return (<>
-              {/* A → ETH: broadcast tx */}
-              <circle r="1.1" fill="#f59e0b" filter="url(#gfx-a)">
-                <animateMotion dur="1.5s" repeatCount="indefinite"
-                  path={`M ${nodeA.x} ${nodeA.y} L ${ethNode.x} ${ethNode.y}`} />
+              <circle r="2.4" fill="rgba(245,158,11,0.1)">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path={`M ${nodeA.x} ${nodeA.y} L ${ethNode.x} ${ethNode.y}`} />
+              </circle>
+              <circle r="1.1" fill="#f59e0b">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path={`M ${nodeA.x} ${nodeA.y} L ${ethNode.x} ${ethNode.y}`} />
               </circle>
               <circle r="0.5" fill="rgba(245,158,11,0.4)">
-                <animateMotion dur="1.5s" begin="-0.18s" repeatCount="indefinite"
-                  path={`M ${nodeA.x} ${nodeA.y} L ${ethNode.x} ${ethNode.y}`} />
+                <animateMotion dur="1.5s" begin="-0.18s" repeatCount="indefinite" path={`M ${nodeA.x} ${nodeA.y} L ${ethNode.x} ${ethNode.y}`} />
               </circle>
-              {/* ETH → B: token delivery */}
-              <circle r="0.9" fill="rgba(74,222,128,0.8)" filter="url(#gfx-a)">
-                <animateMotion dur="1.5s" begin="-0.75s" repeatCount="indefinite"
-                  path={`M ${ethNode.x} ${ethNode.y} L ${nodeB.x} ${nodeB.y}`} />
+              <circle r="2.0" fill="rgba(74,222,128,0.1)">
+                <animateMotion dur="1.5s" begin="-0.75s" repeatCount="indefinite" path={`M ${ethNode.x} ${ethNode.y} L ${nodeB.x} ${nodeB.y}`} />
+              </circle>
+              <circle r="0.9" fill="rgba(74,222,128,0.8)">
+                <animateMotion dur="1.5s" begin="-0.75s" repeatCount="indefinite" path={`M ${ethNode.x} ${ethNode.y} L ${nodeB.x} ${nodeB.y}`} />
               </circle>
               <circle r="0.45" fill="rgba(74,222,128,0.4)">
-                <animateMotion dur="1.5s" begin="-0.95s" repeatCount="indefinite"
-                  path={`M ${ethNode.x} ${ethNode.y} L ${nodeB.x} ${nodeB.y}`} />
+                <animateMotion dur="1.5s" begin="-0.95s" repeatCount="indefinite" path={`M ${ethNode.x} ${ethNode.y} L ${nodeB.x} ${nodeB.y}`} />
               </circle>
             </>);
           })()}
 
           {/* Nodes */}
-          {NODES.map(n => <NodeShape key={n.id} node={n} step={step} />)}
+          {NODES.map(n => {
+            const is4mica = n.id === 25;
+            const isFocus = n.id === FA || n.id === FB;
+            const inactive = n.name === 'SOL Node' || n.name === 'BTC Bridge' || n.name === 'USDC';
+            const isActiveChain = n.type === 'chain' && !inactive && n.id === 15;
+            const dim = inactive
+              || (step === 6 ? !is4mica
+                : step === 7 ? (!isFocus && !isActiveChain)
+                : step >= 1 && !isFocus && !is4mica);
+            return <NodeShape key={n.id} node={n} dim={dim} showLabels={step >= 1} isStep6={step === 6} />;
+          })}
 
           {/* Netting ledger overlay — step 6 only */}
           <AnimatePresence>
             {step === 6 && <NettingLedger key="netting" />}
           </AnimatePresence>
 
-        </motion.svg>
+        </svg>
       </div>
 
       {/* ── Left-side panel ── */}

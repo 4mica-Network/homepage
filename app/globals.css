@@ -667,3 +667,12 @@
     display: block;
   }
 }
+
+@keyframes nlFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes nlSpin {
+  to { transform: rotate(360deg); }
+}

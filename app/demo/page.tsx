@@ -36,7 +36,6 @@ const NODES: NetNode[] = [
   { id: 10, type: 'api',   name: 'SettleAPI',   x: 62,  y: 40, size: 1.9 },
   { id: 11, type: 'api',   name: 'KYC API',     x: 18,  y: 6,  size: 1.6 },
   // Databases
-  { id: 12, type: 'db',    name: 'OrderBook',   x: 38,  y: 40, size: 1.9 },
   { id: 13, type: 'db',    name: 'AssetLedger', x: 88,  y: 66, size: 1.9 },
   { id: 14, type: 'db',    name: 'UserReg',     x: 54,  y: 91, size: 1.5 },
   // Blockchain nodes
@@ -50,39 +49,44 @@ const NODES: NetNode[] = [
   { id: 21, type: 'ext',   name: 'OpenAI',      x: 4,   y: 18, size: 3.4 },
   { id: 24, type: 'ext',   name: 'PriceWatch',  x: 66,  y: 18, size: 1.6 },
   // 4mica — the payment hub
-  { id: 25, type: 'brand', name: '4mica', x: 50, y: 50, size: 5.2 },
+  { id: 25, type: 'brand', name: '4Mica', x: 50, y: 50, size: 5.2 },
   // USDC ERC-20 contract — deactivated (settlement done off-chain via netting)
   { id: 26, type: 'chain', name: 'USDC',  x: 38, y: 72, size: 2.2 },
+  // Collateral Vault — locks funds during guarantee issuance
+  { id: 27, type: 'chain', name: 'Vault', x: 36, y: 37, size: 2.4 },
 ];
 
+// Lookup by node ID so EDGES and code references are order-independent
+const NODE_MAP: Record<number, NetNode> = Object.fromEntries(NODES.map(n => [n.id, n]));
+
 const EDGES: [number, number][] = [
-  [0, 1], [0, 2], [0, 3], [0, 6], [0, 9], [0, 10], [0, 12], [0, 17], [0, 18], [0, 20], [0, 22],
+  [0, 1], [0, 2], [0, 3], [0, 6], [0, 9], [0, 10], [0, 15], [0, 18], [0, 20], [0, 22],
   [1, 4], [1, 5], [1, 8], [1, 10], [1, 13], [1, 19], [1, 20], [1, 23],
   [2, 3], [2, 9], [2, 11], [2, 21],
-  [3, 7], [3, 11], [3, 12], [3, 18], [3, 24],
+  [3, 7], [3, 11], [3, 18], [3, 24],
   [4, 6], [4, 14], [4, 17], [4, 20], [4, 23],
   [5, 8], [5, 13], [5, 16],
   [6, 9], [6, 14], [6, 15],
-  [7, 12], [7, 18], [7, 19], [7, 24],
+  [7, 18], [7, 19], [7, 24],
   [8, 13], [8, 16], [8, 19], [8, 24],
   [9, 15], [9, 21],
-  [10, 12], [10, 13],
+  [10, 13],
   [11, 7], [11, 18],
-  [12, 15], [12, 20],
   [13, 16], [13, 17],
   [14, 15], [15, 6],
   [16, 5], [17, 4],
   [18, 11], [20, 1], [21, 2],
-  [22, 9], [22, 12], [22, 24],
+  [22, 9], [22, 24],
   [23, 13], [23, 10],
   [24, 8],
-  // ETH → B (used in step 7 on-chain settlement)
-  [17, 1],
+  // ETH → B (used in on-chain settlement step)
+  [15, 1],
   // 4mica (index 25) connects to everything
   [25, 0], [25, 1], [25, 2], [25, 3], [25, 4], [25, 5], [25, 6],
   [25, 7], [25, 8], [25, 10], [25, 11],
-  [25, 12], [25, 13], [25, 15], [25, 16], [25, 17],
+  [25, 13], [25, 15], [25, 16], [25, 17],
   [25, 18], [25, 20], [25, 21], [25, 22], [25, 23],
+  [25, 27],
 ];
 
 const FA = 0;
@@ -90,39 +94,42 @@ const FB = 1;
 
 // ── Edge groups (pre-computed once — 6 groups instead of 80+ animated elements) ─
 const EDGE_GROUPS: { key: string; edges: [number,number][]; stroke: string; sw: number }[] = (() => {
-  const isAB   = ([a,b]: [number,number]) => (a===FA&&b===FB)||(a===FB&&b===FA);
-  const inv4   = ([a,b]: [number,number]) => a===25||b===25;
-  const is4B   = (e: [number,number]) => inv4(e)&&(e[0]===FB||e[1]===FB);
-  const isAEth = ([a,b]: [number,number]) => (a===FA&&b===17)||(a===17&&b===FA);
-  const isEthB = ([a,b]: [number,number]) => (a===17&&b===FB)||(a===FB&&b===17);
+  const isAB    = ([a,b]: [number,number]) => (a===FA&&b===FB)||(a===FB&&b===FA);
+  const inv4    = ([a,b]: [number,number]) => a===25||b===25;
+  const is4B    = (e: [number,number]) => inv4(e)&&(e[0]===FB||e[1]===FB);
+  const isAEth  = ([a,b]: [number,number]) => (a===FA&&b===15)||(a===15&&b===FA);
+  const isEthB  = ([a,b]: [number,number]) => (a===15&&b===FB)||(a===FB&&b===15);
+  const isVault = ([a,b]: [number,number]) => (a===25&&b===27)||(a===27&&b===25);
   return [
-    { key:'ab',   edges: EDGES.filter(isAB),                               stroke:'rgba(120,200,255,0.55)', sw:0.3  },
-    { key:'4b',   edges: EDGES.filter(e=>is4B(e)),                         stroke:'rgba(123,203,255,0.5)',  sw:0.3  },
-    { key:'4',    edges: EDGES.filter(e=>inv4(e)&&!is4B(e)),               stroke:'rgba(123,203,255,0.1)',  sw:0.18 },
-    { key:'aeth', edges: EDGES.filter(isAEth),                             stroke:'rgba(245,158,11,0.7)',   sw:0.3  },
-    { key:'ethb', edges: EDGES.filter(isEthB),                             stroke:'rgba(245,158,11,0.7)',   sw:0.3  },
-    { key:'bg',   edges: EDGES.filter(e=>!isAB(e)&&!inv4(e)&&!isAEth(e)&&!isEthB(e)), stroke:'rgba(120,180,220,0.12)', sw:0.14 },
+    { key:'ab',    edges: EDGES.filter(isAB),                                           stroke:'rgba(120,200,255,0.55)', sw:0.3  },
+    { key:'4b',    edges: EDGES.filter(e=>is4B(e)),                                     stroke:'rgba(123,203,255,0.5)',  sw:0.3  },
+    { key:'4',     edges: EDGES.filter(e=>inv4(e)&&!is4B(e)&&!isVault(e)),              stroke:'rgba(123,203,255,0.1)',  sw:0.18 },
+    { key:'vault', edges: EDGES.filter(isVault),                                        stroke:'rgba(245,158,11,0.65)',  sw:0.3  },
+    { key:'aeth',  edges: EDGES.filter(isAEth),                                         stroke:'rgba(245,158,11,0.7)',   sw:0.3  },
+    { key:'ethb',  edges: EDGES.filter(isEthB),                                         stroke:'rgba(245,158,11,0.7)',   sw:0.3  },
+    { key:'bg',    edges: EDGES.filter(e=>!isAB(e)&&!inv4(e)&&!isAEth(e)&&!isEthB(e)), stroke:'rgba(120,180,220,0.12)', sw:0.14 },
   ];
 })();
 
 function edgeGroupOpacity(key: string, step: number): number {
   if (step === 0) return 1;
-  if (step === 6) return 0;
-  if (step === 7) return (key === 'aeth' || key === 'ethb') ? 1 : 0;
+  if (step === 8) return 0;   // netting — all edges hidden
+  if (step === 9) return (key === 'aeth' || key === 'ethb') ? 1 : 0;  // on-chain
   switch (key) {
-    case 'ab':   return (step === 1 || step === 3 || step === 4) ? 1 : 0.04;
-    case '4b':   return (step === 2 || step === 5) ? 1 : 0.3;
-    case '4':    return 0.3;
+    case 'ab':    return (step === 1 || step === 3 || step === 4 || step === 7) ? 1 : 0.04;
+    case '4b':    return (step === 2 || step === 5 || step === 6) ? 1 : 0.04;
+    case '4':     return (step === 2 || step === 5) ? 0.3 : 0.04;
+    case 'vault': return step === 6 ? 1 : 0.04;
     case 'aeth':
-    case 'ethb': return 0.04;
-    default:     return 0.04;
+    case 'ethb':  return 0;
+    default:      return 0.04;
   }
 }
 
 // ── Steps ─────────────────────────────────────────────────────────────────────
 
-const STEP_DURATIONS = [4200, 3800, 4000, 4500, 4500, 4500, 5500, 5000];
-const TOTAL_STEPS = 8;
+const STEP_DURATIONS = [4200, 3800, 4000, 4500, 4500, 4500, 4500, 4000, 5500, 5000];
+const TOTAL_STEPS = 10;
 
 // ── HTTP panels ───────────────────────────────────────────────────────────────
 
@@ -225,7 +232,31 @@ const SETTLE_ROWS = [
   [{ c: 'rgba(200,215,242,0.35)', v: '}' }],
 ];
 
-// Step 6: Agent B → Agent A   200 OK + resource
+// Step 6: 4Mica locks collateral in Vault + issues guarantee to Agent B
+const GUARANTEE_ROWS = [
+  [{ c: '#94a3b8', v: '// 4Mica  ·  Guarantee Issuance  ·  tab 0x123' }],
+  [],
+  [{ c: 'rgba(200,215,242,0.5)', v: '1. Verify EIP-712 signature' }],
+  [{ c: '#48c9b0', v: '   ✓ ' }, { c: 'rgba(200,215,242,0.6)', v: 'sig valid  ·  user 0x28f3  ·  amt 100 USDC' }],
+  [],
+  [{ c: 'rgba(200,215,242,0.5)', v: '2. Lock collateral in Vault' }],
+  [{ c: '#fbbf24', v: 'await ' }, { c: '#48c9b0', v: 'vault' }, { c: 'rgba(200,215,242,0.5)', v: '.' }, { c: '#3baeef', v: 'lockCollateral' }, { c: 'rgba(200,215,242,0.5)', v: '({' }],
+  [{ c: '#7dd3fc', v: '  tabId: ' }, { c: '#fbbf24', v: '"0x123",' }],
+  [{ c: '#7dd3fc', v: '  user: ' }, { c: '#86efac', v: '"0x28f3…TradingBot",' }],
+  [{ c: '#7dd3fc', v: '  amount: ' }, { c: '#fbbf24', v: '"0x64"' }, { c: '#94a3b8', v: '  // 100 USDC' }],
+  [{ c: 'rgba(200,215,242,0.5)', v: '})' }],
+  [{ c: '#48c9b0', v: '   ✓ ' }, { c: 'rgba(200,215,242,0.6)', v: 'locked  ·  lockId 0xfee1dead' }],
+  [],
+  [{ c: 'rgba(200,215,242,0.5)', v: '3. Issue guarantee → Agent B' }],
+  [{ c: 'rgba(200,215,242,0.35)', v: '{' }],
+  [{ c: '#7dd3fc', v: '  "tabId": ' }, { c: '#fbbf24', v: '"0x123",' }],
+  [{ c: '#7dd3fc', v: '  "lockId": ' }, { c: '#fbbf24', v: '"0xfee1dead",' }],
+  [{ c: '#7dd3fc', v: '  "guarantee": ' }, { c: 'rgba(200,215,242,0.4)', v: '"0x5678…cert"' }],
+  [{ c: 'rgba(200,215,242,0.35)', v: '}' }],
+  [{ c: '#48c9b0', v: '   ✓ ' }, { c: '#4ade80', v: 'guarantee delivered to Agent B' }],
+];
+
+// Step 7: Agent B → Agent A   200 OK + resource
 const OK_ROWS = [
   [{ c: 'rgba(200,215,242,0.45)', v: 'HTTP/1.1 ' }, { c: '#4ade80', v: '200 OK' }],
   [],
@@ -244,7 +275,7 @@ const OK_ROWS = [
 
 // Step 7: 4mica internal netting & clearing
 const NETTING_ROWS = [
-  [{ c: '#94a3b8', v: '// 4mica Netting Engine  ·  epoch 1742818980' }],
+  [{ c: '#94a3b8', v: '// 4Mica Netting Engine  ·  epoch 1742818980' }],
   [],
   [{ c: 'rgba(200,215,242,0.5)', v: 'Pending claims batch:' }],
   [{ c: '#7dd3fc', v: '  0x28f3→0x72e1 ' }, { c: '#94a3b8', v: 'req:0x0 ' }, { c: '#fbbf24', v: '100 USDC' }, { c: '#48c9b0', v: '  ← our tx' }],
@@ -418,7 +449,7 @@ const NodeShape = memo(function NodeShape({
         <text x={x} y={y + size + 2} textAnchor="middle" fontSize="2" fontWeight="700"
           fill="rgba(123,203,255,0.9)"
           style={{ fontFamily: 'var(--font-display)', pointerEvents: 'none', letterSpacing: '-0.02em' }}>
-          4mica
+          4Mica
         </text>
       </g>
     );
@@ -602,7 +633,7 @@ export default function DemoPage() {
           className="w-full h-full"
           style={{
             transformOrigin: `${mx}% ${my}%`,
-            transform: `scale(${step === 0 ? 1 : step === 6 ? 1.5 : step === 7 ? 1 : 2.2})`,
+            transform: `scale(${step === 0 ? 1 : step === 8 ? 1.5 : step === 9 ? 1 : 2.2})`,
             transition: 'transform 1.15s cubic-bezier(0.4,0,0.2,1)',
             willChange: 'transform',
           }}
@@ -613,7 +644,7 @@ export default function DemoPage() {
             <g key={key} stroke={stroke} strokeWidth={sw}
               style={{ opacity: edgeGroupOpacity(key, step), transition: 'opacity 0.5s ease' }}>
               {edges.map(([a, b], i) => (
-                <line key={i} x1={NODES[a].x} y1={NODES[a].y} x2={NODES[b].x} y2={NODES[b].y} />
+                <line key={i} x1={NODE_MAP[a]?.x} y1={NODE_MAP[a]?.y} x2={NODE_MAP[b]?.x} y2={NODE_MAP[b]?.y} />
               ))}
             </g>
           ))}
@@ -628,7 +659,7 @@ export default function DemoPage() {
               <circle key={`p${i}`} r="0.5" fill={col}>
                 <animateMotion dur={`${1.6 + (i % 7) * 0.3}s`} begin={`${-(i * 0.5) % 3}s`}
                   repeatCount="indefinite"
-                  path={`M ${NODES[a].x} ${NODES[a].y} L ${NODES[b].x} ${NODES[b].y}`} />
+                  path={`M ${NODE_MAP[a]?.x ?? 0} ${NODE_MAP[a]?.y ?? 0} L ${NODE_MAP[b]?.x ?? 0} ${NODE_MAP[b]?.y ?? 0}`} />
               </circle>
             );
           })}
@@ -648,7 +679,7 @@ export default function DemoPage() {
 
           {/* Step 2: B→4mica POST /tabs */}
           {step === 2 && (() => {
-            const n4 = NODES[25];
+            const n4 = NODE_MAP[25];
             return (<>
               <circle r="2.2" fill="rgba(72,201,176,0.1)">
                 <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
@@ -693,7 +724,7 @@ export default function DemoPage() {
 
           {/* Step 5: B→4mica POST /settle */}
           {step === 5 && (() => {
-            const n4 = NODES[25];
+            const n4 = NODE_MAP[25];
             return (<>
               <circle r="2.2" fill="rgba(72,201,176,0.1)">
                 <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${n4.x} ${n4.y}`} />
@@ -710,9 +741,45 @@ export default function DemoPage() {
             </>);
           })()}
 
-          {/* Step 7: A submits payTabErc20 — A → ETH Node → B */}
-          {step === 7 && (() => {
-            const ethNode = NODES[17];
+          {/* Step 6: 4Mica → Vault (lock collateral) + 4Mica → B (guarantee) */}
+          {step === 6 && (() => {
+            const n4 = NODE_MAP[25];
+            const nv = NODE_MAP[27];
+            return (<>
+              <circle r="2.0" fill="rgba(245,158,11,0.1)">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path={`M ${n4.x} ${n4.y} L ${nv.x} ${nv.y}`} />
+              </circle>
+              <circle r="0.9" fill="#f59e0b">
+                <animateMotion dur="1.5s" repeatCount="indefinite" path={`M ${n4.x} ${n4.y} L ${nv.x} ${nv.y}`} />
+              </circle>
+              <circle r="0.55" fill="rgba(245,158,11,0.55)">
+                <animateMotion dur="1.5s" begin="-0.75s" repeatCount="indefinite" path={`M ${nv.x} ${nv.y} L ${n4.x} ${n4.y}`} />
+              </circle>
+              <circle r="2.0" fill="rgba(72,201,176,0.1)">
+                <animateMotion dur="1.8s" begin="-0.3s" repeatCount="indefinite" path={`M ${n4.x} ${n4.y} L ${nodeB.x} ${nodeB.y}`} />
+              </circle>
+              <circle r="0.9" fill="#48c9b0">
+                <animateMotion dur="1.8s" begin="-0.3s" repeatCount="indefinite" path={`M ${n4.x} ${n4.y} L ${nodeB.x} ${nodeB.y}`} />
+              </circle>
+            </>);
+          })()}
+
+          {/* Step 7: B→A 200 OK + resource delivered */}
+          {step === 7 && (<>
+            <circle r="2.2" fill="rgba(74,222,128,0.1)">
+              <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${nodeA.x} ${nodeA.y}`} />
+            </circle>
+            <circle r="1.0" fill="#4ade80">
+              <animateMotion dur="1.8s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${nodeA.x} ${nodeA.y}`} />
+            </circle>
+            <circle r="0.5" fill="rgba(74,222,128,0.4)">
+              <animateMotion dur="1.8s" begin="-0.18s" repeatCount="indefinite" path={`M ${nodeB.x} ${nodeB.y} L ${nodeA.x} ${nodeA.y}`} />
+            </circle>
+          </>)}
+
+          {/* Step 9: A submits payTabErc20 — A → ETH Node → B */}
+          {step === 9 && (() => {
+            const ethNode = NODE_MAP[15];
             return (<>
               <circle r="2.4" fill="rgba(245,158,11,0.1)">
                 <animateMotion dur="1.5s" repeatCount="indefinite" path={`M ${nodeA.x} ${nodeA.y} L ${ethNode.x} ${ethNode.y}`} />
@@ -738,19 +805,21 @@ export default function DemoPage() {
           {/* Nodes */}
           {NODES.map(n => {
             const is4mica = n.id === 25;
+            const isVaultNode = n.id === 27;
             const isFocus = n.id === FA || n.id === FB;
             const inactive = n.name === 'SOL Node' || n.name === 'BTC Bridge' || n.name === 'USDC';
             const isActiveChain = n.type === 'chain' && !inactive && n.id === 15;
             const dim = inactive
-              || (step === 6 ? !is4mica
-                : step === 7 ? (!isFocus && !isActiveChain)
+              || (step === 8 ? !is4mica
+                : step === 9 ? (!isFocus && !isActiveChain)
+                : step === 6 ? (!is4mica && !isVaultNode && n.id !== FB)
                 : step >= 1 && !isFocus && !is4mica);
-            return <NodeShape key={n.id} node={n} dim={dim} showLabels={step >= 1} isStep6={step === 6} />;
+            return <NodeShape key={n.id} node={n} dim={dim} showLabels={step >= 1} isStep6={step === 8} />;
           })}
 
           {/* Netting ledger overlay — step 6 only */}
           <AnimatePresence>
-            {step === 6 && <NettingLedger key="netting" />}
+            {step === 8 && <NettingLedger key="netting" />}
           </AnimatePresence>
 
         </svg>
@@ -759,12 +828,14 @@ export default function DemoPage() {
       {/* ── Left-side panel ── */}
       <div className="fixed left-4 z-20 w-80" style={{ top: 'calc(50vh - 210px)', height: '420px' }}>
         <TerminalPanel rows={REQUEST_ROWS}    title="A → B  ·  GET /resources/token-bundle"     accent="#3baeef" visible={step === 1} />
-        <TerminalPanel rows={TAB_ROWS}        title="B → 4mica  ·  POST /tabs"                   accent="#48c9b0" visible={step === 2} />
+        <TerminalPanel rows={TAB_ROWS}        title="B → 4Mica  ·  POST /tabs"                   accent="#48c9b0" visible={step === 2} />
         <TerminalPanel rows={RESPONSE_ROWS}   title="B → A  ·  402 Payment Required"             accent="#f87171" visible={step === 3} />
         <TerminalPanel rows={SIGNING_ROWS}    title="A  signs EIP-712  ·  X-PAYMENT → B"         accent="#7bcbff" visible={step === 4} />
-        <TerminalPanel rows={SETTLE_ROWS}     title="B → 4mica  ·  POST /settle"                 accent="#48c9b0" visible={step === 5} />
-        <TerminalPanel rows={NETTING_ROWS}    title="4mica  ·  Netting &amp; Clearing Engine"    accent="#48c9b0" visible={step === 6} />
-        <TerminalPanel rows={BLOCKCHAIN_ROWS} title="A  ·  payTabErc20()  ·  On-Chain"           accent="#f59e0b" visible={step === 7} />
+        <TerminalPanel rows={SETTLE_ROWS}     title="B → 4Mica  ·  POST /settle"                 accent="#48c9b0" visible={step === 5} />
+        <TerminalPanel rows={GUARANTEE_ROWS}  title="4Mica  ·  Vault Lock  ·  Guarantee → B"    accent="#f59e0b" visible={step === 6} />
+        <TerminalPanel rows={OK_ROWS}         title="B → A  ·  200 OK  ·  Resource Delivered"    accent="#4ade80" visible={step === 7} />
+        <TerminalPanel rows={NETTING_ROWS}    title="4Mica  ·  Netting &amp; Clearing Engine"    accent="#48c9b0" visible={step === 8} />
+        <TerminalPanel rows={BLOCKCHAIN_ROWS} title="A  ·  payTabErc20()  ·  On-Chain"           accent="#f59e0b" visible={step === 9} />
       </div>
 
       {/* ── UI overlay — full screen on step 0, right of panel otherwise ── */}

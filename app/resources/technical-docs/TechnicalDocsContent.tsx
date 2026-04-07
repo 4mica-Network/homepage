@@ -94,6 +94,17 @@ function TechnicalDocsContentInner() {
                       Use this page to get paid as a resource server, configure deeper server integrations, or pay as an agent
                       with fetch/axios wrappers that automatically open tabs, sign guarantees (V1 or V2), and retry requests.
                     </p>
+                    <div className="bg-brand-deep/30 border border-brand-deep rounded-lg p-4 text-sm text-ink-body">
+                      <span className="font-semibold text-ink-strong">New here?</span> Payer wallets must deposit collateral before making payments.
+                      Start with the{' '}
+                      <button
+                        onClick={() => setActiveSection('registration')}
+                        className="underline text-ink-strong hover:opacity-80 cursor-pointer"
+                      >
+                        Registration
+                      </button>{' '}
+                      section first.
+                    </div>
                     <div>
                       <h3 className="text-xl font-semibold text-ink-strong mb-4">Key Capabilities</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -225,7 +236,7 @@ pnpm install @4mica/sdk`,
                           {
                             label: 'Python',
                             language: 'bash',
-                            code: `pip install fourmica-sdk`,
+                            code: `pip install sdk-4mica`,
                           },
                           {
                             label: 'Rust',

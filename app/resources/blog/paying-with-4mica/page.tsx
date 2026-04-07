@@ -46,7 +46,7 @@ export default function PayingWith4MicaPage() {
       bullets: [
         'A wallet private key with collateral available (ETH or ERC20).',
         'The recipient endpoint you want to call.',
-        'Access to the 4Mica operator API (default: https://api.4mica.xyz/).',
+        'Access to a 4Mica network: Ethereum Sepolia (https://ethereum.sepolia.4mica.xyz/) or Base Sepolia (https://base.sepolia.4mica.xyz/).',
         'A 402 response that advertises `scheme: "4mica-credit"` and `extra.tabEndpoint`.',
       ],
     },
@@ -60,10 +60,10 @@ export default function PayingWith4MicaPage() {
         {
           language: 'ts',
           caption: 'Deposit collateral (TypeScript SDK)',
-          code: String.raw`import { Client, ConfigBuilder } from "sdk-4mica";
+          code: String.raw`import { Client, ConfigBuilder } from "@4mica/sdk";
 
 const cfg = new ConfigBuilder()
-  .rpcUrl(process.env["4MICA_RPC_URL"] ?? "https://api.4mica.xyz/")
+  .network(process.env["4MICA_NETWORK"] ?? "base-sepolia")
   .walletPrivateKey(process.env.PAYER_KEY!)
   .build();
 
@@ -90,8 +90,8 @@ PAYER_KEY = "0x..."
 async def main():
     cfg = (
         ConfigBuilder()
+        .network("base-sepolia")
         .wallet_private_key(PAYER_KEY)
-        .rpc_url("https://api.4mica.xyz/")
         .build()
     )
     client = await Client.new(cfg)
@@ -145,7 +145,7 @@ async fn main() -> anyhow::Result<()> {
         {
           language: 'ts',
           caption: 'Parse requirements (TypeScript SDK)',
-          code: String.raw`import { PaymentRequirements } from "sdk-4mica";
+          code: String.raw`import { PaymentRequirements } from "@4mica/sdk";
 
 const requirements = PaymentRequirements.fromRaw(reqRaw); // from 402 response
 if (!requirements.scheme.includes("4mica")) {
@@ -183,10 +183,10 @@ if !requirements.scheme.contains("4mica") {
         {
           language: 'ts',
           caption: 'Sign payment header (TypeScript SDK)',
-          code: String.raw`import { Client, ConfigBuilder, X402Flow } from "sdk-4mica";
+          code: String.raw`import { Client, ConfigBuilder, X402Flow } from "@4mica/sdk";
 
 const cfg = new ConfigBuilder()
-  .rpcUrl(process.env["4MICA_RPC_URL"] ?? "https://api.4mica.xyz/")
+  .network(process.env["4MICA_NETWORK"] ?? "base-sepolia")
   .walletPrivateKey(process.env.PAYER_KEY!)
   .build();
 
@@ -211,8 +211,8 @@ USER_ADDRESS = "0x..."
 async def main():
     cfg = (
         ConfigBuilder()
+        .network("base-sepolia")
         .wallet_private_key(PAYER_KEY)
-        .rpc_url("https://api.4mica.xyz/")
         .build()
     )
     client = await Client.new(cfg)

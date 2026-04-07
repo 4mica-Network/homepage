@@ -111,13 +111,17 @@ asyncio.run(main())`,
         {
           language: 'rust',
           caption: 'Deposit collateral (Rust SDK)',
-          code: String.raw`use rust_sdk_4mica::{Client, ConfigBuilder, U256};
+          code: String.raw`use alloy::signers::local::PrivateKeySigner;
+use sdk_4mica::{Client, ConfigBuilder, U256};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    let signer: PrivateKeySigner = std::env::var("PAYER_KEY")?.parse()?;
+
     let client = Client::new(
         ConfigBuilder::default()
-            .wallet_private_key(std::env::var("PAYER_KEY")?)
+            .rpc_url("https://base.sepolia.4mica.xyz/".to_string())
+            .signer(signer)
             .build()?,
     )
     .await?;
@@ -164,10 +168,10 @@ if "4mica" not in requirements.scheme:
         {
           language: 'rust',
           caption: 'Parse requirements (Rust SDK)',
-          code: String.raw`use rust_sdk_4mica::x402::PaymentRequirements;
+          code: String.raw`use sdk_4mica::x402::PaymentRequirements;
 
 let requirements: PaymentRequirements = serde_json::from_value(req_raw)?;
-if !requirements.scheme.contains("4mica") {
+if !requirements.scheme.to_lowercase().contains("4mica") {
     anyhow::bail!("Unsupported scheme; expected 4mica credit.");
 }`,
         },
@@ -229,24 +233,28 @@ asyncio.run(main())`,
         {
           language: 'rust',
           caption: 'Sign payment header (Rust SDK)',
-          code: String.raw`use rust_sdk_4mica::{Client, ConfigBuilder, X402Flow};
+          code: String.raw`use alloy::signers::local::PrivateKeySigner;
+use sdk_4mica::{Client, ConfigBuilder, X402Flow};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    let payer = Client::new(
+    let signer: PrivateKeySigner = std::env::var("PAYER_KEY")?.parse()?;
+
+    let client = Client::new(
         ConfigBuilder::default()
-            .wallet_private_key(std::env::var("PAYER_KEY")?)
+            .rpc_url("https://base.sepolia.4mica.xyz/".to_string())
+            .signer(signer)
             .build()?,
     )
     .await?;
 
-    let flow = X402Flow::new(payer)?;
-    // requirements from Step 2
+    let flow = X402Flow::new(client)?;
+    // requirements: PaymentRequirements from Step 2
     let signed = flow
         .sign_payment(requirements, std::env::var("USER_ADDRESS")?)
         .await?;
 
-    let x_payment_header = signed.header; // send as X-PAYMENT (v1) or PAYMENT-SIGNATURE (v2)
+    let x_payment_header = signed.header; // send as X-PAYMENT header
     Ok(())
 }`,
         },
@@ -291,7 +299,7 @@ async fn main() -> anyhow::Result<()> {
         {
           language: 'rust',
           caption: 'Pay the tab (Rust SDK)',
-          code: String.raw`use rust_sdk_4mica::U256;
+          code: String.raw`use sdk_4mica::U256;
 
 // req_id comes from the certificate returned by /settle
 client

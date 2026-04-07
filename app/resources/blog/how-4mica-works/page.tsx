@@ -165,10 +165,7 @@ export default function How4MicaWorksPage() {
         {
           language: 'bash',
           label: 'Rust',
-          code: String.raw`cargo add rust-sdk-4mica
-
-# Cargo.toml
-rust-sdk-4mica = "0.4.0"`,
+          code: String.raw`cargo add sdk-4mica`,
         },
         {
           language: 'bash',
@@ -178,7 +175,7 @@ rust-sdk-4mica = "0.4.0"`,
         {
           language: 'bash',
           label: 'TypeScript',
-          code: 'npm i sdk-4mica',
+          code: 'npm i @4mica/sdk',
         },
       ],
     },
@@ -198,7 +195,7 @@ Content-Type: application/json
 {
   "paymentRequirements": {
     "scheme": "4mica-credit",
-    "network": "eip155:80002",
+    "network": "eip155:84532",
     "maxAmountRequired": "100",
     "resource": "/v1/report",
     "description": "Generate report",
@@ -245,10 +242,10 @@ Content-Type: application/json
         {
           language: 'ts',
           caption: 'Create a tab (TypeScript SDK)',
-          code: String.raw`import { Client, ConfigBuilder } from "sdk-4mica";
+          code: String.raw`import { Client, ConfigBuilder } from "@4mica/sdk";
 
 const cfg = new ConfigBuilder()
-  .rpcUrl(process.env["4MICA_RPC_URL"] ?? "https://api.4mica.xyz/")
+  .network(process.env["4MICA_NETWORK"] ?? "base-sepolia")
   .walletPrivateKey(process.env.RECIPIENT_KEY!)
   .build();
 
@@ -277,7 +274,7 @@ USER_ADDRESS = "0x..."
 RECIPIENT_ADDRESS = "0x..."  # must match RECIPIENT_KEY
 
 async def main():
-    cfg = ConfigBuilder().wallet_private_key(RECIPIENT_KEY).build()
+    cfg = ConfigBuilder().network("base-sepolia").wallet_private_key(RECIPIENT_KEY).build()
     client = await Client.new(cfg)
     try:
         tab_id = await client.recipient.create_tab(
@@ -295,24 +292,28 @@ asyncio.run(main())`,
         {
           language: 'rust',
           caption: 'Create a tab (Rust SDK)',
-          code: String.raw`use rust_sdk_4mica::{Client, ConfigBuilder};
+          code: String.raw`use alloy::signers::local::PrivateKeySigner;
+use sdk_4mica::{Client, ConfigBuilder};
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    let signer: PrivateKeySigner = std::env::var("RECIPIENT_KEY")?.parse()?;
+
     let cfg = ConfigBuilder::default()
-        .wallet_private_key(std::env::var("RECIPIENT_KEY")?)
+        .rpc_url("https://base.sepolia.4mica.xyz/".to_string())
+        .signer(signer)
         .build()?;
     let client = Client::new(cfg).await?;
 
     let user_address = std::env::var("USER_ADDRESS")?;
     let recipient_address = std::env::var("RECIPIENT_ADDRESS")?;
 
-    let tab_id = client
+    let result = client
         .recipient
-        .create_tab(user_address, recipient_address, None, Some(3600))
+        .create_tab(user_address, recipient_address, None, Some(3600), 1)
         .await?;
 
-    println!("tab_id={tab_id}");
+    println!("tab_id={}", result.tab_id);
     Ok(())
 }`,
         },
@@ -328,17 +329,18 @@ async fn main() -> anyhow::Result<()> {
         {
           language: 'ts',
           caption: 'Sign payment header (TypeScript SDK)',
-          code: String.raw`import { Client, ConfigBuilder, PaymentRequirements, X402Flow } from "sdk-4mica";
+          code: String.raw`import { Client, ConfigBuilder, X402Flow, PaymentRequirementsV1 } from "@4mica/sdk";
 
 const cfg = new ConfigBuilder()
-  .rpcUrl(process.env["4MICA_RPC_URL"] ?? "https://api.4mica.xyz/")
+  .network(process.env["4MICA_NETWORK"] ?? "base-sepolia")
   .walletPrivateKey(process.env.PAYER_KEY!)
   .build();
 
 const client = await Client.new(cfg);
 const flow = X402Flow.fromClient(client);
 
-const requirements = PaymentRequirements.fromRaw(reqRaw); // from 402 response
+// requirements from the 402 response body
+const requirements = reqRaw as PaymentRequirementsV1;
 const payment = await flow.signPayment(requirements, "0xUserAddress");
 const xPaymentHeader = payment.header;
 
@@ -354,7 +356,7 @@ PAYER_KEY = "0x..."
 USER_ADDRESS = "0x..."
 
 async def main():
-    cfg = ConfigBuilder().wallet_private_key(PAYER_KEY).build()
+    cfg = ConfigBuilder().network("base-sepolia").wallet_private_key(PAYER_KEY).build()
     client = await Client.new(cfg)
     flow = X402Flow.from_client(client)
 
@@ -369,13 +371,17 @@ asyncio.run(main())`,
         {
           language: 'rust',
           caption: 'Sign payment header (Rust SDK)',
-          code: String.raw`use rust_sdk_4mica::{Client, ConfigBuilder, X402Flow};
-use rust_sdk_4mica::x402::PaymentRequirements;
+          code: String.raw`use alloy::signers::local::PrivateKeySigner;
+use sdk_4mica::{Client, ConfigBuilder, X402Flow};
+use sdk_4mica::x402::PaymentRequirements;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    let signer: PrivateKeySigner = std::env::var("PAYER_KEY")?.parse()?;
+
     let cfg = ConfigBuilder::default()
-        .wallet_private_key(std::env::var("PAYER_KEY")?)
+        .rpc_url("https://base.sepolia.4mica.xyz/".to_string())
+        .signer(signer)
         .build()?;
     let client = Client::new(cfg).await?;
     let flow = X402Flow::new(client)?;
@@ -383,7 +389,7 @@ async fn main() -> anyhow::Result<()> {
     // req_raw is the JSON object from the 402 response
     let requirements: PaymentRequirements = serde_json::from_value(req_raw)?;
     let payment = flow
-        .sign_payment(requirements.clone(), std::env::var("USER_ADDRESS")?)
+        .sign_payment(requirements, std::env::var("USER_ADDRESS")?)
         .await?;
     let x_payment_header = payment.header;
     Ok(())

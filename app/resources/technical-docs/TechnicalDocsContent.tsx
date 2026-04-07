@@ -10,6 +10,7 @@ import CodeTabs from '../blog/CodeTabs';
 const navigationItems = [
   { id: 'overview', title: 'Overview', icon: 'ri-eye-line' },
   { id: 'installation', title: 'Installation', icon: 'ri-download-cloud-2-line' },
+  { id: 'registration', title: 'Registration', icon: 'ri-shield-check-line' },
   { id: 'server-integration', title: 'Server Integration', icon: 'ri-server-line' },
   { id: 'client-integration', title: 'Client Integration', icon: 'ri-user-line' },
   { id: 'examples', title: 'Code Examples', icon: 'ri-file-code-line' },
@@ -186,6 +187,282 @@ pip install "4mica-x402[requests]"`,
                       />
                       <p className="text-sm text-ink-body mt-3">
                         Use <code className="font-mono">@x402/fetch</code> for fetch clients and <code className="font-mono">@x402/axios</code> for Axios-based apps.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeSection === 'registration' && (
+                <div>
+                  <h2 className="text-3xl font-bold text-ink-strong mb-6">Registration</h2>
+                  <div className="space-y-8">
+                    <p className="text-ink-body leading-relaxed">
+                      Before a wallet can make payments on 4Mica, it must deposit collateral into the Core4Mica contract.
+                      Depositing is the only registration step — there is no separate sign-up. Once the deposit transaction
+                      confirms, the 4Mica core service picks up the collateral event and the wallet is immediately eligible
+                      to sign payment guarantees.
+                    </p>
+                    <div className="bg-white/5 border border-white/10 rounded-lg p-4 text-sm text-ink-body space-y-1">
+                      <p className="font-semibold text-ink-strong">Supported networks</p>
+                      <ul className="list-disc list-inside space-y-1 mt-2">
+                        <li><code className="font-mono">eip155:11155111</code> — Ethereum Sepolia (<code className="font-mono">https://ethereum.sepolia.4mica.xyz/</code>)</li>
+                        <li><code className="font-mono">eip155:84532</code> — Base Sepolia (<code className="font-mono">https://base.sepolia.4mica.xyz/</code>)</li>
+                      </ul>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold text-ink-strong">Install the SDK</h3>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'bash',
+                            code: `npm install @4mica/sdk
+# or
+pnpm install @4mica/sdk`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'bash',
+                            code: `pip install fourmica-sdk`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'bash',
+                            code: `cargo add sdk-4mica alloy
+cargo add tokio --features macros,rt-multi-thread`,
+                          },
+                        ]}
+                      />
+                      <p className="text-sm text-ink-body">
+                        Rust uses the SDK crate directly and points at the network RPC URL explicitly, for example
+                        <code className="font-mono"> https://base.sepolia.4mica.xyz/</code> or
+                        <code className="font-mono"> https://ethereum.sepolia.4mica.xyz/</code>.
+                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold text-ink-strong">Deposit USDC on Base Sepolia</h3>
+                      <p className="text-sm text-ink-body">
+                        For ERC-20 tokens (e.g. USDC), first approve the Core4Mica contract to spend the token, then call
+                        <code className="font-mono"> deposit</code>. The SDK fetches the contract address automatically from
+                        the network URL — you do not need to supply it manually.
+                      </p>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `import { Client, ConfigBuilder } from "@4mica/sdk";
+
+// USDC on Base Sepolia
+const USDC = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
+// 1 USDC = 1_000_000 (6 decimals)
+const AMOUNT = 1_000_000n;
+
+const cfg = new ConfigBuilder()
+  .network("base-sepolia")          // or "ethereum-sepolia"
+  .walletPrivateKey("0xYourPrivateKey")
+  .build();
+
+const client = await Client.new(cfg);
+
+try {
+  // Step 1 — approve the Core4Mica contract to spend USDC
+  await client.user.approveErc20(USDC, AMOUNT);
+  console.log("Approved");
+
+  // Step 2 — deposit into the vault (this is your registration)
+  const receipt = await client.user.deposit(AMOUNT, USDC);
+  console.log("Deposited. tx:", receipt.transactionHash);
+} finally {
+  await client.aclose();
+}`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `import asyncio
+from fourmica_sdk import Client, ConfigBuilder
+
+# USDC on Base Sepolia
+USDC = "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+# 1 USDC = 1_000_000 (6 decimals)
+AMOUNT = 1_000_000
+
+async def main():
+    cfg = (
+        ConfigBuilder()
+        .network("base-sepolia")          # or "ethereum-sepolia"
+        .wallet_private_key("0xYourPrivateKey")
+        .build()
+    )
+
+    async with await Client.new(cfg) as client:
+        # Step 1 — approve the Core4Mica contract to spend USDC
+        await client.user.approve_erc20(USDC, AMOUNT)
+        print("Approved")
+
+        # Step 2 — deposit into the vault (this is your registration)
+        receipt = await client.user.deposit(AMOUNT, erc20_token=USDC)
+        print("Deposited. tx:", receipt["transactionHash"].hex())
+
+asyncio.run(main())`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `use alloy::{primitives::U256, signers::local::PrivateKeySigner};
+use sdk_4mica::{Client, ConfigBuilder};
+
+// USDC on Base Sepolia
+const USDC: &str = "0x036CbD53842c5426634e7929541eC2318f3dCF7e";
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // 1 USDC = 1_000_000 (6 decimals)
+    let amount = U256::from(1_000_000u64);
+    let signer: PrivateKeySigner = "0xYourPrivateKey".parse()?;
+
+    let cfg = ConfigBuilder::default()
+        .rpc_url("https://base.sepolia.4mica.xyz/".to_string())
+        .signer(signer)
+        .build()?;
+
+    let client = Client::new(cfg).await?;
+
+    // Step 1 — approve the Core4Mica contract to spend USDC
+    client.user.approve_erc20(USDC.to_string(), amount).await?;
+    println!("Approved");
+
+    // Step 2 — deposit into the vault (this is your registration)
+    let receipt = client
+        .user
+        .deposit(amount, Some(USDC.to_string()))
+        .await?;
+    println!("Deposited. tx: {:?}", receipt.transaction_hash);
+
+    Ok(())
+}`,
+                          },
+                        ]}
+                      />
+                    </div>
+
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold text-ink-strong">Depositing native ETH</h3>
+                      <p className="text-sm text-ink-body">
+                        To deposit ETH instead of an ERC-20 token, omit the token address and pass the amount in wei.
+                        No approval step is needed.
+                      </p>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `// 0.001 ETH in wei
+const receipt = await client.user.deposit(1_000_000_000_000_000n);
+console.log("Deposited ETH. tx:", receipt.transactionHash);`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `# 0.001 ETH in wei
+receipt = await client.user.deposit(1_000_000_000_000_000)
+print("Deposited ETH. tx:", receipt["transactionHash"].hex())`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `use alloy::{primitives::U256, signers::local::PrivateKeySigner};
+use sdk_4mica::{Client, ConfigBuilder};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let signer: PrivateKeySigner = "0xYourPrivateKey".parse()?;
+
+    let cfg = ConfigBuilder::default()
+        .rpc_url("https://base.sepolia.4mica.xyz/".to_string())
+        .signer(signer)
+        .build()?;
+
+    let client = Client::new(cfg).await?;
+
+    // 0.001 ETH in wei
+    let receipt = client
+        .user
+        .deposit(U256::from(1_000_000_000_000_000u64), None)
+        .await?;
+    println!("Deposited ETH. tx: {:?}", receipt.transaction_hash);
+
+    Ok(())
+}`,
+                          },
+                        ]}
+                      />
+                    </div>
+
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-semibold text-ink-strong">Verify your collateral balance</h3>
+                      <p className="text-sm text-ink-body">
+                        After depositing, confirm the balance was recorded on-chain.
+                      </p>
+                      <CodeTabs
+                        blocks={[
+                          {
+                            label: 'TypeScript',
+                            language: 'ts',
+                            code: `const positions = await client.user.getUser();
+for (const pos of positions) {
+  console.log("asset:", pos.asset, "collateral:", pos.collateral.toString());
+}`,
+                          },
+                          {
+                            label: 'Python',
+                            language: 'python',
+                            code: `positions = await client.user.get_user()
+for pos in positions:
+    print("asset:", pos.asset, "collateral:", pos.collateral)`,
+                          },
+                          {
+                            label: 'Rust',
+                            language: 'rust',
+                            code: `use alloy::signers::local::PrivateKeySigner;
+use sdk_4mica::{Client, ConfigBuilder};
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let signer: PrivateKeySigner = "0xYourPrivateKey".parse()?;
+
+    let cfg = ConfigBuilder::default()
+        .rpc_url("https://base.sepolia.4mica.xyz/".to_string())
+        .signer(signer)
+        .build()?;
+
+    let client = Client::new(cfg).await?;
+    let positions = client.user.get_user().await?;
+
+    for pos in positions {
+        println!("asset: {}, collateral: {}", pos.asset, pos.collateral);
+    }
+
+    Ok(())
+}`,
+                          },
+                        ]}
+                      />
+                    </div>
+
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-ink-strong">Register via the website</h3>
+                      <p className="text-sm text-ink-body">
+                        Prefer a guided UI? The{' '}
+                        <a href="/agents/register" className="underline text-ink-strong hover:opacity-80">
+                          Agent Registration page
+                        </a>{' '}
+                        lets you connect a wallet, choose a network (Ethereum Sepolia or Base Sepolia), select an
+                        asset, and complete the approve + deposit flow in a few clicks — no code required.
                       </p>
                     </div>
                   </div>

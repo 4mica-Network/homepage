@@ -16,7 +16,7 @@ const navigationItems = [
   { id: 'examples', title: 'Code Examples', icon: 'ri-file-code-line' },
   { id: 'guarantee-modes', title: 'Guarantee Modes', icon: 'ri-git-branch-line' },
   { id: 'facilitator-api', title: 'Facilitator API', icon: 'ri-cloud-line' },
-  { id: 'operator-api', title: 'Operator API', icon: 'ri-database-2-line' },
+  { id: 'operator-api', title: 'Core API', icon: 'ri-database-2-line' },
   { id: 'payment-flow', title: 'Protocol Flow', icon: 'ri-route-line' },
 ];
 
@@ -1209,12 +1209,14 @@ session = x402_requests(client)`,
                         <p className="text-sm text-ink-body">
                           <span className="font-semibold">Gets:</span>{' '}
                           <code className="font-mono">
-                            {'{ userAddress, recipientAddress, network?, erc20Token?, ttlSeconds? }'}
+                            {'{ userAddress, recipientAddress, x402Version?, guaranteeVersion?, network?, erc20Token?, ttlSeconds? }'}
                           </code>
                           . Networks use CAIP-2 identifiers (e.g. <code className="font-mono">eip155:11155111</code> for Ethereum Sepolia, <code className="font-mono">eip155:84532</code> for Base Sepolia).
                           Use <code className="font-mono">erc20Token</code> = null or omit for ETH. Aliases:{' '}
                           <code className="font-mono">assetAddress</code> and <code className="font-mono">networkId</code> are accepted.
                           If <code className="font-mono">network</code> is omitted, the facilitator defaults to the first configured network.
+                          <code className="font-mono">x402Version</code> is the preferred version field and maps to the underlying core
+                          <code className="font-mono"> guaranteeVersion</code>. If both are supplied they must match; if neither is supplied the facilitator defaults to version <code className="font-mono">1</code>.
                         </p>
                         <p className="text-sm text-ink-body">
                           <span className="font-semibold">Returns:</span>{' '}
@@ -1231,6 +1233,7 @@ session = x402_requests(client)`,
                               language: 'json',
                               code: `{
   "network": "eip155:84532",
+  "x402Version": 2,
   "userAddress": "0xUser",
   "recipientAddress": "0xRecipient",
   "erc20Token": null,
@@ -1419,16 +1422,18 @@ session = x402_requests(client)`,
                           <code className="font-mono"> validationRegistryAddress</code>, <code className="font-mono">validatorAddress</code>,{' '}
                           <code className="font-mono">validatorAgentId</code>, and <code className="font-mono">minValidationScore</code> in{' '}
                           <code className="font-mono">paymentRequirements.extra</code>.{' '}
-                          <code className="font-mono">requiredValidationTag</code> is optional. For V2 signing with the
-                          TypeScript SDK / <code className="font-mono">@4mica/x402</code> packages, include{' '}
-                          <code className="font-mono">validationChainId</code> and make it match{' '}
-                          <code className="font-mono">network</code> (<code className="font-mono">eip155:&lt;chainId&gt;</code>).
-                          Some SDKs can derive it from <code className="font-mono">network</code> when omitted.
+                          <code className="font-mono">jobHash</code> is also required and <code className="font-mono">requiredValidationTag</code> is optional.
+                          The facilitator does not require <code className="font-mono">validationChainId</code> in{' '}
+                          <code className="font-mono">paymentRequirements.extra</code>; it derives the expected chain id from the CAIP-2
+                          <code className="font-mono"> network</code>, while the signed V2 claim still carries
+                          <code className="font-mono"> validation_chain_id</code>.
                         </p>
                         <p>
                           <span className="font-semibold">paymentPayload</span> is the decoded payment header
                           (<code className="font-mono">X-PAYMENT</code> for v1, <code className="font-mono">PAYMENT-SIGNATURE</code> for v2)
-                          and supports <code className="font-mono">x402Version</code> 1 or 2.
+                          and supports <code className="font-mono">x402Version</code> 1 or 2. V1 envelopes carry top-level
+                          <code className="font-mono"> scheme</code> and <code className="font-mono">network</code>; V2 envelopes carry those fields inside
+                          <code className="font-mono"> accepted</code>.
                         </p>
                         <p>
                           <span className="font-semibold">certificate</span> is returned as{' '}
@@ -1454,7 +1459,7 @@ session = x402_requests(client)`,
 
               {activeSection === 'operator-api' && (
                 <div>
-                  <h2 className="text-3xl font-bold text-ink-strong mb-6">Operator API Reference</h2>
+                  <h2 className="text-3xl font-bold text-ink-strong mb-6">Core API Reference</h2>
                   <div className="space-y-6">
                     <p className="text-ink-body leading-relaxed">
                       Core operator endpoints are served by <code className="font-mono">4mica-core/core</code>. Core routes live under
@@ -1465,7 +1470,8 @@ session = x402_requests(client)`,
                       <p>
                         <span className="font-semibold">Public endpoints:</span>{' '}
                         <code className="font-mono">/auth/*</code>, <code className="font-mono">/core/health</code>,{' '}
-                        <code className="font-mono">/core/public-params</code>
+                        <code className="font-mono">/core/public-params</code>, <code className="font-mono">/core/tokens</code>,{' '}
+                        <code className="font-mono">/metrics</code>
                       </p>
                       <p>
                         <span className="font-semibold">Auth header:</span>{' '}
@@ -1501,6 +1507,10 @@ session = x402_requests(client)`,
                         </li>
                         <li>
                           Tab-specific routes require tab ownership (user or recipient) or the <code className="font-mono">facilitator</code> role.
+                        </li>
+                        <li>
+                          <code className="font-mono">/core/users/{'{user_address}'}/assets/{'{asset_address}'}</code> currently requires only
+                          <code className="font-mono"> tab:read</code>; it does not enforce user-address matching.
                         </li>
                         <li>
                           <code className="font-mono">/core/users/{'{user_address}'}/suspension</code> requires the <code className="font-mono">admin</code> role.
@@ -1618,16 +1628,17 @@ session = x402_requests(client)`,
                         {
                           method: 'GET',
                           path: '/core/health',
-                          desc: 'Liveness + listener readiness.',
+                          desc: 'Health status for the database and chain RPC dependencies.',
                           expects: 'No body.',
-                          returns: '{ status: "ok", listener_ready: true }',
+                          returns: '{ status: "ok" | "fail", db: "ok" | "fail", chain_rpc: "ok" | "fail" }',
                           examples: [
                             {
                               label: 'Response',
                               language: 'json',
                               code: `{
   "status": "ok",
-  "listener_ready": true
+  "db": "ok",
+  "chain_rpc": "ok"
 }`,
                             },
                           ],
@@ -1638,7 +1649,7 @@ session = x402_requests(client)`,
                           desc: 'Public operator parameters.',
                           expects: 'No body.',
                           returns:
-                            '{ public_key, contract_address, ethereum_http_rpc_url, eip712_name, eip712_version, chain_id }',
+                            '{ public_key, contract_address, ethereum_http_rpc_url, eip712_name, eip712_version, chain_id, max_accepted_guarantee_version, accepted_guarantee_versions, active_guarantee_domain_separator, trusted_validation_registries, validation_hash_canonicalization_version }',
                           examples: [
                             {
                               label: 'Response',
@@ -1649,7 +1660,36 @@ session = x402_requests(client)`,
   "ethereum_http_rpc_url": "https://rpc.example.com",
   "eip712_name": "4Mica",
   "eip712_version": "1",
-  "chain_id": 1
+  "chain_id": 1,
+  "max_accepted_guarantee_version": 2,
+  "accepted_guarantee_versions": [1, 2],
+  "active_guarantee_domain_separator": "0xDomainSeparator",
+  "trusted_validation_registries": ["0xRegistry"],
+  "validation_hash_canonicalization_version": "erc8004-v1"
+}`
+                            },
+                          ],
+                        },
+                        {
+                          method: 'GET',
+                          path: '/core/tokens',
+                          desc: 'List ERC-20 tokens supported by the active core deployment.',
+                          expects: 'No body.',
+                          returns:
+                            '{ chain_id, tokens: [{ symbol, address, decimals }] }',
+                          examples: [
+                            {
+                              label: 'Response',
+                              language: 'json',
+                              code: `{
+  "chain_id": 84532,
+  "tokens": [
+    {
+      "symbol": "USDC",
+      "address": "0xAsset",
+      "decimals": 6
+    }
+  ]
 }`,
                             },
                           ],
@@ -1659,9 +1699,9 @@ session = x402_requests(client)`,
                           path: '/core/payment-tabs',
                           desc: 'Create or reuse a payment tab.',
                           expects:
-                            '{ user_address, recipient_address, erc20_token?, ttl? }',
+                            '{ user_address, recipient_address, erc20_token?, ttl?, guarantee_version }',
                           returns:
-                            '{ id, user_address, recipient_address, erc20_token?, next_req_id }',
+                            '{ id, user_address, recipient_address, erc20_token?, asset_address, guarantee_version, next_req_id }',
                           examples: [
                             {
                               label: 'Request',
@@ -1670,7 +1710,8 @@ session = x402_requests(client)`,
   "user_address": "0xUser",
   "recipient_address": "0xRecipient",
   "erc20_token": null,
-  "ttl": 3600
+  "ttl": 3600,
+  "guarantee_version": 2
 }`,
                             },
                             {
@@ -1681,6 +1722,8 @@ session = x402_requests(client)`,
   "user_address": "0xUser",
   "recipient_address": "0xRecipient",
   "erc20_token": null,
+  "asset_address": "0xAsset",
+  "guarantee_version": 2,
   "next_req_id": "0x0"
 }`,
                             },
@@ -1738,6 +1781,7 @@ session = x402_requests(client)`,
     "user_address": "0xUser",
     "recipient_address": "0xRecipient",
     "asset_address": "0xAsset",
+    "accepted_guarantee_version": 2,
     "start_timestamp": 1716500000,
     "ttl_seconds": 3600,
     "status": "open",
@@ -1766,6 +1810,7 @@ session = x402_requests(client)`,
       "user_address": "0xUser",
       "recipient_address": "0xRecipient",
       "asset_address": "0xAsset",
+      "accepted_guarantee_version": 2,
       "start_timestamp": 1716500000,
       "ttl_seconds": 3600,
       "status": "open",
@@ -1776,6 +1821,7 @@ session = x402_requests(client)`,
     "latest_guarantee": {
       "tab_id": "0x1",
       "req_id": "0x0",
+      "version": 2,
       "from_address": "0xUser",
       "to_address": "0xRecipient",
       "asset_address": "0xAsset",
@@ -1803,6 +1849,7 @@ session = x402_requests(client)`,
   "user_address": "0xUser",
   "recipient_address": "0xRecipient",
   "asset_address": "0xAsset",
+  "accepted_guarantee_version": 2,
   "start_timestamp": 1716500000,
   "ttl_seconds": 3600,
   "status": "open",
@@ -1830,6 +1877,7 @@ session = x402_requests(client)`,
     "user_address": "0xUser",
     "recipient_address": "0xRecipient",
     "asset_address": "0xAsset",
+    "accepted_guarantee_version": 2,
     "start_timestamp": 1716500000,
     "ttl_seconds": 3600,
     "status": "open",
@@ -1855,6 +1903,7 @@ session = x402_requests(client)`,
   {
     "tab_id": "0x1",
     "req_id": "0x0",
+    "version": 2,
     "from_address": "0xUser",
     "to_address": "0xRecipient",
     "asset_address": "0xAsset",
@@ -1879,6 +1928,7 @@ session = x402_requests(client)`,
                               code: `{
   "tab_id": "0x1",
   "req_id": "0x0",
+  "version": 2,
   "from_address": "0xUser",
   "to_address": "0xRecipient",
   "asset_address": "0xAsset",
@@ -1902,6 +1952,7 @@ session = x402_requests(client)`,
                               code: `{
   "tab_id": "0x1",
   "req_id": "0x0",
+  "version": 2,
   "from_address": "0xUser",
   "to_address": "0xRecipient",
   "asset_address": "0xAsset",

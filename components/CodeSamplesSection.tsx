@@ -223,8 +223,8 @@ export default function CodeSamplesSection() {
                     })}
                   </div>
                 </div>
-                <div className="bg-surface-solid p-4 sm:p-5">
-                  <div className="space-y-1 font-mono text-xs sm:text-sm leading-relaxed text-ink-strong">
+                <div className="bg-surface-solid p-4 sm:p-5 overflow-x-auto">
+                  <div className="space-y-1 font-mono text-xs sm:text-sm leading-relaxed text-ink-strong min-w-max">
                     {codeLines.map((line, index) => (
                       <div key={`${activeLanguage}-${activeAction}-${index}`} className="grid grid-cols-[2.2rem_1fr] gap-3">
                         <span className="select-none text-right text-[10px] text-ink-subtle sm:text-xs">

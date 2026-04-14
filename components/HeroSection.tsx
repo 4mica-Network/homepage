@@ -34,7 +34,7 @@ const highlights = [
         <div className="grid items-center gap-12 lg:grid-cols-1">
           <div className="flex flex-col items-center text-center">
             <h1 className="section-title-lg leading-tight w-full">Scale your agentic revenue</h1>
-            <p className="mt-3 text-lg md:text-xl text-ink-body/80 whitespace-nowrap leading-relaxed">
+            <p className="mt-3 text-lg md:text-xl text-ink-body/80 leading-relaxed max-w-lg">
               AI agents work non-stop. Monetize every interaction without payment friction. {/* CHANGED */}
             </p>
             <p className="mt-1 text-sm text-ink-muted/60 max-w-lg leading-relaxed">

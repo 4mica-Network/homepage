@@ -162,7 +162,7 @@ export default function DocsCalloutSection() {
                 Collateral earns yield in Aave. Agents transact on credit. 4Mica settles later.
               </p>
             </div>
-            <div className="flex gap-3 shrink-0">
+            <div className="flex flex-wrap gap-3 shrink-0">
               <Link href="/resources/technical-docs" className="btn btn-primary btn-md text-center whitespace-nowrap">
                 Start Building
               </Link>
@@ -173,7 +173,7 @@ export default function DocsCalloutSection() {
           </div>
 
           {/* Step number tabs */}
-          <div className="mb-5 flex gap-2">
+          <div className="mb-5 flex flex-wrap gap-2">
             {STEPS.map((s, i) => {
               const isActive = i === active;
               return (

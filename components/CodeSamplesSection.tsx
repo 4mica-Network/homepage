@@ -2,13 +2,12 @@
 
 import { useState } from 'react';
 
-type LanguageId = 'typescript' | 'python' | 'rust';
+type LanguageId = 'typescript' | 'python';
 type KeyAction = 'payer' | 'recipient';
 
 const languageTabs: { id: LanguageId; label: string }[] = [
   { id: 'typescript', label: 'TypeScript' },
   { id: 'python', label: 'Python' },
-  { id: 'rust', label: 'Rust' },
 ];
 
 const keyActions: { id: KeyAction; label: string }[] = [
@@ -28,47 +27,47 @@ const scheme = await FourMicaEvmScheme.create(account);
 const fetchWithPayment = wrapFetchWithPaymentFromConfig(fetch, {
   schemes: [
     {
-      network: "eip155:11155111", // Ethereum Sepolia
+      network: "eip155:84532", // Base Sepolia
       client: scheme,
     },
   ],
 });
 
-const response = await fetchWithPayment("https://api.example.com/premium-content");
-const data = await response.json();
-console.log(data);`,
+const response = await fetchWithPayment("https://api.example.com/resource");
+const data = await response.json();`,
     recipient: `import express from "express";
 import { paymentMiddlewareFromConfig } from "@4mica/x402/server/express";
+import { FourMicaEvmScheme } from "@4mica/x402/server";
 
 const app = express();
 app.use(express.json());
 
+const TAB_ENDPOINT = "http://localhost:3000/payment/tab";
+
 app.use(
   paymentMiddlewareFromConfig(
     {
-      "GET /premium-content": {
+      "GET /resource": {
         accepts: {
           scheme: "4mica-credit",
           price: "$0.10",
-          network: "eip155:11155111", // Ethereum Sepolia
+          network: "eip155:84532", // Base Sepolia
           payTo: "0xYourAddress",
         },
-        description: "Access to premium content",
+        description: "Access to premium resource",
       },
     },
-    {
-      advertisedEndpoint: "https://api.example.com/tabs/open",
-    }
+    { advertisedEndpoint: TAB_ENDPOINT },
+    undefined,
+    [{ network: "eip155:84532", server: new FourMicaEvmScheme(TAB_ENDPOINT) }]
   )
 );
 
-app.get("/premium-content", (req, res) => {
-  res.json({ message: "This is premium content behind a paywall" });
+app.get("/resource", (req, res) => {
+  res.json({ message: "Premium content" });
 });
 
-app.listen(3000, () => {
-  console.log("Server running on http://localhost:3000");
-});`,
+app.listen(3000);`,
   },
   python: {
     payer: `from x402 import x402ClientSync
@@ -79,22 +78,22 @@ client = x402ClientSync()
 client.register("eip155:11155111", FourMicaEvmScheme("0xYourPrivateKey"))
 
 session = x402_requests(client)
-response = session.get("https://api.example.com/premium-content")
-print(response.status_code, response.text)`,
+response = session.get("https://api.example.com/resource")
+print(response.status_code, response.json())`,
     recipient: `from fastapi import FastAPI
 from fourmica_x402.http import fastapi_payment_middleware_from_config
 
 app = FastAPI()
 
 routes = {
-    "GET /premium-content": {
+    "GET /resource": {
         "accepts": {
             "scheme": "4mica-credit",
             "price": "$0.10",
             "network": "eip155:11155111",  # Ethereum Sepolia
             "payTo": "0xYourAddress",
         },
-        "description": "Access to premium content",
+        "description": "Access to premium resource",
     },
 }
 
@@ -107,13 +106,9 @@ middleware = fastapi_payment_middleware_from_config(
 async def x402_mw(request, call_next):
     return await middleware(request, call_next)
 
-@app.get("/premium-content")
-async def premium_content():
-    return {"message": "This is premium content behind a paywall"}`,
-  },
-  rust: {
-    payer: `Will be ready soon!`,
-    recipient: `Will be ready soon!`,
+@app.get("/resource")
+async def resource():
+    return {"message": "Premium content"}`,
   },
 };
 
@@ -133,11 +128,6 @@ const tokenPatterns: Record<LanguageId, TokenPattern> = {
       /(#.*$)|('''[^']*'''|"""[^"]*"""|'[^'\\]*(?:\\.[^'\\]*)*'|"[^"\\]*(?:\\.[^"\\]*)*")|(\b0x[0-9a-fA-F]+\b|\b\d+(?:_\d+)*(?:\.\d+)?\b)|(\b(?:import|from|async|def|await|return|class|try|except|raise|if|elif|else|for|while|with|as|in|None|True|False)\b)/g,
     classes: ['comment', 'string', 'number', 'keyword'],
   },
-  rust: {
-    regex:
-      /(\/\/.*$)|(b?"[^"\\]*(?:\\.[^"\\]*)*"|b?'[^'\\]*(?:\\.[^'\\]*)*')|(\b0x[0-9a-fA-F_]+\b|\b\d+(?:_\d+)*(?:\.\d+)?\b)|(\b(?:use|let|mut|async|await|fn|pub|struct|impl|match|if|else|for|while|loop|return|crate|mod|enum|trait|Result|Ok|Err|Some|None)\b)|(\b\w+!)/g,
-    classes: ['comment', 'string', 'number', 'keyword', 'macro'],
-  },
 };
 
 const escapeHtml = (value: string) =>
@@ -150,18 +140,14 @@ const escapeHtml = (value: string) =>
 
 const highlightLine = (line: string, language: LanguageId) => {
   const pattern = tokenPatterns[language];
-  if (!pattern) {
-    return escapeHtml(line);
-  }
+  if (!pattern) return escapeHtml(line);
   let result = '';
   let lastIndex = 0;
   pattern.regex.lastIndex = 0;
   let match = pattern.regex.exec(line);
   while (match) {
     const index = match.index ?? 0;
-    if (index > lastIndex) {
-      result += escapeHtml(line.slice(lastIndex, index));
-    }
+    if (index > lastIndex) result += escapeHtml(line.slice(lastIndex, index));
     const groupIndex = match.slice(1).findIndex((group) => group !== undefined);
     const className = groupIndex >= 0 ? pattern.classes[groupIndex] : '';
     const tokenValue = escapeHtml(match[0]);
@@ -169,9 +155,7 @@ const highlightLine = (line: string, language: LanguageId) => {
     lastIndex = index + match[0].length;
     match = pattern.regex.exec(line);
   }
-  if (lastIndex < line.length) {
-    result += escapeHtml(line.slice(lastIndex));
-  }
+  if (lastIndex < line.length) result += escapeHtml(line.slice(lastIndex));
   return result;
 };
 
@@ -186,12 +170,18 @@ export default function CodeSamplesSection() {
     <section className="py-20 section-gloss">
       <div className="container mx-auto px-6">
         <div className="mx-auto max-w-5xl">
+
+          {/* Header */}
+          <div className="mb-8">
+            <p className="section-kicker">Quick start</p>
+            <h2 className="mt-2 section-title-sm">Integrate in seconds</h2>
+            <p className="section-lead mt-1">
+              Drop the middleware into your server and wrap your HTTP client. That&apos;s it.
+            </p>
+          </div>
+
           <div className="glass-panel rounded-2xl p-5 sm:p-6">
-            <div className="flex items-center justify-between text-[10px] sm:text-xs uppercase tracking-[0.24em] text-ink-muted">
-              <span>Quick Start</span>
-              <span>Client + Server Integration</span>
-            </div>
-            <div className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-surface-solid">
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-surface-solid">
               <div className="flex flex-wrap items-center gap-2 border-b border-white/10 bg-surface-solid px-3 py-2">
                 {languageTabs.map((tab) => {
                   const isActive = activeLanguage === tab.id;
@@ -251,8 +241,8 @@ export default function CodeSamplesSection() {
               </div>
             </div>
             <div className="mt-4 flex items-center justify-between text-xs text-ink-muted">
-              <span>Client and server integration examples</span>
-              <span className="text-brand-teal">SDK + API ready</span>
+              <span>Full docs at <span className="text-brand-teal">/resources/technical-docs</span></span>
+              <span className="text-brand-teal">SDKs: TypeScript · Python · Rust soon</span>
             </div>
           </div>
         </div>

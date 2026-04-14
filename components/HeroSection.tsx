@@ -5,18 +5,11 @@ export default function HeroSection() {
   const handleGetStarted = () => {
     const docsSection = document.querySelector('#docs');
     if (docsSection) {
-      docsSection.scrollIntoView({ behavior: 'smooth' });
+      docsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   };
 
-  const handleJoinCommunity = () => {
-    const communitySection = document.querySelector('#community');
-    if (communitySection) {
-      communitySection.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const highlights = [
+const highlights = [
     {
       title: 'Earn while agents spend',
       description: 'Deposits generate yield that offsets costs',
@@ -54,12 +47,12 @@ export default function HeroSection() {
               >
                 Start Building
               </button>
-              <button
-                onClick={handleJoinCommunity}
+              <a
+                href="/resources/technical-docs"
                 className="btn btn-outline btn-lg whitespace-nowrap font-normal"
               >
                 Read Docs
-              </button>
+              </a>
             </div>
             <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl"> {/* CHANGED: mt-10→mt-14 — more breathing room between buttons and cards */}
               {highlights.map((highlight) => (

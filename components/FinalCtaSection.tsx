@@ -8,10 +8,10 @@ export default function FinalCtaSection() {
       <div className="container mx-auto px-6">
         <div className="glass-panel rounded-3xl p-10 sm:p-12 text-center max-w-4xl mx-auto">
           <h2 className="section-title">
-            Ready to build with payment tabs?
+            Deposit once. Spend anywhere. Settle later.
           </h2>
           <p className="section-lead">
-            Start building or join the community and help define the standard.
+            Your collateral earns yield in Aave while your agents transact on credit — no prefunding, no gas per request.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
             <Link

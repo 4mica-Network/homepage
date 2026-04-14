@@ -15,11 +15,11 @@ export default function PartnersSection() {
     },
     {
       title: 'Testnet live',
-      description: '4Mica is now live on the testnet',
+      description: '4Mica is live on testnet — deposit, spend, and settle today',
     },
     {
-      title: 'Non-custodial design',
-      description: 'Collateral stays on-chain until settlement or claim',
+      title: 'Non-custodial',
+      description: 'Collateral stays in Aave until settlement or on-chain claim',
     },
   ];
 
@@ -27,18 +27,18 @@ export default function PartnersSection() {
     <section className="py-20 section-gloss">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <p className="section-kicker mb-4">Powering</p>
+          <p className="section-kicker mb-4">Trusted by</p>
           <h2 className="section-title mb-4">
-            Our early partners
+            Partners that trust 4Mica
           </h2>
           <p className="section-lead max-w-2xl mx-auto">
-            Collaborators integrating payment tabs and credit-backed UX
+            Teams running AVS compute, API monetization, and agentic commerce on 4Mica's credit layer
           </p>
         </div>
-        
+
         <div className="flex flex-wrap justify-center items-center gap-8 mb-12">
           {partners.map((partner, index) => (
-            <Link 
+            <Link
               key={index}
               href={partner.href}
               target="_blank"
@@ -65,16 +65,22 @@ export default function PartnersSection() {
             </div>
           ))}
         </div>
-        
-        <div className="text-center">
-          <button
-            className="btn btn-primary btn-lg whitespace-nowrap"
-            onClick={() => {
-              window.location.href = "mailto:mairon@4mica.xyz";
-            }}
+
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <Link
+            href="/resources/technical-docs"
+            className="btn btn-primary btn-lg whitespace-nowrap text-center"
           >
-            Build with us
-          </button>
+            Start Building
+          </Link>
+          <Link
+            href="https://github.com/4mica-Network/4mica-core/"
+            target="_blank"
+            rel="noreferrer"
+            className="btn btn-outline btn-lg whitespace-nowrap text-center"
+          >
+            Star us on GitHub
+          </Link>
         </div>
       </div>
     </section>

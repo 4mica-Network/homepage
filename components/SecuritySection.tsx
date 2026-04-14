@@ -2,7 +2,7 @@
 
 export default function SecuritySection() {
   const items = [
-    'Non-custodial collateral stays in Core4Mica until settlement or claim',
+    'Non-custodial collateral stays in Aave until settlement or claim',
     'Guarantees are BLS-signed with domain separation and versioned configs',
     'AccessManaged roles, Pausable, and ReentrancyGuard protect critical flows',
   ];

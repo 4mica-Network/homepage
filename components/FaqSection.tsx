@@ -5,42 +5,47 @@ export default function FaqSection() {
     {
       question: 'What is a payment tab?',
       answer:
-        'A tab is a credit line identified by tab_id. The recipient opens it, and req_id tracks each spend against the tab.',
+        'A tab is a credit session opened by the recipient via POST /tabs. It is identified by a tabId, a TTL, and a guarantee version (V1 or V2). The version determines which on-chain decoder the contract uses when the recipient calls remunerate(). Each individual spend within the tab is tracked by a reqId, which increments with every signed guarantee.',
     },
     {
       question: 'What is a payment guarantee?',
       answer:
-        'A guarantee is a BLS-signed claim with tab_id, req_id, client, recipient, asset, amount, total_amount, timestamp, and a domain separator. V2 also embeds ERC-8004 validation policy fields.',
+        'A guarantee is a signed claim the payer attaches to their request as an X-PAYMENT header. It carries tabId, reqId, userAddress, recipientAddress, amount, totalAmount, asset, and a timestamp. Payers sign with EIP-712 (default) or EIP-191. The facilitator verifies the signature and issues a BLS-signed certificate on-chain.',
     },
     {
       question: 'Do you support both V1 and V2?',
       answer:
-        'Yes. Both are supported. V1 is the baseline credit guarantee flow; V2 adds ERC-8004 validation-gated remuneration checks.',
+        'Yes. V1 is the baseline EIP-712 signed guarantee flow. V2 extends it with a full on-chain validation policy — validationRegistryAddress, validationRequestHash, validationChainId, validationSubjectHash, and a jobHash — which gates remuneration on a passing ValidationRegistry status.',
     },
     {
       question: 'When can recipients claim collateral?',
       answer:
-        'After the remuneration grace period (default 14 days) and before tab expiration (default 21 days). For V2, claim/remuneration also requires a passing ERC-8004 validation status that matches the signed policy.',
-    },
-    {
-      question: 'How does V2 validation work?',
-      answer:
-        'V2 claims commit a validation request hash, validator, agent id, and score threshold. During remuneration, core checks ValidationRegistry status on-chain and reverts unless the policy constraints pass.',
+        'Recipients call remunerate() after the remunerationGracePeriod (default 14 days) and before tabExpirationTime (default 21 days). For V2 guarantees, the ValidationRegistry must also return a passing status that satisfies the signed policy before the contract releases funds.',
     },
     {
       question: 'When do users settle?',
       answer:
-        'The product flow asks users to settle after 7 days. If they do not, the on-chain claim window opens at 14 days by default.',
+        'The product flow asks users to call payTabInERC20Token() after 7 days. If they do not, the recipient\'s on-chain claim window opens at 14 days (remunerationGracePeriod) and closes at 21 days (tabExpirationTime).',
     },
     {
-      question: 'How do withdrawals work for users?',
+      question: 'How do withdrawals work?',
       answer:
-        'Users request a withdrawal, then finalize after the withdrawal grace period (default 22 days). A synchronization delay (default 6 hours) protects tabs opened near a withdrawal request.',
+        'Users call requestWithdrawal() to start the timelock, then finalizeWithdrawal() once withdrawalGracePeriod (default 22 days) has elapsed. A synchronizationDelay (default 6 hours) prevents race conditions between a withdrawal request and a tab opened at the same time.',
     },
     {
-      question: 'Which assets are supported by default?',
+      question: 'Which assets are supported?',
       answer:
-        'ETH, USDC, and USDT are supported. Stablecoin flows require USDC or USDT; other assets revert.',
+        'ETH and stablecoins. Stablecoin deposits route through depositStablecoin() and are forwarded to Aave to earn yield. USDC and USDT are enabled by default; other ERC-20s revert unless explicitly configured.',
+    },
+    {
+      question: 'How is a dispute handled?',
+      answer:
+        'With V2 guarantees, dispute resolution is fully on-chain via ERC-8004\'s ValidationRegistry. The payer signs a guarantee that commits to a validationRequestHash — a hash binding the specific validator, agentId, minValidationScore, requiredValidationTag, and jobHash to the exact payment claims (tabId, reqId, amounts, asset). When the recipient calls remunerate(), the ValidationRegistryGuaranteeDecoder checks the ValidationRegistry on-chain: if the validation is still pending, the response score is below minValidationScore, the validator or agentId don\'t match, or the tag doesn\'t match, the call reverts and collateral stays locked. Validators — stakers re-running the job, zkML verifiers, or TEE oracles — post a response (0–100) to the registry, and can update it multiple times for progressive finality.',
+    },
+    {
+      question: 'How does the facilitator work?',
+      answer:
+        'The facilitator (x402-4mica) exposes /tabs, /verify, /settle, and /supported. POST /tabs issues a tab JSON with tabId and nextReqId. POST /verify checks the X-PAYMENT signature. POST /settle issues a BLS-signed certificate the recipient uses for on-chain remuneration.',
     },
   ];
 

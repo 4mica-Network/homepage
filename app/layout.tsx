@@ -36,9 +36,9 @@ export const metadata: Metadata = {
     description: "4Mica - Sub-second transactions across any blockchain",
     images: [
       {
-        url: "/assets/logo.jpg",
-        width: 2048,
-        height: 2048,
+        url: "/assets/logo_transparent.png",
+        width: 264,
+        height: 192,
         alt: "4Mica Logo",
       },
     ],
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "4Mica",
     description: "4Mica - Sub-second transactions across any blockchain",
-    images: ["/assets/logo.jpg"],
+    images: ["/assets/logo_transparent.png"],
   },
 };
 

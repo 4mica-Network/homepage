@@ -32,7 +32,7 @@ export default function AboutSection() {
           </h2>
           <p className="section-lead">
             4Mica issues cryptographic payment tabs that keep capital productive while delivering real-time UX. We help teams
-            monetize APIs, AVS services, and on-chain commerce without forcing users to pre-fund every request.
+            monetize APIs and on-chain commerce without forcing users to pre-fund every request.
           </p>
         </div>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">

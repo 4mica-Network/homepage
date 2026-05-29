@@ -118,13 +118,13 @@ app.use(
       <div className="space-y-2 text-sm text-ink-body">
         <h3 className="text-lg font-semibold text-ink-strong">Options</h3>
         <ul className="list-disc list-inside space-y-1">
-          <li><code className="font-mono">routes</code> (required) — protected route definitions keyed by method + path.</li>
-          <li><code className="font-mono">tabConfig</code> (required) — tab endpoint + optional TTL.</li>
-          <li><code className="font-mono">facilitatorClients</code> (optional) — add other facilitator clients.</li>
-          <li><code className="font-mono">schemes</code> (optional) — register additional schemes/networks.</li>
-          <li><code className="font-mono">paywallConfig</code> (optional) — configuration for the built-in paywall UI.</li>
-          <li><code className="font-mono">paywall</code> (optional) — custom paywall provider.</li>
-          <li><code className="font-mono">syncFacilitatorOnStart</code> (optional) — sync supported kinds at startup (default: true).</li>
+          <li><code className="font-mono">routes</code> (required) - protected route definitions keyed by method + path.</li>
+          <li><code className="font-mono">tabConfig</code> (required) - tab endpoint + optional TTL.</li>
+          <li><code className="font-mono">facilitatorClients</code> (optional) - add other facilitator clients.</li>
+          <li><code className="font-mono">schemes</code> (optional) - register additional schemes/networks.</li>
+          <li><code className="font-mono">paywallConfig</code> (optional) - configuration for the built-in paywall UI.</li>
+          <li><code className="font-mono">paywall</code> (optional) - custom paywall provider.</li>
+          <li><code className="font-mono">syncFacilitatorOnStart</code> (optional) - sync supported kinds at startup (default: true).</li>
         </ul>
       </div>
       <div className="space-y-4">

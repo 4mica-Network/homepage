@@ -135,7 +135,7 @@ const fetchWithPayment = wrapFetchWithPayment(fetch, client);`}
       <div className="space-y-2 text-sm text-ink-body">
         <h3 className="text-lg font-semibold text-ink-strong">Flow Summary</h3>
         <ol className="list-decimal list-inside space-y-1">
-          <li>Call the protected resource — receive HTTP 402 with payment requirements.</li>
+          <li>Call the protected resource - receive HTTP 402 with payment requirements.</li>
           <li>The wrapper reads <code className="font-mono">paymentRequirements.extra.tabEndpoint</code> from the 402 response and opens a tab on the resource server.</li>
           <li>Signs a guarantee with your key and retries with a payment header (<code className="font-mono">X-PAYMENT</code> for v1, <code className="font-mono">PAYMENT-SIGNATURE</code> for v2).</li>
           <li>Returns the successful response or surfaces any retry errors.</li>
@@ -236,7 +236,7 @@ session = x402_requests(client)`}
       <div className="space-y-2 text-sm text-ink-body">
         <h3 className="text-lg font-semibold text-ink-strong">Flow Summary</h3>
         <ol className="list-decimal list-inside space-y-1">
-          <li>Call the protected resource — receive HTTP 402 with payment requirements.</li>
+          <li>Call the protected resource - receive HTTP 402 with payment requirements.</li>
           <li>The wrapper reads <code className="font-mono">paymentRequirements.extra.tabEndpoint</code> from the 402 response and opens a tab on the resource server.</li>
           <li>Signs a guarantee with your key and retries with a payment header (<code className="font-mono">X-PAYMENT</code> for v1, <code className="font-mono">PAYMENT-SIGNATURE</code> for v2).</li>
           <li>Returns the successful response or raises an exception for unresolvable 402s.</li>

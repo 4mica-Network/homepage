@@ -57,7 +57,7 @@ export default function BlogContent() {
           </h1>
           <div className="accent-bar mx-auto mb-8"></div>
           <p className="section-lead max-w-3xl mx-auto text-xl">
-            Insights, updates, and thought leadership on AVS payments, blockchain infrastructure, and the future of decentralized finance.
+            Insights, updates, and thought leadership on onchain payments, blockchain infrastructure, and the future of decentralized finance.
           </p>
         </div>
 
@@ -143,7 +143,7 @@ export default function BlogContent() {
               <div className="glass-panel rounded-lg p-6">
                 <h3 className="text-xl font-bold text-ink-strong mb-4">Stay Updated</h3>
                 <p className="text-ink-body mb-4">
-                  Get the latest insights on AVS payments and blockchain infrastructure.
+                  Get the latest insights on onchain payments and blockchain infrastructure.
                 </p>
                 
                 {isSubscribed ? (
@@ -203,7 +203,7 @@ export default function BlogContent() {
               <div className="glass-panel rounded-lg p-6">
                 <h3 className="text-xl font-bold text-ink-strong mb-4">Popular Tags</h3>
                 <div className="flex flex-wrap gap-2">
-                  {['AVS', 'Payments', 'Blockchain', 'DeFi', 'EigenLayer', 'Security', 'Integration', 'Architecture'].map((tag) => (
+                  {['Payments', 'Blockchain', 'DeFi', 'Security', 'Integration', 'Architecture', 'AI Agents'].map((tag) => (
                     <span 
                       key={tag}
                       className="bg-white/10 text-ink-body px-3 py-1 rounded-full text-sm hover:bg-brand-deep hover:text-ink transition-colors cursor-pointer"

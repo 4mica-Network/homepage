@@ -21,7 +21,7 @@ export default function GuaranteeModesSection() {
           </p>
           <p className="text-ink-body leading-relaxed mt-4">
             Settlement happens later. The payer can settle voluntarily by calling{' '}
-            <code className="font-mono bg-brand-deep/30 text-ink px-1.5 py-0.5 rounded">payTabInERC20Token</code>{' '}
+            <code className="font-mono">payTabInERC20Token</code>{' '}
             on the vault contract, which is a direct ERC-20 transfer that records payment against the
             tab once the job is done. If the payer defaults and does not settle, the recipient
             can submit the BLS certificate to the <strong>4Mica vault contract</strong> via{' '}
@@ -41,7 +41,7 @@ export default function GuaranteeModesSection() {
                 No job-validation condition is attached.
               </p>
             </div>
-            <div className="rounded-lg border border-brand-deep/40 bg-brand-deep/10 p-4">
+            <div className="rounded-lg border border-white/10 bg-white/5 p-4">
               <h3 className="text-base font-semibold text-ink-strong mb-2">V2: Verified</h3>
               <p className="text-sm text-ink-body">
                 Same as V1, but when the recipient calls <code className="font-mono">remunerate</code>{' '}
@@ -51,6 +51,145 @@ export default function GuaranteeModesSection() {
               </p>
             </div>
           </div>
+        </section>
+
+        {/* ── Remuneration time window ── */}
+        <section>
+          <h3 className="text-xl font-semibold text-ink-strong mb-4">Collecting on User Default</h3>
+          <p className="text-ink-body leading-relaxed mb-4">
+            If the payer does not settle voluntarily, the recipient enforces payment by calling{' '}
+            <code className="font-mono">remunerate</code> on the vault contract with the stored
+            BLS certificate. The vault checks the BLS signature, verifies the guarantee has not
+            already been paid or previously remunerated, and transfers the locked collateral to
+            the recipient.
+          </p>
+          <p className="text-ink-body leading-relaxed mb-4">
+            <code className="font-mono">remunerate</code> can only be called within a strict
+            time window anchored to the <code className="font-mono">timestamp</code> field
+            embedded in the guarantee:
+          </p>
+          <div className="rounded-lg border border-white/10 bg-white/5 p-4 font-mono text-sm text-ink-body mb-4">
+            guarantee.timestamp + 14 days &nbsp;≤&nbsp; block.timestamp &nbsp;&lt;&nbsp; guarantee.timestamp + 21 days
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+              <p className="text-xs font-semibold text-ink-muted uppercase tracking-wide mb-1">Opens</p>
+              <p className="text-sm text-ink-body">14 days after guarantee timestamp - the grace period for voluntary settlement.</p>
+            </div>
+            <div className="rounded-lg border border-white/10 bg-white/5 p-4">
+              <p className="text-xs font-semibold text-ink-muted uppercase tracking-wide mb-1">Closes</p>
+              <p className="text-sm text-ink-body">21 days after guarantee timestamp. Calling after this reverts with <code className="font-mono">TabExpired()</code>.</p>
+            </div>
+            <div className="rounded-lg border border-amber-400/20 bg-amber-400/5 p-4">
+              <p className="text-xs font-semibold text-amber-400/80 uppercase tracking-wide mb-1">Window</p>
+              <p className="text-sm text-ink-body"><strong>7 days</strong> to act. Missing this window means the collateral is never claimable - there is no recovery path.</p>
+            </div>
+          </div>
+          <div className="rounded-lg border border-amber-400/20 bg-amber-400/5 p-4 mb-6">
+            <p className="text-sm text-ink-body">
+              <strong className="text-ink-strong">Store the BLS certificate at issuance.</strong>{' '}
+              The cert (<code className="font-mono">claims</code> + <code className="font-mono">signature</code>) returned by{' '}
+              <code className="font-mono">issuePaymentGuarantee</code> - or by the facilitator&apos;s{' '}
+              <code className="font-mono">/settle</code> endpoint - must be persisted. It can also be
+              retrieved later via <code className="font-mono">getLatestGuarantee</code>, but only while
+              the 4Mica core service is accessible. Do not rely on retrieval as your only recovery path.
+            </p>
+          </div>
+          <p className="text-ink-body leading-relaxed mb-4">
+            Use <code className="font-mono">listPendingRemunerations()</code> to poll for tabs
+            with outstanding guarantees, then retrieve the stored certificate and submit it
+            on-chain once the window opens.
+          </p>
+          <CodeTabs
+            blocks={[
+              {
+                label: 'Monitor defaults (TS)',
+                language: 'typescript',
+                code: `// Returns all tabs with settlementStatus = PENDING for this recipient,
+// each paired with their latest guarantee.
+const pending = await client.recipient.listPendingRemunerations();
+
+for (const { tab, latestGuarantee } of pending) {
+  if (!latestGuarantee?.certificate) continue;
+
+  const now = Math.floor(Date.now() / 1000);
+  const ts = latestGuarantee.timestamp;
+  const windowOpen = ts + 14 * 24 * 3600;
+  const windowClose = ts + 21 * 24 * 3600;
+
+  if (now < windowOpen) {
+    console.log(\`Tab \${tab.tabId}: opens in \${Math.round((windowOpen - now) / 3600)}h\`);
+  } else if (now >= windowClose) {
+    console.log(\`Tab \${tab.tabId}: EXPIRED - window closed\`);
+  } else {
+    console.log(\`Tab \${tab.tabId}: READY - submitting remuneration\`);
+    const cert = JSON.parse(latestGuarantee.certificate);
+    const receipt = await client.recipient.remunerate(cert);
+    console.log('Settled in tx', receipt.transactionHash);
+  }
+}`,
+              },
+              {
+                label: 'Retrieve cert by tab ID (TS)',
+                language: 'typescript',
+                code: `// If you lost the cert returned at issuance, retrieve it from the core.
+// The certificate field is the JSON-serialized BLS cert stored by the core service.
+const guarantee = await client.recipient.getLatestGuarantee(tabId);
+if (!guarantee?.certificate) throw new Error('No guarantee found');
+
+const cert = JSON.parse(guarantee.certificate); // { claims: '0x...', signature: '0x...' }
+const receipt = await client.recipient.remunerate(cert);
+console.log('Settled in tx', receipt.transactionHash);`,
+              },
+              {
+                label: 'Monitor defaults (Python)',
+                language: 'python',
+                code: `import json, time
+from fourmica_sdk.models import BLSCert
+
+# Returns all tabs with settlement_status = PENDING for this recipient,
+# each paired with their latest guarantee.
+pending = await client.recipient.list_pending_remunerations()
+
+for item in pending:
+    g = item.latest_guarantee
+    if not g or not g.certificate:
+        continue
+
+    now = int(time.time())
+    window_open = g.timestamp + 14 * 24 * 3600
+    window_close = g.timestamp + 21 * 24 * 3600
+
+    if now < window_open:
+        print(f"Tab {item.tab.tab_id}: opens in {(window_open - now) // 3600}h")
+    elif now >= window_close:
+        print(f"Tab {item.tab.tab_id}: EXPIRED - window closed")
+    else:
+        print(f"Tab {item.tab.tab_id}: READY - submitting remuneration")
+        data = json.loads(g.certificate)
+        cert = BLSCert(claims=data["claims"], signature=data["signature"])
+        receipt = await client.recipient.remunerate(cert)
+        print("Settled in tx", receipt["transactionHash"])`,
+              },
+              {
+                label: 'Retrieve cert by tab ID (Python)',
+                language: 'python',
+                code: `import json
+from fourmica_sdk.models import BLSCert
+
+# If you lost the cert returned at issuance, retrieve it from the core.
+# The certificate field is the JSON-serialized BLS cert stored by the core service.
+guarantee = await client.recipient.get_latest_guarantee(tab_id)
+if not guarantee or not guarantee.certificate:
+    raise RuntimeError("No guarantee found")
+
+data = json.loads(guarantee.certificate)  # {"claims": "0x...", "signature": "0x..."}
+cert = BLSCert(claims=data["claims"], signature=data["signature"])
+receipt = await client.recipient.remunerate(cert)
+print("Settled in tx", receipt["transactionHash"])`,
+              },
+            ]}
+          />
         </section>
 
         {/* ── V2 structure ── */}

@@ -13,7 +13,7 @@ interface NetNode {
   name: string;
   x: number;
   y: number;
-  size: number; // circle radius in SVG units — bigger = more important
+  size: number; // circle radius in SVG units - bigger = more important
 }
 
 // ── Nodes ─────────────────────────────────────────────────────────────────────
@@ -48,11 +48,11 @@ const NODES: NetNode[] = [
   { id: 20, type: 'ext',   name: 'Chainlink',   x: 50,  y: 66, size: 2.3 },
   { id: 21, type: 'ext',   name: 'OpenAI',      x: 4,   y: 18, size: 3.4 },
   { id: 24, type: 'ext',   name: 'PriceWatch',  x: 66,  y: 18, size: 1.6 },
-  // 4mica — the payment hub
+  // 4mica - the payment hub
   { id: 25, type: 'brand', name: '4Mica', x: 50, y: 50, size: 5.2 },
-  // USDC ERC-20 contract — deactivated (settlement done off-chain via netting)
+  // USDC ERC-20 contract - deactivated (settlement done off-chain via netting)
   { id: 26, type: 'chain', name: 'USDC',  x: 38, y: 72, size: 2.2 },
-  // Collateral Vault — locks funds during guarantee issuance
+  // Collateral Vault - locks funds during guarantee issuance
   { id: 27, type: 'chain', name: 'Vault', x: 36, y: 37, size: 2.4 },
 ];
 
@@ -92,7 +92,7 @@ const EDGES: [number, number][] = [
 const FA = 0;
 const FB = 1;
 
-// ── Edge groups (pre-computed once — 6 groups instead of 80+ animated elements) ─
+// ── Edge groups (pre-computed once - 6 groups instead of 80+ animated elements) ─
 const EDGE_GROUPS: { key: string; edges: [number,number][]; stroke: string; sw: number }[] = (() => {
   const isAB    = ([a,b]: [number,number]) => (a===FA&&b===FB)||(a===FB&&b===FA);
   const inv4    = ([a,b]: [number,number]) => a===25||b===25;
@@ -113,7 +113,7 @@ const EDGE_GROUPS: { key: string; edges: [number,number][]; stroke: string; sw: 
 
 function edgeGroupOpacity(key: string, step: number): number {
   if (step === 0) return 1;
-  if (step === 8) return 0;   // netting — all edges hidden
+  if (step === 8) return 0;   // netting - all edges hidden
   if (step === 9) return (key === 'aeth' || key === 'ethb') ? 1 : 0;  // on-chain
   switch (key) {
     case 'ab':    return (step === 1 || step === 3 || step === 4 || step === 7) ? 1 : 0.04;
@@ -288,7 +288,7 @@ const NETTING_ROWS = [
   [{ c: '#7dd3fc', v: '  0x28f3 ' }, { c: 'rgba(200,215,242,0.4)', v: 'net ' }, { c: '#f87171', v: '−25 USDC' }, { c: '#94a3b8', v: '  pays' }],
   [{ c: '#7dd3fc', v: '  0x72e1 ' }, { c: 'rgba(200,215,242,0.4)', v: 'net ' }, { c: '#4ade80', v: '+100 USDC' }, { c: '#94a3b8', v: '  receives' }],
   [],
-  [{ c: '#4ade80', v: '  On-chain txs: 2/4 ' }, { c: '#94a3b8', v: '— 50% gas reduction' }],
+  [{ c: '#4ade80', v: '  On-chain txs: 2/4 ' }, { c: '#94a3b8', v: '- 50% gas reduction' }],
   [{ c: '#48c9b0', v: '  Status: ' }, { c: '#4ade80', v: 'CLEARING CONFIRMED ✓' }],
 ];
 
@@ -324,7 +324,7 @@ const NODE_GLOW: Record<NodeType, string> = {
   brand: 'rgba(123,203,255,0.18)',
 };
 
-// CPU / chip — for AI agents
+// CPU / chip - for AI agents
 function IconChip() {
   return (
     <g fill="none" stroke="rgba(255,255,255,0.9)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.16">
@@ -339,7 +339,7 @@ function IconChip() {
   );
 }
 
-// Server rack — for APIs
+// Server rack - for APIs
 function IconServer() {
   return (
     <g fill="none" stroke="rgba(255,255,255,0.9)" strokeLinecap="round" strokeWidth="0.14">
@@ -353,7 +353,7 @@ function IconServer() {
   );
 }
 
-// Cylinder — for databases
+// Cylinder - for databases
 function IconDatabase() {
   return (
     <g fill="none" stroke="rgba(255,255,255,0.9)" strokeLinecap="round" strokeWidth="0.14">
@@ -366,7 +366,7 @@ function IconDatabase() {
   );
 }
 
-// Chain links — for blockchains
+// Chain links - for blockchains
 function IconChain() {
   return (
     <g fill="none" stroke="rgba(255,255,255,0.9)" strokeLinecap="round" strokeWidth="0.16">
@@ -377,7 +377,7 @@ function IconChain() {
   );
 }
 
-// Globe — for external services
+// Globe - for external services
 function IconGlobe() {
   return (
     <g fill="none" stroke="rgba(255,255,255,0.9)" strokeLinecap="round" strokeWidth="0.13">
@@ -390,7 +390,7 @@ function IconGlobe() {
   );
 }
 
-// Shopping cart — for shopping bots
+// Shopping cart - for shopping bots
 function IconCart() {
   return (
     <g fill="none" stroke="rgba(255,255,255,0.9)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.15">
@@ -625,7 +625,7 @@ export default function DemoPage() {
   return (
     <div className="relative w-screen h-screen overflow-hidden" style={{ background: 'rgb(6,9,15)' }}>
 
-      {/* ── Network SVG — full screen on step 0, right of panel otherwise ── */}
+      {/* ── Network SVG - full screen on step 0, right of panel otherwise ── */}
       <div className="fixed top-0 bottom-0 right-0 overflow-hidden" style={{ left: step === 0 ? '0px' : '352px', transition: 'left 0.7s ease' }}>
         <svg
           viewBox="0 0 100 100"
@@ -639,7 +639,7 @@ export default function DemoPage() {
           }}
         >
 
-          {/* Edges — 6 groups with CSS opacity transition instead of 80+ elements */}
+          {/* Edges - 6 groups with CSS opacity transition instead of 80+ elements */}
           {EDGE_GROUPS.map(({ key, edges, stroke, sw }) => (
             <g key={key} stroke={stroke} strokeWidth={sw}
               style={{ opacity: edgeGroupOpacity(key, step), transition: 'opacity 0.5s ease' }}>
@@ -649,7 +649,7 @@ export default function DemoPage() {
             </g>
           ))}
 
-          {/* Pulses — step 0 */}
+          {/* Pulses - step 0 */}
           {step === 0 && EDGES.map(([a, b], i) => {
             if (i % 2 !== 0) return null;
             const col = i % 3 === 0
@@ -777,7 +777,7 @@ export default function DemoPage() {
             </circle>
           </>)}
 
-          {/* Step 9: A submits payTabErc20 — A → ETH Node → B */}
+          {/* Step 9: A submits payTabErc20 - A → ETH Node → B */}
           {step === 9 && (() => {
             const ethNode = NODE_MAP[15];
             return (<>
@@ -817,7 +817,7 @@ export default function DemoPage() {
             return <NodeShape key={n.id} node={n} dim={dim} showLabels={step >= 1} isStep6={step === 8} />;
           })}
 
-          {/* Netting ledger overlay — step 6 only */}
+          {/* Netting ledger overlay - step 6 only */}
           <AnimatePresence>
             {step === 8 && <NettingLedger key="netting" />}
           </AnimatePresence>
@@ -838,7 +838,7 @@ export default function DemoPage() {
         <TerminalPanel rows={BLOCKCHAIN_ROWS} title="A  ·  payTabErc20()  ·  On-Chain"           accent="#f59e0b" visible={step === 9} />
       </div>
 
-      {/* ── UI overlay — full screen on step 0, right of panel otherwise ── */}
+      {/* ── UI overlay - full screen on step 0, right of panel otherwise ── */}
       <div className="fixed top-0 bottom-0 right-0 z-10 flex flex-col items-center justify-between pointer-events-none" style={{ left: step === 0 ? '0px' : '352px', transition: 'left 0.7s ease' }}>
 
         {/* Top spacer */}
@@ -880,7 +880,7 @@ export default function DemoPage() {
           </AnimatePresence>
         </div>
 
-        {/* Left-side terminal panel — always visible, never covers the network */}
+        {/* Left-side terminal panel - always visible, never covers the network */}
         <div />
 
         {/* Controls */}

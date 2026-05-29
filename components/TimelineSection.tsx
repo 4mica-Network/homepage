@@ -15,13 +15,13 @@ export default function TimelineSection({ showHeader = true }: TimelineSectionPr
     {
       quarter: 'Q3 2025',
       title: 'Alpha Release',
-      description: 'Alpha Release to Ethereum and Solana with credit capabilities for Agents and AVSs',
+      description: 'Alpha Release to Ethereum and Solana with credit capabilities for Agents and APIs',
       done: true
     },
     {
       quarter: 'Q4 2025',
       title: 'Strategic Partnerships',
-      description: 'Partnerships with AI platforms, AVSs, and DeFI companies to enhance ecosystem integration',
+      description: 'Partnerships with AI platforms and DeFi companies to enhance ecosystem integration',
       done: true
     },
     {

@@ -102,8 +102,11 @@ export default function PaymentFlowSection() {
             </li>
             <li>
               <span className="font-semibold text-ink-body">Tab closure.</span> Happy path: the payer settles on-chain using the
-              <code className="font-mono"> req_id</code> in the certificate. Default path: after grace period, the recipient
-              remunerates on-chain with the certificate.
+              <code className="font-mono"> req_id</code> in the certificate. Default path: the recipient calls{' '}
+              <code className="font-mono">remunerate</code> on-chain with the BLS certificate within the window{' '}
+              <code className="font-mono">[timestamp + 14 days, timestamp + 21 days)</code>. Calling before the window opens
+              reverts with <code className="font-mono">TabNotYetOverdue()</code>; calling after it closes reverts with{' '}
+              <code className="font-mono">TabExpired()</code> and the collateral is unclaimable.
             </li>
             <li>
               <span className="font-semibold text-ink-body">Withdrawals &amp; sync.</span> Withdrawal requests pause guarantees while
@@ -132,7 +135,7 @@ export default function PaymentFlowSection() {
               <li>/verify is structural only; no core calls.</li>
               <li>/settle upgrades claims with monotonic <code className="font-mono">req_id</code> and running totals.</li>
               <li>Certificates are verified against operator public parameters and domain.</li>
-              <li>Remuneration only succeeds after grace period and if the tab is unpaid.</li>
+              <li>Remuneration only succeeds within the window <code className="font-mono">[timestamp + 14d, timestamp + 21d)</code> and if the tab is unpaid. Missing the 21-day deadline makes the collateral permanently unclaimable.</li>
               <li>V2 additionally requires passing ERC-8004 validation status that matches the signed policy.</li>
             </ul>
           </div>

@@ -40,8 +40,18 @@ function PythonInstallation() {
     <div className="space-y-6">
       <p className="text-ink-body leading-relaxed">
         Install the <code className="font-mono">4mica-x402</code> package with the extra that matches your web framework.
+        For collateral management, balance queries, and on-chain operations (deposits, remuneration, withdrawals),
+        also install <code className="font-mono">sdk-4mica</code> directly.
         Then optionally add a client wrapper for your HTTP library to handle 402 responses automatically.
       </p>
+      <div>
+        <h3 className="text-xl font-semibold text-ink-strong mb-3">Direct SDK (collateral, remuneration, balances)</h3>
+        <CodeBlock code={`pip install sdk-4mica`} language="bash" />
+        <p className="text-sm text-ink-body mt-3">
+          Provides <code className="font-mono">Client</code>, <code className="font-mono">ConfigBuilder</code>, and all
+          on-chain operations. Auth is enabled by default - no extra configuration needed to connect to the 4Mica core API.
+        </p>
+      </div>
       <div>
         <h3 className="text-xl font-semibold text-ink-strong mb-3">Server Package</h3>
         <CodeTabs
@@ -94,7 +104,7 @@ function RustInstallation() {
     <div className="space-y-6">
       <p className="text-ink-body leading-relaxed">
         Add the <code className="font-mono">sdk-4mica</code> crate for collateral management and wallet operations.
-        Server-side middleware and HTTP client wrappers are not yet available for Rust — they are on the roadmap.
+        Server-side middleware and HTTP client wrappers are not yet available for Rust - they are on the roadmap.
       </p>
       <div>
         <h3 className="text-xl font-semibold text-ink-strong mb-3">SDK Crate</h3>
@@ -104,7 +114,7 @@ function RustInstallation() {
         />
         <p className="text-sm text-ink-body mt-3">
           Requires Tokio for the async runtime. The SDK points directly at the network RPC URL
-          (e.g. <code className="font-mono">https://base.sepolia.api.4mica.xyz/</code>) — no separate
+          (e.g. <code className="font-mono">https://base.sepolia.api.4mica.xyz/</code>) - no separate
           facilitator package is needed.
         </p>
       </div>

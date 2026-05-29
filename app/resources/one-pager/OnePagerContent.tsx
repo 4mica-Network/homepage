@@ -64,7 +64,7 @@ export default function OnePagerContent() {
                     <i className="ri-lightbulb-line text-white text-lg"></i>
                   </div>
                 </div>
-                Case Study: AVSs (e.g., Aligned Layer)
+                Case Study: API Monetization
               </h2>
               
               <div className="mb-6">
@@ -143,7 +143,7 @@ export default function OnePagerContent() {
                 },
                 {
                   title: 'Multi-Platform Support',
-                  description: 'Trusted by Aligned layer as the ultimate payment solution for AVSs',
+                  description: 'Composable payment infrastructure for APIs, agents, and on-chain services',
                   icon: 'ri-links-line'
                 }
               ].map((item, index) => (
@@ -263,7 +263,7 @@ export default function OnePagerContent() {
           {/* Footer Message */}
           <div className="text-center">
             <p className="text-xl text-ink/90 font-medium italic">
-              &ldquo;4Mica is building the missing payment primitive that makes AVSs commercially viable.&rdquo;
+              &ldquo;4Mica is building the missing payment primitive that makes on-chain services commercially viable.&rdquo;
             </p>
           </div>
         </div>

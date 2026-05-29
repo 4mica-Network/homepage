@@ -18,7 +18,7 @@ const capabilities: Record<Language, Capability[]> = {
     },
     {
       title: 'Automatic Facilitator Setup',
-      desc: 'FourMicaEvmScheme and the facilitator client are registered for you — no manual configuration needed.',
+      desc: 'FourMicaEvmScheme and the facilitator client are registered for you - no manual configuration needed.',
     },
     {
       title: 'Tab Management',
@@ -48,7 +48,7 @@ const capabilities: Record<Language, Capability[]> = {
     },
     {
       title: 'Automatic Facilitator Setup',
-      desc: 'FourMicaEvmScheme and the facilitator client are registered for you — no manual configuration needed.',
+      desc: 'FourMicaEvmScheme and the facilitator client are registered for you - no manual configuration needed.',
     },
     {
       title: 'Tab Management',
@@ -82,7 +82,7 @@ const capabilities: Record<Language, Capability[]> = {
     },
     {
       title: 'Direct RPC Integration',
-      desc: 'The SDK communicates directly with the 4Mica network RPC URL — no separate facilitator package needed for wallet operations.',
+      desc: 'The SDK communicates directly with the 4Mica network RPC URL - no separate facilitator package needed for wallet operations.',
     },
     {
       title: 'ERC-8004 Validation Gating',
@@ -110,7 +110,7 @@ const intros: Record<Language, { p1: string; p2: string }> = {
   },
   rust: {
     p1: 'The sdk-4mica crate provides collateral management and wallet operations for the x402 Payment Protocol with 4Mica credit flow support. It communicates directly with the 4Mica network RPC URL and handles deposit, withdrawal, and balance queries.',
-    p2: 'Use this page to register a wallet by depositing collateral. Server middleware and HTTP client wrappers for Rust are on the roadmap — see the sections below for what is available today.',
+    p2: 'Use this page to register a wallet by depositing collateral. Server middleware and HTTP client wrappers for Rust are on the roadmap - see the sections below for what is available today.',
   },
 };
 
@@ -123,7 +123,7 @@ export default function OverviewSection({ onNavigate, language }: OverviewSectio
       <div className="space-y-6">
         <p className="text-ink-body leading-relaxed">{p1}</p>
         <p className="text-ink-body leading-relaxed">{p2}</p>
-        <div className="bg-brand-deep/30 border border-brand-deep rounded-lg p-4 text-sm text-ink-body">
+        <div className="bg-white/5 border border-white/10 rounded-lg p-4 text-sm text-ink-body">
           <span className="font-semibold text-ink-strong">New here?</span> Payer wallets must deposit collateral before making payments.
           Start with the{' '}
           <button
